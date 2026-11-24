@@ -99,8 +99,8 @@
           <input
             id="globalSearch"
             type="search"
-            placeholder="Search Events..."
-            aria-label="Search Events"
+            placeholder="Search events, venues, blocks..."
+            aria-label="Search events, venues, blocks"
             class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white text-charcoal text-xs sm:text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-amberhub"
           />
         </div>
@@ -120,10 +120,10 @@
   </header>
 
   <!-- GLOBAL TIME-CLASH BANNER (Appears automatically if any 2 registered events overlap) -->
-  <div id="globalClashBanner" class="hidden bg-red-50 border-b border-red-200">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-red-800">
+  <div id="globalClashBanner" class="hidden bg-[#FDECEA] border-b border-[#C62828]/30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-[#C62828]">
       <div class="flex items-center gap-2 font-semibold">
-        <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-[#C62828] shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
         </svg>
         <span id="globalClashText">Time-Clash Detected!</span>
@@ -148,43 +148,37 @@
             Discover Upcoming Campus Events
           </h1>
           <p class="text-sm text-muted mt-1">
-            All university workshops, hackathons, cultural nights, and sports tournaments in one clear feed.
+            All upcoming campus events in one place — zero WhatsApp clutter, automatic time-clash warnings.
           </p>
         </div>
         <div class="text-xs font-semibold text-muted bg-cardbg border border-subtle px-3 py-1.5 rounded-lg">
-          Tip: Register for <strong class="text-navy">Hack Night</strong> &amp; <strong class="text-navy">Open Mic Evening</strong> to test live clash detection
+          Tip: Register for <strong class="text-navy">Hack Night (Block 34, Room 810)</strong> &amp; <strong class="text-navy">Open Mic Evening (Shanti Devi Mittal Auditorium)</strong> to test clash detection
         </div>
       </div>
 
-      <!-- Horizontal Category Pills + Free Events Only Toggle -->
+      <!-- Live Summary Stats Row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-cardbg border border-subtle rounded-xl p-3.5 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-muted">Events This Week</p>
+          <p id="statTotalEvents" class="text-2xl font-extrabold text-navy mt-0.5">18</p>
+        </div>
+        <div class="bg-cardbg border border-subtle rounded-xl p-3.5 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-muted">Matching Filter</p>
+          <p id="statMatchingEvents" class="text-2xl font-extrabold text-amberhub mt-0.5">8</p>
+        </div>
+        <div class="bg-cardbg border border-subtle rounded-xl p-3.5 shadow-sm">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-muted">Registered</p>
+          <p id="statRegisteredEvents" class="text-2xl font-extrabold text-success mt-0.5">0</p>
+        </div>
+        <div id="statClashCard" class="bg-cardbg border border-subtle rounded-xl p-3.5 shadow-sm transition">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-muted">Active Clashes</p>
+          <p id="statActiveClashes" class="text-2xl font-extrabold text-navy mt-0.5">0</p>
+        </div>
+      </div>
+
+      <!-- Horizontal Category Pills -->
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div id="homePills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Home Category Filter">
-          <!-- Injected by JS -->
-        </div>
-        <button
-          id="freeOnlyToggle"
-          type="button"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0"
-        >
-          <span id="freeToggleDot" class="w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40"></span>
-          <span>Free Events Only</span>
-        </button>
-      </div>
-
-      <!-- Featured Event Card (Deep Navy #1B2A4A) -->
-      <div id="featuredCardMount"></div>
-
-      <!-- Highlighted Upcoming Events Grid -->
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <h2 id="homeGridHeading" class="text-base sm:text-lg font-bold text-navy">
-            Highlighted Upcoming Events
-          </h2>
-          <a href="#feed" class="text-xs sm:text-sm font-bold text-amberhub hover:text-amberhub-hover">
-            Browse Full Department Feed ↓
-          </a>
-        </div>
-        <div id="homeEventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <!-- Injected by JS -->
         </div>
       </div>
@@ -208,9 +202,30 @@
         </div>
       </div>
 
-      <!-- Department Filter Pills (Default: Engineering) -->
-      <div id="feedPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Department Filter">
-        <!-- Injected by JS -->
+      <!-- Department Filter Pills (Default: Engineering) + Free Events Only Toggle -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div id="feedPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Department Filter">
+          <!-- Injected by JS -->
+        </div>
+        <button
+          id="freeOnlyToggle"
+          type="button"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0"
+        >
+          <span id="freeToggleDot" class="w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40"></span>
+          <span>Free Events Only</span>
+        </button>
+      </div>
+
+      <!-- Feed Time-Clash Warning Banner -->
+      <div id="feedClashBanner" class="hidden p-3.5 rounded-xl bg-[#FDECEA] border border-[#C62828]/30 text-[#C62828] flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-semibold">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+          </svg>
+          <span id="feedClashText">Schedule overlap detected!</span>
+        </div>
+        <a href="#confirmation" class="text-xs font-extrabold underline">View Clashes ↓</a>
       </div>
 
       <!-- Filtered Events Grid -->
@@ -225,16 +240,24 @@
          SECTION 3 — EVENT DETAIL PAGE
          =================================================================== -->
     <section id="details" class="space-y-5">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
-          03 • EVENT DETAIL PAGE
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-          Standardised Event Details
-        </h2>
-        <p class="text-sm text-muted mt-1">
-          Click <strong>View Details</strong> on any event above to inspect its full schedule, venue directions, and included activities here.
-        </p>
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
+            03 • EVENT DETAIL PAGE
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+            Standardised Event Details
+          </h2>
+          <p class="text-sm text-muted mt-1">
+            Click <strong>View Details</strong> on any event above to inspect its full schedule, campus block directions, and included activities here.
+          </p>
+        </div>
+        <a
+          href="#feed"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-cardbg border border-subtle hover:border-navy text-xs sm:text-sm font-bold text-navy transition"
+        >
+          ← Back to Filtered Feed
+        </a>
       </div>
 
       <!-- Event Detail Card (Matches Screen 3 of Mockup) -->
@@ -269,8 +292,8 @@
             <h3 id="regFormTitle" class="text-xl sm:text-2xl font-extrabold text-navy mt-0.5">
               Register: Design Thinking Workshop 2026
             </h3>
-            <p id="regFormMeta" class="text-xs sm:text-sm text-muted mt-1">
-              August 23, 2026 • 10:00 - 17:00 Hours • Seminar Hall 1, Main Block
+            <p id="regFormMeta" class="text-xs sm:text-sm font-medium text-navy/80 mt-2 inline-block px-3 py-1 rounded-lg bg-white border border-subtle">
+              August 23, 2026 • 10:00 AM – 1:00 PM • Shanti Devi Mittal Auditorium
             </p>
           </div>
           <span id="regFormFeeBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success">
@@ -279,10 +302,10 @@
         </div>
 
         <!-- Inline Form Validation Error Box (No alert()) -->
-        <div id="regErrorBox" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium"></div>
+        <div id="regErrorBox" class="hidden mb-4 p-3 rounded-xl bg-[#FDECEA] border border-[#C62828]/30 text-[#C62828] text-sm font-medium"></div>
 
         <!-- Inline Pre-Submission Clash Preview if selected event overlaps an existing registration -->
-        <div id="regClashPreview" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm font-semibold"></div>
+        <div id="regClashPreview" class="hidden mb-4 p-3 rounded-xl bg-[#FDECEA] border border-[#C62828]/30 text-[#C62828] text-xs sm:text-sm font-semibold"></div>
 
         <form id="registrationForm" class="space-y-4" novalidate>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -301,12 +324,12 @@
 
             <div>
               <label for="inputRollNo" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
-                Roll Number / Reg No
+                Registration / Roll Number
               </label>
               <input
                 id="inputRollNo"
                 type="text"
-                placeholder="e.g., 12304567"
+                placeholder="12345678"
                 required
                 class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
               />
@@ -322,6 +345,7 @@
                 id="inputEmail"
                 type="email"
                 value="astabhya@univ.edu"
+                placeholder="astabhya@univ.edu"
                 required
                 class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
               />
@@ -336,14 +360,26 @@
                 class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
               >
                 <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Business">Business</option>
-                <option value="Arts">Arts</option>
-                <option value="Design">Design</option>
+                <option value="Electronics & Comm.">Electronics &amp; Comm.</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Business & Management">Business &amp; Management</option>
+                <option value="Arts & Design">Arts &amp; Design</option>
               </select>
             </div>
           </div>
+
+          <!-- SMS Reminder Opt-In Checkbox -->
+          <label class="flex items-center gap-2.5 p-3 rounded-xl bg-white border border-subtle cursor-pointer select-none">
+            <input
+              id="inputSmsOptIn"
+              type="checkbox"
+              checked
+              class="w-4 h-4 rounded accent-[#D4882A] cursor-pointer"
+            />
+            <span class="text-xs sm:text-sm font-medium text-charcoal">
+              Send me an SMS reminder 1 hour before this event starts
+            </span>
+          </label>
 
           <div class="pt-3 flex flex-col sm:flex-row items-center justify-end gap-3">
             <button
@@ -351,7 +387,7 @@
               type="button"
               class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-subtle bg-white text-muted hover:text-navy hover:border-navy text-sm font-semibold transition"
             >
-              Reset
+              Cancel
             </button>
             <button
               type="submit"
@@ -401,7 +437,7 @@
             A confirmation email has been sent to astabhya@univ.edu
           </p>
           <p id="confirmEventMeta" class="text-xs font-semibold text-navy/80 mt-2 bg-white border border-subtle rounded-lg px-3 py-1.5 inline-block">
-            August 23, 2026 • 10:00 - 17:00 Hours • Seminar Hall 1, Main Block
+            August 23, 2026 • 10:00 AM – 1:00 PM • Shanti Devi Mittal Auditorium
           </p>
 
           <!-- Action Buttons -->
@@ -415,7 +451,7 @@
                 <rect x="3" y="4" width="18" height="18" rx="2"></rect>
                 <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"></path>
               </svg>
-              <span>Add to Google Calendar</span>
+              <span>Add to Google Calendar (.ics)</span>
             </button>
 
             <button
@@ -453,8 +489,8 @@
           </div>
 
           <!-- Local Time-Clash Warning Box -->
-          <div id="scheduleClashBox" class="hidden p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 space-y-1">
-            <div class="flex items-center gap-2 font-extrabold text-sm text-red-700">
+          <div id="scheduleClashBox" class="hidden p-4 rounded-xl bg-[#FDECEA] border border-[#C62828]/30 text-[#C62828] space-y-1">
+            <div class="flex items-center gap-2 font-extrabold text-sm text-[#C62828]">
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
               </svg>
@@ -503,10 +539,10 @@
 
       /* -------------------------------------------------------------------
          1. COMPLETE DATASET OF 18 REALISTIC CAMPUS EVENTS
-            - 8 Engineering events
-            - 3 Arts, 3 Business, 2 Cultural, 2 Sports
-            - Includes intentional overlap: Hack Night & Open Mic Evening (Nov 3)
-              plus Robotics & IoT Lab & Campus Startup Pitch (Aug 27)
+            - 8 Engineering, 3 Arts, 3 Business, 2 Cultural, 2 Sports
+            - Updated venues: Shanti Devi Mittal Auditorium + Blocks 34, 32,
+              33, 36, 38, and 14 with rooms 404, 703, 810, etc.
+            - Intentional overlap: Hack Night & Open Mic Evening (Nov 3)
          ------------------------------------------------------------------- */
       const EVENTS = [
         // === 8 ENGINEERING EVENTS ===
@@ -518,12 +554,12 @@
           year: '2026',
           fullDate: 'August 23, 2026',
           isoDate: '2026-08-23',
-          startMin: 600,  // 10:00
-          endMin: 1020,   // 17:00
-          timeLabel: '10:00 - 17:00 Hours',
+          startMin: 600,  // 10:00 AM
+          endMin: 780,    // 1:00 PM
+          timeLabel: '10:00 AM – 1:00 PM',
           title: 'Design Thinking Workshop 2026',
-          venue: 'Seminar Hall 1, Main Block',
-          directions: 'Enter Main Academic Block via Gate 2, take the central staircase to the 1st Floor, and turn right past the Dean’s Office (2 min walk from Library).',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter through the Main Auditorium Plaza gates; registration desks are in the ground-floor lobby (3 min walk from Block 34).',
           club: 'Design Thinking Club',
           fee: 0,
           seatsTaken: 84,
@@ -546,12 +582,12 @@
           year: '2026',
           fullDate: 'August 21, 2026',
           isoDate: '2026-08-21',
-          startMin: 840,  // 14:00
-          endMin: 1020,   // 17:00
-          timeLabel: '14:00 - 17:00 Hours',
+          startMin: 840,  // 2:00 PM
+          endMin: 1020,   // 5:00 PM
+          timeLabel: '2:00 PM – 5:00 PM',
           title: 'AI & ML Bootcamp',
-          venue: 'CS Innovation Lab, Tech Block',
-          directions: 'Tech Block Ground Floor, Room G-04 directly opposite the Robotics noticeboard.',
+          venue: 'Block 34, Room 404',
+          directions: 'Enter Block 34 via the East Entrance near the central lawn, take Lift A or the main staircase to the 4th Floor, and walk straight to Computer Lab Room 404.',
           club: 'AI & Data Science Society',
           fee: 0,
           seatsTaken: 62,
@@ -574,12 +610,12 @@
           year: '2026',
           fullDate: 'August 16, 2026',
           isoDate: '2026-08-16',
-          startMin: 660,  // 11:00
-          endMin: 840,    // 14:00
-          timeLabel: '11:00 - 14:00 Hours',
+          startMin: 660,  // 11:00 AM
+          endMin: 840,    // 2:00 PM
+          timeLabel: '11:00 AM – 2:00 PM',
           title: 'CAD Challenge',
-          venue: 'Mechanical Studio B',
-          directions: 'Workshop Complex Wing B, 2nd Floor next to the 3D Printing & Prototyping Bay.',
+          venue: 'Block 34, Room 703',
+          directions: 'Take the central elevators in Block 34 up to the 7th Floor, turn left past the Faculty Cabins, and enter CAD Studio Room 703.',
           club: 'Mechanical Engineering Guild',
           fee: 50,
           seatsTaken: 38,
@@ -595,34 +631,6 @@
           ]
         },
         {
-          id: 'robotics-iot-lab-2026',
-          category: 'Engineering',
-          month: 'Aug',
-          day: '27',
-          year: '2026',
-          fullDate: 'August 27, 2026',
-          isoDate: '2026-08-27',
-          startMin: 900,  // 15:00
-          endMin: 1080,   // 18:00
-          timeLabel: '15:00 - 18:00 Hours',
-          title: 'Robotics & IoT Lab',
-          venue: 'Robotics Arena, Block C',
-          directions: 'Block C Basement Lab 02; follow the yellow floor markers from the North Entrance.',
-          club: 'Campus Robotics Club',
-          fee: 100,
-          seatsTaken: 45,
-          seatsTotal: 50,
-          coordinator: 'Devansh Joshi • +91 98991 44120 • robotics@univ.edu',
-          rules: 'ESP32 kits, ultrasonic sensors, and breadboards provided in pairs. Bring a USB-C cable.',
-          description:
-            'Wire, flash, and deploy a real smart-campus sensor node using ESP32 microcontrollers and MQTT dashboards. Great for beginners and hardware enthusiasts alike.',
-          activities: [
-            'ESP32 sensor wiring & calibration walkthrough',
-            'Streaming live room-occupancy data to a web dashboard',
-            'Mini autonomous obstacle-avoidance demo'
-          ]
-        },
-        {
           id: 'hack-night-2026',
           category: 'Engineering',
           month: 'Nov',
@@ -630,18 +638,18 @@
           year: '2026',
           fullDate: 'November 3, 2026',
           isoDate: '2026-11-03',
-          startMin: 1020, // 17:00
-          endMin: 1260,   // 21:00
-          timeLabel: '17:00 - 21:00 Hours',
+          startMin: 1020, // 5:00 PM
+          endMin: 1260,   // 9:00 PM
+          timeLabel: '5:00 PM – 9:00 PM',
           title: 'Hack Night',
-          venue: 'CS Seminar Hall',
-          directions: 'Computer Science Block, 2nd Floor Auditorium Hall directly above the Student Lounge.',
+          venue: 'Block 34, Room 810',
+          directions: 'Take Lift B in Block 34 to the 8th Floor Innovation Wing; Room 810 is the corner glass-walled lab overlooking the campus walkway.',
           club: 'Coding Club',
           fee: 0,
           seatsTaken: 67,
           seatsTotal: 150,
           coordinator: 'Siddharth Rao • +91 98204 51190 • codingclub@univ.edu',
-          rules: 'Teams of 2–4 students. Bring laptops and chargers; pizza and coffee provided at 19:30.',
+          rules: 'Teams of 2–4 students. Bring laptops and chargers; pizza and coffee provided at 7:30 PM.',
           description:
             'Four hours, one working prototype. Team up with designers and developers to ship a practical campus web utility or automation tool before the 9:00 PM demo bell.',
           activities: [
@@ -651,19 +659,19 @@
           ]
         },
         {
-          id: 'cloud-native-sprint-2026',
+          id: 'cloud-devops-lab-2026',
           category: 'Engineering',
-          month: 'Sep',
-          day: '02',
+          month: 'Aug',
+          day: '25',
           year: '2026',
-          fullDate: 'September 2, 2026',
-          isoDate: '2026-09-02',
-          startMin: 840,  // 14:00
-          endMin: 1020,   // 17:00
-          timeLabel: '14:00 - 17:00 Hours',
-          title: 'Cloud Native Sprint',
-          venue: 'Seminar Hall 2, Tech Block',
-          directions: 'Tech Block 1st Floor, East Wing beside the Cloud Computing Research Lab.',
+          fullDate: 'August 25, 2026',
+          isoDate: '2026-08-25',
+          startMin: 900,  // 3:00 PM
+          endMin: 1050,   // 5:30 PM
+          timeLabel: '3:00 PM – 5:30 PM',
+          title: 'Cloud & DevOps Hands-On Lab',
+          venue: 'Block 38, Room 404',
+          directions: 'Walk past the Central Library toward the CSE Cluster to reach Block 38. Take the main stairs or elevator to the 4th Floor, Room 404.',
           club: 'Cloud Computing Club',
           fee: 0,
           seatsTaken: 54,
@@ -679,77 +687,161 @@
           ]
         },
         {
-          id: 'embedded-systems-jam-2026',
+          id: 'embedded-iot-sprint-2026',
           category: 'Engineering',
-          month: 'Sep',
-          day: '05',
+          month: 'Aug',
+          day: '27',
           year: '2026',
-          fullDate: 'September 5, 2026',
-          isoDate: '2026-09-05',
-          startMin: 600,  // 10:00
-          endMin: 780,    // 13:00
-          timeLabel: '10:00 - 13:00 Hours',
-          title: 'Embedded Systems Jam',
-          venue: 'Electronics Lab 1, Main Block',
-          directions: 'Main Block 2nd Floor, South Corridor Room 214.',
+          fullDate: 'August 27, 2026',
+          isoDate: '2026-08-27',
+          startMin: 630,  // 10:30 AM
+          endMin: 810,    // 1:30 PM
+          timeLabel: '10:30 AM – 1:30 PM',
+          title: 'Embedded Systems & IoT Sprint',
+          venue: 'Block 33, Room 703',
+          directions: 'Block 33 is directly adjacent to Block 34 on the Engineering Spine. Take the elevator to the 7th Floor; Room 703 is the third lab on the right.',
           club: 'IEEE Student Branch',
-          fee: 75,
-          seatsTaken: 29,
-          seatsTotal: 45,
+          fee: 100,
+          seatsTaken: 34,
+          seatsTotal: 50,
           coordinator: 'Pranav Kulkarni • +91 98331 66402 • ieee@univ.edu',
-          rules: 'Open to ECE, EEE, and CSE students. All STM32 boards and oscilloscopes supplied.',
+          rules: 'Open to ECE, EEE, and CSE students. All ESP32 kits, sensors, and oscilloscopes supplied.',
           description:
-            'Dive into bare-metal firmware programming, PWM motor control, and two-layer PCB layout checks in KiCad with hands-on guidance from IEEE senior fellows.',
+            'Wire, flash, and deploy a real smart-campus sensor node using ESP32 microcontrollers and MQTT dashboards with hands-on guidance from IEEE senior fellows.',
           activities: [
-            'STM32 GPIO & interrupt-driven firmware lab',
-            'Schematic capture & DRC verification in KiCad',
+            'ESP32 sensor wiring & calibration walkthrough',
+            'Streaming live room-occupancy data to a web dashboard',
             'Hardware debugging clinic with logic analyzers'
           ]
         },
         {
-          id: 'competitive-coding-arena-2026',
+          id: 'cybersecurity-ctf-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '29',
+          year: '2026',
+          fullDate: 'August 29, 2026',
+          isoDate: '2026-08-29',
+          startMin: 960,  // 4:00 PM
+          endMin: 1140,   // 7:00 PM
+          timeLabel: '4:00 PM – 7:00 PM',
+          title: 'Cybersecurity CTF Qualifier',
+          venue: 'Block 34, Room 602',
+          directions: 'Enter Block 34 and take the elevator to the 6th Floor; Room 602 is located right beside the Network Security Lab.',
+          club: 'InfoSec & Cyber Club',
+          fee: 0,
+          seatsTaken: 74,
+          seatsTotal: 100,
+          coordinator: 'Aarav Mehta • +91 98450 22918 • infosec@univ.edu',
+          rules: 'Individual or pairs. Bring a laptop with Kali Linux or a modern browser for web/crypto challenges.',
+          description:
+            'Test your web exploitation, cryptography, reverse engineering, and digital forensics skills in a timed Jeopardy-style Capture The Flag qualifier.',
+          activities: [
+            'Live 12-challenge CTF board across web, crypto & forensics',
+            'Real-time scoreboard with first-blood bonus points',
+            'Post-event write-up walkthrough & finals qualification'
+          ]
+        },
+        {
+          id: 'robotics-line-follower-2026',
           category: 'Engineering',
           month: 'Sep',
-          day: '08',
+          day: '02',
           year: '2026',
-          fullDate: 'September 8, 2026',
-          isoDate: '2026-09-08',
-          startMin: 960,  // 16:00
-          endMin: 1140,   // 19:00
-          timeLabel: '16:00 - 19:00 Hours',
-          title: 'Competitive Coding Arena',
-          venue: 'Computer Lab 4, Tech Block',
-          directions: 'Tech Block 3rd Floor, Labs 304–305 (take Lift B).',
-          club: 'ACM Student Chapter',
-          fee: 0,
-          seatsTaken: 96,
-          seatsTotal: 120,
-          coordinator: 'Aarav Mehta • +91 98450 22918 • acm@univ.edu',
-          rules: 'Individual ICPC-style 2-hour contest (C++, Java, or Python) followed by live editorial.',
+          fullDate: 'September 2, 2026',
+          isoDate: '2026-09-02',
+          startMin: 840,  // 2:00 PM
+          endMin: 1020,   // 5:00 PM
+          timeLabel: '2:00 PM – 5:00 PM',
+          title: 'Robotics Line-Follower Arena',
+          venue: 'Block 36, Room 108',
+          directions: 'Walk south from Block 34 toward the Workshop Zone to Block 36. Room 108 is the large Robotics Arena on the 1st Floor.',
+          club: 'Campus Robotics Club',
+          fee: 150,
+          seatsTaken: 42,
+          seatsTotal: 60,
+          coordinator: 'Devansh Joshi • +91 98991 44120 • robotics@univ.edu',
+          rules: 'Teams of up to 4 members. ₹150 per bot entry; standard 3cm black-on-white arena track.',
           description:
-            'Sharpen your data structures and algorithmic problem-solving under timed contest pressure. Top 10 finishers receive ACM merit certificates and placement prep vouchers.',
+            'Tune your PID controllers and IR sensor arrays to race autonomous line-following bots through sharp hairpins, loops, and speed checkpoints.',
           activities: [
-            '6-problem algorithmic contest on local judge',
-            'Live scoreboard freeze during final 30 minutes',
-            'Post-contest editorial walkthrough & prize distribution'
+            'Bot dimension & sensor compliance check',
+            'Two timed qualifying runs on the official arena track',
+            'Top 8 knockout finals & fastest-lap awards'
           ]
         },
 
-        // === ARTS EVENTS (3) ===
+        // === 3 ARTS EVENTS ===
         {
-          id: 'golden-hour-photo-walk-2026',
+          id: 'open-mic-evening-2026',
+          category: 'Arts',
+          month: 'Nov',
+          day: '03',
+          year: '2026',
+          fullDate: 'November 3, 2026',
+          isoDate: '2026-11-03',
+          startMin: 1110, // 6:30 PM (overlaps with Hack Night 5:00 PM–9:00 PM!)
+          endMin: 1230,   // 8:30 PM
+          timeLabel: '6:30 PM – 8:30 PM',
+          title: 'Open Mic Evening',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter through the Main Auditorium Plaza gates; doors open at 6:00 PM.',
+          club: 'Music & Literature Society',
+          fee: 0,
+          seatsTaken: 112,
+          seatsTotal: 180,
+          coordinator: 'Sanya Gill • +91 98714 90823 • musicsoc@univ.edu',
+          rules: 'Free entry for all students. Performers get a 4-minute stage slot (sign up at lobby by 6:15 PM).',
+          description:
+            'Unwind after evening classes with unplugged acoustic sets, original slam poetry, and student stand-up comedy on the main auditorium stage.',
+          activities: [
+            'Unplugged indie & acoustic vocal performances',
+            'Original slam poetry & spoken-word storytelling',
+            'Student stand-up comedy & acoustic jam finale'
+          ]
+        },
+        {
+          id: 'digital-illustration-2026',
           category: 'Arts',
           month: 'Aug',
           day: '24',
           year: '2026',
           fullDate: 'August 24, 2026',
           isoDate: '2026-08-24',
-          startMin: 960,  // 16:00
-          endMin: 1080,   // 18:00
-          timeLabel: '16:00 - 18:00 Hours',
-          title: 'Golden Hour Photo Walk',
-          venue: 'Art Gallery Lawn',
-          directions: 'Meet at the white pergola in front of the Central Art Gallery beside the Lotus Pond.',
+          startMin: 900,  // 3:00 PM
+          endMin: 1020,   // 5:00 PM
+          timeLabel: '3:00 PM – 5:00 PM',
+          title: 'Digital Illustration & UI Sketching',
+          venue: 'Block 32, Room 810',
+          directions: 'Block 32 sits right next to Block 33 along the main academic walkway. Take Lift A to the 8th Floor; Design Studio Room 810 is at the end of the corridor.',
+          club: 'Fine Arts & Design Collective',
+          fee: 0,
+          seatsTaken: 36,
+          seatsTotal: 50,
+          coordinator: 'Tara Deshmukh • +91 98672 19004 • finearts@univ.edu',
+          rules: 'Bring a tablet, laptop with Figma, or sketchbook. All brush presets and UI templates shared free.',
+          description:
+            'Master rapid UI wireframing, vector iconography, and expressive character sketching in a friendly cross-disciplinary studio session.',
+          activities: [
+            '15-minute composition, grid & visual hierarchy warm-up',
+            'Hands-on Figma icon & illustration sprint',
+            'Gallery pin-up & constructive peer feedback'
+          ]
+        },
+        {
+          id: 'campus-photo-walk-2026',
+          category: 'Arts',
+          month: 'Aug',
+          day: '28',
+          year: '2026',
+          fullDate: 'August 28, 2026',
+          isoDate: '2026-08-28',
+          startMin: 990,  // 4:30 PM
+          endMin: 1110,   // 6:30 PM
+          timeLabel: '4:30 PM – 6:30 PM',
+          title: 'Campus Photography Walk',
+          venue: 'Block 14, Room 204',
+          directions: 'Head to Block 14 near the North Academic Gate; meet on the 2nd Floor in Media Room 204 for the briefing before heading out across campus.',
           club: 'Lens & Shutter Club',
           fee: 0,
           seatsTaken: 41,
@@ -757,89 +849,33 @@
           coordinator: 'Ishita Sen • +91 98109 34112 • lensclub@univ.edu',
           rules: 'Any smartphone or DSLR welcome. Best 5 shots featured in the campus magazine.',
           description:
-            'Capture campus architecture, candid student life, and golden-hour portraits on a guided sunset walk with senior student photographers.',
+            'Capture campus architecture, candid student life, and golden-hour portraits on a guided sunset trail with senior student photographers.',
           activities: [
-            '15-minute composition & natural lighting tips',
-            '75-minute guided photo trail across 4 campus landmarks',
-            'Group shot review & mobile editing presets'
-          ]
-        },
-        {
-          id: 'poster-zine-studio-2026',
-          category: 'Arts',
-          month: 'Sep',
-          day: '01',
-          year: '2026',
-          fullDate: 'September 1, 2026',
-          isoDate: '2026-09-01',
-          startMin: 660,  // 11:00
-          endMin: 780,    // 13:00
-          timeLabel: '11:00 - 13:00 Hours',
-          title: 'Poster & Zine Design Studio',
-          venue: 'Fine Arts Studio 2',
-          directions: 'Humanities & Arts Block, 1st Floor Room A-108.',
-          club: 'Fine Arts Collective',
-          fee: 50,
-          seatsTaken: 24,
-          seatsTotal: 40,
-          coordinator: 'Tara Deshmukh • +91 98672 19004 • finearts@univ.edu',
-          rules: 'All A3 paper, brush pens, linocut ink, and folding tools are included in the ₹50 kit fee.',
-          description:
-            'Experiment with bold editorial typography, collage layouts, and 8-page pocket zine folding to create tactile visual stories.',
-          activities: [
-            'Grid & colour-contrast poster mini-lecture',
-            'Hands-on 8-page pocket zine folding & illustration',
-            'Community artwork swap & gallery pin-up'
-          ]
-        },
-        {
-          id: 'charcoal-sketch-evening-2026',
-          category: 'Arts',
-          month: 'Sep',
-          day: '10',
-          year: '2026',
-          fullDate: 'September 10, 2026',
-          isoDate: '2026-09-10',
-          startMin: 1020, // 17:00
-          endMin: 1140,   // 19:00
-          timeLabel: '17:00 - 19:00 Hours',
-          title: 'Charcoal & Sketch Evening',
-          venue: 'Design Courtyard',
-          directions: 'Open-air courtyard between the Architecture Wing and the Campus Café.',
-          club: 'Visual Arts Society',
-          fee: 0,
-          seatsTaken: 33,
-          seatsTotal: 50,
-          coordinator: 'Nikhil Varma • +91 98215 73409 • visualarts@univ.edu',
-          rules: 'Open to absolute beginners. Charcoal sticks and newsprint pads provided.',
-          description:
-            'Unwind after lectures with expressive charcoal gesture drawing, live acoustic background music, and friendly critiques.',
-          activities: [
-            'Light, shadow & tonal shading warm-up',
-            'Live still-life and portrait sketching session',
-            'Take-home fixative spray & showcase wall'
+            '15-minute composition & natural lighting briefing in Room 204',
+            '75-minute guided photo trail across campus landmarks',
+            'Group shot review & mobile colour-grading presets'
           ]
         },
 
-        // === BUSINESS EVENTS (3) ===
+        // === 3 BUSINESS EVENTS ===
         {
-          id: 'campus-startup-pitch-2026',
+          id: 'startup-pitch-night-2026',
           category: 'Business',
           month: 'Aug',
-          day: '27',
+          day: '26',
           year: '2026',
-          fullDate: 'August 27, 2026',
-          isoDate: '2026-08-27',
-          startMin: 900,  // 15:00 (overlaps with Robotics & IoT Lab!)
-          endMin: 1080,   // 18:00
-          timeLabel: '15:00 - 18:00 Hours',
-          title: 'Campus Startup Pitch',
-          venue: 'Main Auditorium, Block A',
-          directions: 'Block A Ground Floor; enter through the Central Foyer opposite the Flagpole.',
+          fullDate: 'August 26, 2026',
+          isoDate: '2026-08-26',
+          startMin: 1020, // 5:00 PM
+          endMin: 1170,   // 7:30 PM
+          timeLabel: '5:00 PM – 7:30 PM',
+          title: 'Startup Pitch Night',
+          venue: 'Block 34, Room 703',
+          directions: 'Take the central elevators in Block 34 up to the 7th Floor; Room 703 is the tiered presentation room to the left of the lobby.',
           club: 'Entrepreneurship Cell',
           fee: 0,
-          seatsTaken: 142,
-          seatsTotal: 200,
+          seatsTaken: 68,
+          seatsTotal: 90,
           coordinator: 'Riya Kapoor • +91 98188 50921 • ecell@univ.edu',
           rules: 'Open to both pitching founders and student spectators. ₹25,000 seed micro-grant pool.',
           description:
@@ -851,181 +887,181 @@
           ]
         },
         {
-          id: 'product-strategy-case-jam-2026',
+          id: 'fintech-case-study-2026',
           category: 'Business',
-          month: 'Sep',
-          day: '03',
+          month: 'Aug',
+          day: '30',
           year: '2026',
-          fullDate: 'September 3, 2026',
-          isoDate: '2026-09-03',
-          startMin: 780,  // 13:00
-          endMin: 960,    // 16:00
-          timeLabel: '13:00 - 16:00 Hours',
-          title: 'Product Strategy Case Jam',
-          venue: 'Management Seminar Hall',
-          directions: 'School of Management Building, 2nd Floor Room M-201.',
-          club: 'Consulting & Finance Society',
-          fee: 100,
+          fullDate: 'August 30, 2026',
+          isoDate: '2026-08-30',
+          startMin: 660,  // 11:00 AM
+          endMin: 810,    // 1:30 PM
+          timeLabel: '11:00 AM – 1:30 PM',
+          title: 'FinTech & Markets Case Study',
+          venue: 'Block 14, Room 404',
+          directions: 'Enter Block 14 (Business & Management Wing), take the central lift to the 4th Floor, and proceed directly to Case Room 404.',
+          club: 'Finance & Investment Club',
+          fee: 50,
           seatsTaken: 48,
           seatsTotal: 75,
-          coordinator: 'Arjun Sengupta • +91 98301 41287 • cfs@univ.edu',
-          rules: 'Teams of 2–3. ₹100 per team; includes case dossier and refreshments.',
+          coordinator: 'Kunal Bansal • +91 99581 20394 • finclub@univ.edu',
+          rules: 'Teams of 2–3. ₹50 per participant; includes printed case dossier and refreshments.',
           description:
-            'Tackle a real Indian consumer-tech retention and pricing case in a 90-minute sprint and present your recommendation deck to visiting product managers.',
+            'Analyse UPI payment economics, neobanking unit metrics, and equity valuation through a fast-paced Indian FinTech case competition.',
           activities: [
-            'Live case dossier release & root-cause framing',
-            '90-minute 5-slide strategy deck sprint',
-            'Panel judging & consulting interview feedback'
+            'Live FinTech case dossier release & root-cause framing',
+            '75-minute 5-slide strategy deck sprint',
+            'Panel judging & finance internship Q&A'
           ]
         },
         {
-          id: 'fintech-markets-workshop-2026',
+          id: 'product-teardown-2026',
           category: 'Business',
           month: 'Sep',
-          day: '09',
+          day: '01',
           year: '2026',
-          fullDate: 'September 9, 2026',
-          isoDate: '2026-09-09',
-          startMin: 840,  // 14:00
-          endMin: 990,    // 16:30
-          timeLabel: '14:00 - 16:30 Hours',
-          title: 'FinTech & Markets Workshop',
-          venue: 'Business Block Room 204',
-          directions: 'School of Management Building, 2nd Floor West Wing.',
-          club: 'Finance & Investment Club',
+          fullDate: 'September 1, 2026',
+          isoDate: '2026-09-01',
+          startMin: 930,  // 3:30 PM
+          endMin: 1050,   // 5:30 PM
+          timeLabel: '3:30 PM – 5:30 PM',
+          title: 'Product Management Teardown',
+          venue: 'Block 32, Room 506',
+          directions: 'Enter Block 32 via the South Entrance, take Lift B to the 5th Floor, and turn right to Seminar Room 506.',
+          club: 'Consulting & Product Society',
           fee: 0,
-          seatsTaken: 59,
+          seatsTaken: 52,
           seatsTotal: 80,
-          coordinator: 'Kunal Bansal • +91 99581 20394 • finclub@univ.edu',
-          rules: 'No prior finance background required. Mock trading simulator link shared at start.',
+          coordinator: 'Arjun Sengupta • +91 98301 41287 • cps@univ.edu',
+          rules: 'Open to all branches. No prior PM experience required; product tear-down worksheet provided.',
           description:
-            'Understand UPI rails, personal portfolio basics, and equity valuation through an interactive campus mock-market simulation.',
+            'Deconstruct onboarding flows, retention hooks, and pricing experiments of top consumer apps with visiting alumni product managers.',
           activities: [
-            'How modern Indian FinTech & UPI infrastructure scales',
-            '60-minute live mock-portfolio trading game',
-            'Q&A on finance internships & analyst prep'
+            'Live onboarding & funnel teardown of a popular Indian app',
+            'Group feature-prioritisation exercise (RICE scoring)',
+            'PM portfolio & interview prep Q&A'
           ]
         },
 
-        // === CULTURAL EVENTS (2) ===
+        // === 2 CULTURAL EVENTS ===
         {
-          id: 'open-mic-evening-2026',
+          id: 'acoustic-guitar-workshop-2026',
           category: 'Cultural',
-          month: 'Nov',
-          day: '03',
+          month: 'Aug',
+          day: '22',
           year: '2026',
-          fullDate: 'November 3, 2026',
-          isoDate: '2026-11-03',
-          startMin: 1110, // 18:30 (overlaps with Hack Night 17:00-21:00!)
-          endMin: 1230,   // 20:30
-          timeLabel: '18:30 - 20:30 Hours',
-          title: 'Open Mic Evening',
-          venue: 'Central Amphitheatre',
-          directions: 'Outdoor stepped amphitheatre behind the Student Activity Centre.',
-          club: 'Music & Literature Society',
-          fee: 0,
-          seatsTaken: 112,
-          seatsTotal: 180,
-          coordinator: 'Sanya Gill • +91 98714 90823 • musicsoc@univ.edu',
-          rules: 'Free entry for all students. Performers get a 4-minute stage slot (sign up at venue by 18:15).',
+          fullDate: 'August 22, 2026',
+          isoDate: '2026-08-22',
+          startMin: 1050, // 5:30 PM
+          endMin: 1170,   // 7:30 PM
+          timeLabel: '5:30 PM – 7:30 PM',
+          title: 'Acoustic Jam & Guitar Workshop',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter through the East Foyer of Shanti Devi Mittal Auditorium.',
+          club: 'Campus Strings & Music Guild',
+          fee: 100,
+          seatsTaken: 64,
+          seatsTotal: 100,
+          coordinator: 'Kabir Arora • +91 98114 55209 • strings@univ.edu',
+          rules: '₹100 entry includes chord workbook and picks. Bring your own acoustic guitar if you have one.',
           description:
-            'Relax under fairy lights with unplugged acoustic guitar sets, original slam poetry, and student stand-up comedy right on the amphitheatre steps.',
+            'Learn fingerstyle grooves, chord voicings, and live acoustic arrangement techniques followed by an open sing-along jam session.',
           activities: [
-            'Unplugged indie & acoustic vocal performances',
-            'Original slam poetry & spoken-word storytelling',
-            'Student stand-up comedy & acoustic jam finale'
+            'Rhythm strumming & fingerpicking fundamentals',
+            'Live acoustic arrangement breakdown with senior band leads',
+            'Open group acoustic jam finale'
           ]
         },
         {
-          id: 'street-dance-cypher-2026',
+          id: 'classical-contemporary-dance-2026',
           category: 'Cultural',
           month: 'Sep',
           day: '04',
           year: '2026',
           fullDate: 'September 4, 2026',
           isoDate: '2026-09-04',
-          startMin: 1020, // 17:00
-          endMin: 1170,   // 19:30
-          timeLabel: '17:00 - 19:30 Hours',
-          title: 'Street Dance & Cypher',
-          venue: 'Student Plaza Courtyard',
-          directions: 'Central Plaza right outside the Main Canteen.',
-          club: 'Rhythm Crew Dance Club',
-          fee: 50,
-          seatsTaken: 78,
-          seatsTotal: 120,
+          startMin: 1080, // 6:00 PM
+          endMin: 1230,   // 8:30 PM
+          timeLabel: '6:00 PM – 8:30 PM',
+          title: 'Classical & Contemporary Dance Showcase',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Main Auditorium Plaza opposite Uni-Mall. Seating opens at 5:30 PM on a first-come, first-served basis for registered students.',
+          club: 'Rhythm & Heritage Dance Society',
+          fee: 0,
+          seatsTaken: 156,
+          seatsTotal: 220,
           coordinator: 'Yashwant Rana • +91 98117 65320 • rhythmcrew@univ.edu',
-          rules: 'Spectators free; ₹50 battle pass for 1v1 freestyle cypher competitors.',
+          rules: 'Free entry with valid student ID or Campus Hub confirmation pass.',
           description:
-            'High-energy hip-hop, popping, and contemporary showcase featuring campus dance crews and open 1v1 freestyle battle brackets.',
+            'An evening celebrating Bharatanatyam, Kathak fusion, contemporary storytelling, and high-energy campus crew choreography under full stage lighting.',
           activities: [
-            'Open choreography warm-up with crew captains',
-            '1v1 & 2v2 freestyle cypher knockouts',
-            'Campus crew showcase & live DJ closing set'
+            'Classical solo & duet ensemble performances',
+            'Contemporary fusion showcase by campus dance squads',
+            'Audience interactive rhythm finale'
           ]
         },
 
-        // === SPORTS EVENTS (2) ===
+        // === 2 SPORTS EVENTS ===
         {
-          id: 'basketball-cup-2026',
+          id: 'badminton-open-2026',
           category: 'Sports',
           month: 'Aug',
-          day: '28',
+          day: '31',
           year: '2026',
-          fullDate: 'August 28, 2026',
-          isoDate: '2026-08-28',
-          startMin: 990,  // 16:30
-          endMin: 1170,   // 19:30
-          timeLabel: '16:30 - 19:30 Hours',
-          title: 'Inter-Dept Basketball Cup',
-          venue: 'Outdoor Court 1, Sports Complex',
-          directions: 'Sports Complex Gate 4, floodlit basketball court next to the athletics track.',
-          club: 'University Sports Council',
-          fee: 0,
-          seatsTaken: 130,
-          seatsTotal: 200,
-          coordinator: 'Vikramjit Singh • +91 98760 11245 • sports@univ.edu',
-          rules: 'Free spectator seating. Halftime 3-point shootout open to any registered attendee.',
-          description:
-            'Cheer on department squads under floodlights in the 5v5 knockout semifinals and grand final, featuring a crowd-favourite halftime 3-point contest.',
-          activities: [
-            '5v5 department knockout semifinals & championship final',
-            'Halftime spectator 3-point shootout with merch prizes',
-            'Trophy & tournament MVP presentation'
-          ]
-        },
-        {
-          id: 'badminton-doubles-open-2026',
-          category: 'Sports',
-          month: 'Sep',
-          day: '06',
-          year: '2026',
-          fullDate: 'September 6, 2026',
-          isoDate: '2026-09-06',
-          startMin: 900,  // 15:00
-          endMin: 1110,   // 18:30
-          timeLabel: '15:00 - 18:30 Hours',
-          title: 'Badminton Doubles Open',
-          venue: 'Indoor Stadium, Sports Complex',
-          directions: 'Indoor Sports Arena, Courts 1–4 (non-marking court shoes mandatory).',
+          fullDate: 'August 31, 2026',
+          isoDate: '2026-08-31',
+          startMin: 960,  // 4:00 PM
+          endMin: 1140,   // 7:00 PM
+          timeLabel: '4:00 PM – 7:00 PM',
+          title: 'Inter-Block Badminton Open',
+          venue: 'Indoor Sports Complex, Near Block 34',
+          directions: 'Walk 200m east past Block 34 toward the Sports Arena Gate; Courts 1–4 are inside the main indoor hall (non-marking shoes mandatory).',
           club: 'Racquet Sports Club',
-          fee: 100,
+          fee: 50,
           seatsTaken: 44,
           seatsTotal: 64,
           coordinator: 'Neha Choudhary • +91 98104 88731 • racquetclub@univ.edu',
-          rules: '₹100 per doubles pair; Yonex feather shuttles supplied. Bring your own racquet.',
+          rules: '₹50 entry per player; Yonex feather shuttles supplied. Bring your own racquet and non-marking shoes.',
           description:
-            'Fast-paced knockout tournament for men’s, women’s, and mixed doubles teams across four indoor wooden courts with student umpires.',
+            'Fast-paced inter-block knockout badminton tournament across four indoor wooden courts with live digital brackets and student umpires.',
           activities: [
             'Court warm-up & live digital bracket draw',
-            'Best-of-3 knockout doubles matches',
-            'Finals & medal ceremony'
+            'Best-of-3 knockout singles & doubles rounds',
+            'Championship finals & medal presentation'
+          ]
+        },
+        {
+          id: 'campus-chess-rapid-2026',
+          category: 'Sports',
+          month: 'Sep',
+          day: '03',
+          year: '2026',
+          fullDate: 'September 3, 2026',
+          isoDate: '2026-09-03',
+          startMin: 840,  // 2:00 PM
+          endMin: 1020,   // 5:00 PM
+          timeLabel: '2:00 PM – 5:00 PM',
+          title: 'Campus Chess Rapid Tournament',
+          venue: 'Block 34, Room 810',
+          directions: 'Take Lift B in Block 34 to the 8th Floor; Room 810 is set up with 30 tournament boards and digital chess clocks.',
+          club: 'University Chess Society',
+          fee: 0,
+          seatsTaken: 46,
+          seatsTotal: 60,
+          coordinator: 'Vikramjit Singh • +91 98760 11245 • chess@univ.edu',
+          rules: 'Free entry. 5-round Swiss format, 10+5 rapid time control. Boards and clocks provided.',
+          description:
+            'Test your tactical sharpness in a 5-round FIDE-style rapid chess tournament open to casual players and rated university competitors alike.',
+          activities: [
+            'Swiss pairing round check-in & rules briefing',
+            '5 rounds of 10+5 rapid matches with digital clocks',
+            'Top 3 overall & Best Fresher trophy presentation'
           ]
         }
       ];
 
       const CATEGORIES = ['All', 'Engineering', 'Arts', 'Business', 'Cultural', 'Sports'];
-      const STORAGE_KEY = 'campus_hub_single_page_v2';
+      const STORAGE_KEY = 'campus_hub_single_page_v3';
 
       /* -------------------------------------------------------------------
          2. APPLICATION STATE & LOCALSTORAGE
@@ -1305,6 +1341,30 @@
          5. RENDER SECTION 1 (HOME & FEATURED CARD)
          ------------------------------------------------------------------- */
       function renderHome() {
+        // Live Summary Stats
+        const feedMatches = EVENTS.filter((ev) => {
+          if (state.feedCategory !== 'All' && ev.category !== state.feedCategory) return false;
+          if (state.freeOnly && ev.fee > 0) return false;
+          return matchesQuery(ev, state.search);
+        });
+        const regCount = Object.keys(state.registered).length;
+        const clashCount = findRegisteredClashes().length;
+
+        document.getElementById('statTotalEvents').textContent = EVENTS.length;
+        document.getElementById('statMatchingEvents').textContent = feedMatches.length;
+        document.getElementById('statRegisteredEvents').textContent = regCount;
+
+        const clashEl = document.getElementById('statActiveClashes');
+        const clashCard = document.getElementById('statClashCard');
+        clashEl.textContent = clashCount;
+        if (clashCount > 0) {
+          clashEl.className = 'text-2xl font-extrabold text-[#C62828] mt-0.5';
+          clashCard.className = 'bg-[#FDECEA] border border-[#C62828]/40 rounded-xl p-3.5 shadow-sm transition';
+        } else {
+          clashEl.className = 'text-2xl font-extrabold text-navy mt-0.5';
+          clashCard.className = 'bg-cardbg border border-subtle rounded-xl p-3.5 shadow-sm transition';
+        }
+
         // Category pills
         const homePillsEl = document.getElementById('homePills');
         homePillsEl.innerHTML = CATEGORIES.map((cat) => {
@@ -1552,9 +1612,9 @@
               </div>
 
               <div class="p-4">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Organizers</div>
+                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Organizers &amp; Contact</div>
                 <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.club}</div>
-                <div class="text-xs text-muted mt-1">Verified Campus Announcement</div>
+                <div class="text-xs text-muted mt-1">${ev.coordinator}</div>
               </div>
             </div>
 
@@ -1576,7 +1636,7 @@
 
               <div class="lg:col-span-5 space-y-3 bg-white border border-subtle rounded-[12px] p-4">
                 <div>
-                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Entry Fee &amp; Eligibility</div>
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Rules &amp; Eligibility</div>
                   <p class="text-xs sm:text-sm text-charcoal mt-1 leading-relaxed">
                     <span class="inline-block px-2 py-0.5 rounded-md font-bold text-xs mr-1.5 ${ev.fee === 0 ? 'bg-success/15 text-success' : 'bg-amberhub/15 text-amberhub-hover'}">
                       ${formatFee(ev.fee)}
@@ -1609,7 +1669,7 @@
                     : 'bg-white border-amberhub text-amberhub hover:bg-amberhub/10'
                 }"
               >
-                ${rem ? 'Reminder Active ✓' : 'Set Reminder'}
+                ${rem ? 'Reminder Saved ✓' : 'Save / Set Reminder'}
               </button>
             </div>
           </div>
@@ -1661,41 +1721,38 @@
         document.getElementById('confirmEventTitle').textContent = confirmedEv.title;
         document.getElementById('confirmEmailLine').textContent = `A confirmation email has been sent to ${displayEmail}`;
         document.getElementById('confirmEventMeta').textContent = `${confirmedEv.fullDate} • ${confirmedEv.timeLabel} • ${confirmedEv.venue}`;
-
-        const smsActive = isReminded(confirmedEv.id) || Boolean(confirmedRec && confirmedRec.sms);
-        const smsBtn = document.getElementById('btnSmsReminder');
-        const smsLabel = document.getElementById('smsReminderLabel');
-        if (smsActive) {
-          smsBtn.className =
-            'w-full py-2.5 px-4 rounded-xl bg-success/10 border border-success text-success text-sm font-extrabold flex items-center justify-center gap-2 transition';
-          smsLabel.textContent = 'SMS Reminder Active ✓';
-        } else {
-          smsBtn.className =
-            'w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-amberhub text-navy text-sm font-bold flex items-center justify-center gap-2 transition';
-          smsLabel.textContent = 'Set Event Reminder (SMS)';
-        }
-
-        // Clash Detection Banners (Global + Section 5)
+        // Clash Detection Banners (Global + Feed + Section 5)
         const clashes = findRegisteredClashes();
         const globalBanner = document.getElementById('globalClashBanner');
+        const feedClashBanner = document.getElementById('feedClashBanner');
         const scheduleClashBox = document.getElementById('scheduleClashBox');
         const scheduleClashList = document.getElementById('scheduleClashList');
 
+        // Build set of clashing event IDs for item-level badges
+        const clashingIds = new Set();
+        clashes.forEach(({ a, b }) => {
+          clashingIds.add(a.id);
+          clashingIds.add(b.id);
+        });
+
         if (clashes.length > 0) {
           const first = clashes[0];
-          document.getElementById('globalClashText').textContent =
-            `Time-Clash Warning: ${first.a.title} and ${first.b.title} overlap on ${first.a.fullDate}!`;
+          const msg = `Time-Clash Warning: ${first.a.title} (${first.a.venue}) and ${first.b.title} (${first.b.venue}) overlap on ${first.a.fullDate}!`;
+          document.getElementById('globalClashText').textContent = msg;
+          document.getElementById('feedClashText').textContent = msg;
           globalBanner.classList.remove('hidden');
+          feedClashBanner.classList.remove('hidden');
 
           scheduleClashList.innerHTML = clashes
             .map(
               ({ a, b }) =>
-                `<li><strong>${a.title}</strong> (${a.timeLabel}) overlaps with <strong>${b.title}</strong> (${b.timeLabel}) on <strong>${a.fullDate}</strong>.</li>`
+                `<li><strong>${a.title}</strong> (${a.timeLabel} • ${a.venue}) overlaps with <strong>${b.title}</strong> (${b.timeLabel} • ${b.venue}) on <strong>${a.fullDate}</strong>.</li>`
             )
             .join('');
           scheduleClashBox.classList.remove('hidden');
         } else {
           globalBanner.classList.add('hidden');
+          feedClashBanner.classList.add('hidden');
           scheduleClashBox.classList.add('hidden');
         }
 
@@ -1715,21 +1772,24 @@
             .map((id) => {
               const ev = getEvent(id);
               const rec = state.registered[id];
+              const hasClash = clashingIds.has(id);
               return `
-                <div class="p-3.5 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
+                <div class="p-3.5 rounded-xl bg-white border ${hasClash ? 'border-[#C62828]/50' : 'border-subtle'} flex flex-wrap items-center justify-between gap-3">
                   <div class="min-w-0">
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
                       <span class="text-sm font-bold text-navy">${ev.title}</span>
                       <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/15 text-success">Confirmed</span>
+                      ${hasClash ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FDECEA] text-[#C62828]">Time Clash</span>' : ''}
                     </div>
-                    <p class="text-xs text-muted mt-0.5">${ev.fullDate} • ${ev.timeLabel} • ${ev.venue}</p>
+                    <p class="text-xs text-muted mt-0.5">${ev.fullDate} • ${ev.timeLabel}</p>
+                    <p class="text-[11px] font-semibold text-navy/85 mt-0.5">${ev.venue}</p>
                     <p class="text-[11px] text-charcoal/75 mt-0.5">${rec.name} (${rec.rollNo}) • ${rec.dept}</p>
                   </div>
                   <div class="flex items-center gap-2 shrink-0">
                     <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
                       View
                     </button>
-                    <button type="button" data-cancel-reg="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
+                    <button type="button" data-cancel-reg="${ev.id}" class="px-2.5 py-1 rounded-lg bg-[#FDECEA] hover:bg-red-100 text-xs font-bold text-[#C62828]">
                       Cancel
                     </button>
                   </div>
@@ -1744,7 +1804,7 @@
         if (remIds.length === 0) {
           remListEl.innerHTML = `
             <div class="p-4 rounded-xl bg-white border border-dashed border-subtle text-xs sm:text-sm text-muted text-center">
-              No active reminders yet. Click "Set Reminder" on any event detail page.
+              No active reminders yet. Click "Save / Set Reminder" on any event detail page.
             </div>
           `;
         } else {
@@ -1755,13 +1815,13 @@
                 <div class="p-3 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
                   <div class="min-w-0">
                     <p class="text-sm font-bold text-navy">${ev.title}</p>
-                    <p class="text-xs text-muted">${ev.fullDate} • ${ev.timeLabel}</p>
+                    <p class="text-xs text-muted">${ev.fullDate} • ${ev.timeLabel} • <span class="font-semibold text-navy/80">${ev.venue}</span></p>
                   </div>
                   <div class="flex items-center gap-2 shrink-0">
                     <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
                       Open
                     </button>
-                    <button type="button" data-remove-rem="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
+                    <button type="button" data-remove-rem="${ev.id}" class="px-2.5 py-1 rounded-lg bg-[#FDECEA] hover:bg-red-100 text-xs font-bold text-[#C62828]">
                       Remove
                     </button>
                   </div>
@@ -1850,6 +1910,7 @@
           if (feedCatBtn) {
             state.feedCategory = feedCatBtn.dataset.feedCat;
             renderFeed();
+            renderHome();
             return;
           }
 
@@ -1908,20 +1969,15 @@
           }
 
           // Remove Reminder from My Schedule
-          const remRemoveBtn = e.target.closest('[data-remove-rem]');
-          if (remRemoveBtn) {
-            toggleReminder(remRemoveBtn.dataset.removeRem, false);
-          }
-        });
-
-        // Section 4: Reset Form Button
+        // Section 4: Cancel / Reset Form Button
         document.getElementById('btnResetForm').addEventListener('click', () => {
           document.getElementById('inputFullName').value = 'Astabhya Kumar';
           document.getElementById('inputRollNo').value = '';
           document.getElementById('inputEmail').value = 'astabhya@univ.edu';
           document.getElementById('inputDept').selectedIndex = 0;
+          document.getElementById('inputSmsOptIn').checked = true;
           document.getElementById('regErrorBox').classList.add('hidden');
-          showToast('Form fields reset.');
+          showToast('Registration form cleared.');
         });
 
         // Section 4: Submit Registration Form
@@ -1931,10 +1987,11 @@
           const rollNo = document.getElementById('inputRollNo').value.trim();
           const email = document.getElementById('inputEmail').value.trim();
           const dept = document.getElementById('inputDept').value;
+          const smsOptIn = document.getElementById('inputSmsOptIn').checked;
           const errorBox = document.getElementById('regErrorBox');
 
           if (!name || !rollNo || !email || !email.includes('@')) {
-            errorBox.textContent = 'Please enter your Full Name, Roll Number / Reg No, and a valid University Email.';
+            errorBox.textContent = 'Please enter your Full Name, Registration / Roll Number, and a valid University Email.';
             errorBox.classList.remove('hidden');
             return;
           }
@@ -1943,12 +2000,16 @@
           const ev = getEvent(state.selectedEventId);
           const clashesBefore = findClashesForEvent(ev.id);
 
+          if (smsOptIn && !state.reminders.includes(ev.id)) {
+            state.reminders.push(ev.id);
+          }
+
           state.registered[ev.id] = {
             name,
             rollNo,
             email,
             dept,
-            sms: isReminded(ev.id)
+            sms: smsOptIn
           };
           state.lastConfirmedEventId = ev.id;
           state.lastConfirmedEmail = email;
