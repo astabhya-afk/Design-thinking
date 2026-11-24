@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAMPUS HUB — Interactive Single-Page Prototype</title>
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN with Campus Hub Design System Tokens -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              DEFAULT: '#1B2A4A',
+              dark: '#131E36',
+            },
+            amberhub: {
+              DEFAULT: '#D4882A',
+              hover: '#B8721E',
+            },
+            cream: '#F7F3EB',
+            cardbg: '#FAF7F0',
+            subtle: '#E2D9C8',
+            charcoal: '#1E2430',
+            muted: '#5A6475',
+            success: {
+              DEFAULT: '#388E3C',
+              dark: '#2B722F',
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Hide horizontal scrollbar on pill strips while preserving touch scrolling */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Offset anchor scroll so sticky navbar never overlaps section headers */
+    section[id] {
+      scroll-margin-top: 84px;
+    }
+  </style>
+</head>
+<body class="bg-cream text-charcoal font-sans antialiased overflow-x-hidden">
+
+  <!-- =====================================================================
+       STICKY TOP NAVIGATION BAR (#1B2A4A)
+       ===================================================================== -->
+  <header class="sticky top-0 z-50 bg-navy text-white shadow-md border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <a href="#home" class="flex items-center gap-1.5 text-lg sm:text-xl font-extrabold tracking-wide shrink-0">
+        <span class="text-white">CAMPUS</span>
+        <span class="text-amberhub">HUB</span>
+      </a>
+
+      <!-- Center Quick-Jump Section Links -->
+      <nav aria-label="Prototype Sections" class="order-3 lg:order-2 w-full lg:w-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 lg:pt-0">
+        <a href="#home" data-nav="home" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap bg-amberhub text-white transition">
+          Home
+        </a>
+        <a href="#feed" data-nav="feed" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
+          Filtered Feed
+        </a>
+        <a href="#details" data-nav="details" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
+          Event Details
+        </a>
+        <a href="#register" data-nav="register" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
+          Register
+        </a>
+        <a href="#confirmation" data-nav="confirmation" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
+          Confirmation
+        </a>
+      </nav>
+
+      <!-- Right: Live Search Input + Registered Counter Badge -->
+      <div class="order-2 lg:order-3 flex items-center gap-2.5 flex-1 sm:flex-initial justify-end max-w-xs sm:max-w-none">
+        <div class="relative w-full sm:w-52">
+          <svg class="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path stroke-linecap="round" d="M20 20l-3.5-3.5"></path>
+          </svg>
+          <input
+            id="globalSearch"
+            type="search"
+            placeholder="Search Events..."
+            aria-label="Search Events"
+            class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white text-charcoal text-xs sm:text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-amberhub"
+          />
+        </div>
+
+        <a
+          href="#confirmation"
+          title="View My Registered Events"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-semibold text-white shrink-0 transition"
+        >
+          <span class="hidden sm:inline">Registered</span>
+          <span id="navRegBadge" class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-amberhub text-white text-xs font-extrabold">
+            0
+          </span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- GLOBAL TIME-CLASH BANNER (Appears automatically if any 2 registered events overlap) -->
+  <div id="globalClashBanner" class="hidden bg-red-50 border-b border-red-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-red-800">
+      <div class="flex items-center gap-2 font-semibold">
+        <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+        </svg>
+        <span id="globalClashText">Time-Clash Detected!</span>
+      </div>
+      <a href="#confirmation" class="text-xs font-bold underline hover:text-red-950">Review My Schedule →</a>
+    </div>
+  </div>
+
+  <!-- MAIN VERTICAL FLOW CONTAINER (ALL 5 SECTIONS VISIBLE ON ONE PAGE) -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-14 sm:space-y-16">
+
+    <!-- ===================================================================
+         SECTION 1 — LANDING PAGE (HOME & FEATURED EVENTS)
+         =================================================================== -->
+    <section id="home" class="space-y-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
+            01 • LANDING PAGE (HOME)
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+            Discover Upcoming Campus Events
+          </h1>
+          <p class="text-sm text-muted mt-1">
+            All university workshops, hackathons, cultural nights, and sports tournaments in one clear feed.
+          </p>
+        </div>
+        <div class="text-xs font-semibold text-muted bg-cardbg border border-subtle px-3 py-1.5 rounded-lg">
+          Tip: Register for <strong class="text-navy">Hack Night</strong> &amp; <strong class="text-navy">Open Mic Evening</strong> to test live clash detection
+        </div>
+      </div>
+
+      <!-- Horizontal Category Pills + Free Events Only Toggle -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div id="homePills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Home Category Filter">
+          <!-- Injected by JS -->
+        </div>
+        <button
+          id="freeOnlyToggle"
+          type="button"
+          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0"
+        >
+          <span id="freeToggleDot" class="w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40"></span>
+          <span>Free Events Only</span>
+        </button>
+      </div>
+
+      <!-- Featured Event Card (Deep Navy #1B2A4A) -->
+      <div id="featuredCardMount"></div>
+
+      <!-- Highlighted Upcoming Events Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <h2 id="homeGridHeading" class="text-base sm:text-lg font-bold text-navy">
+            Highlighted Upcoming Events
+          </h2>
+          <a href="#feed" class="text-xs sm:text-sm font-bold text-amberhub hover:text-amberhub-hover">
+            Browse Full Department Feed ↓
+          </a>
+        </div>
+        <div id="homeEventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-subtle" />
+
+    <!-- ===================================================================
+         SECTION 2 — FILTERED FEED (18 REALISTIC CAMPUS EVENTS)
+         =================================================================== -->
+    <section id="feed" class="space-y-6">
+      <div>
+        <span class="inline-block px-3 py-1 rounded-full bg-amberhub/15 text-amberhub-hover text-xs font-bold tracking-wider uppercase mb-2">
+          02 • FILTERED FEED
+        </span>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="feedHeading" class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+            Engineering Events (8 Found)
+          </h2>
+          <span id="feedActiveFiltersNote" class="text-xs font-medium text-muted"></span>
+        </div>
+      </div>
+
+      <!-- Department Filter Pills (Default: Engineering) -->
+      <div id="feedPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Department Filter">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Filtered Events Grid -->
+      <div id="feedEventsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <hr class="border-subtle" />
+
+    <!-- ===================================================================
+         SECTION 3 — EVENT DETAIL PAGE
+         =================================================================== -->
+    <section id="details" class="space-y-5">
+      <div>
+        <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
+          03 • EVENT DETAIL PAGE
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+          Standardised Event Details
+        </h2>
+        <p class="text-sm text-muted mt-1">
+          Click <strong>View Details</strong> on any event above to inspect its full schedule, venue directions, and included activities here.
+        </p>
+      </div>
+
+      <!-- Event Detail Card (Matches Screen 3 of Mockup) -->
+      <div id="detailCardMount" class="bg-cardbg border border-subtle rounded-[14px] shadow-md overflow-hidden">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <hr class="border-subtle" />
+
+    <!-- ===================================================================
+         SECTION 4 — REGISTRATION FORM SECTION
+         =================================================================== -->
+    <section id="register" class="space-y-5">
+      <div>
+        <span class="inline-block px-3 py-1 rounded-full bg-amberhub/15 text-amberhub-hover text-xs font-bold tracking-wider uppercase mb-2">
+          04 • REGISTRATION FORM
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+          One-Step Student Registration
+        </h2>
+        <p class="text-sm text-muted mt-1">
+          Complete your details below to reserve your seat and automatically check for schedule overlaps.
+        </p>
+      </div>
+
+      <!-- Registration Elevated Card (Matches Screen 4 of Mockup) -->
+      <div class="max-w-2xl mx-auto bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-8">
+        <div class="flex flex-wrap items-start justify-between gap-3 pb-4 mb-5 border-b border-subtle">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-amberhub">Selected Event</p>
+            <h3 id="regFormTitle" class="text-xl sm:text-2xl font-extrabold text-navy mt-0.5">
+              Register: Design Thinking Workshop 2026
+            </h3>
+            <p id="regFormMeta" class="text-xs sm:text-sm text-muted mt-1">
+              August 23, 2026 • 10:00 - 17:00 Hours • Seminar Hall 1, Main Block
+            </p>
+          </div>
+          <span id="regFormFeeBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success">
+            FREE
+          </span>
+        </div>
+
+        <!-- Inline Form Validation Error Box (No alert()) -->
+        <div id="regErrorBox" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium"></div>
+
+        <!-- Inline Pre-Submission Clash Preview if selected event overlaps an existing registration -->
+        <div id="regClashPreview" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm font-semibold"></div>
+
+        <form id="registrationForm" class="space-y-4" novalidate>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="inputFullName" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
+                Full Name
+              </label>
+              <input
+                id="inputFullName"
+                type="text"
+                value="Astabhya Kumar"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
+              />
+            </div>
+
+            <div>
+              <label for="inputRollNo" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
+                Roll Number / Reg No
+              </label>
+              <input
+                id="inputRollNo"
+                type="text"
+                placeholder="e.g., 12304567"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="inputEmail" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
+                University Email
+              </label>
+              <input
+                id="inputEmail"
+                type="email"
+                value="astabhya@univ.edu"
+                required
+                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
+              />
+            </div>
+
+            <div>
+              <label for="inputDept" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
+                Department
+              </label>
+              <select
+                id="inputDept"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
+              >
+                <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Business">Business</option>
+                <option value="Arts">Arts</option>
+                <option value="Design">Design</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-3 flex flex-col sm:flex-row items-center justify-end gap-3">
+            <button
+              id="btnResetForm"
+              type="button"
+              class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-subtle bg-white text-muted hover:text-navy hover:border-navy text-sm font-semibold transition"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              class="w-full sm:w-auto px-7 py-2.5 rounded-xl bg-amberhub hover:bg-amberhub-hover text-white text-sm font-extrabold tracking-wide uppercase shadow-sm transition"
+            >
+              CONFIRM REGISTRATION
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <hr class="border-subtle" />
+
+    <!-- ===================================================================
+         SECTION 5 — SUCCESS STATE, CALENDAR ACTIONS & MY REGISTRATIONS
+         =================================================================== -->
+    <section id="confirmation" class="space-y-5 pb-10">
+      <div>
+        <span class="inline-block px-3 py-1 rounded-full bg-success/15 text-success text-xs font-bold tracking-wider uppercase mb-2">
+          05 • SUCCESS STATE &amp; ACTIONS
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
+          Registration Confirmation &amp; My Schedule
+        </h2>
+        <p class="text-sm text-muted mt-1">
+          Export your confirmed event to Google Calendar (.ics), toggle SMS reminders, and manage saved registrations.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Left: Screen 5 Success State Card -->
+        <div class="lg:col-span-5 bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-7 text-center">
+          <div class="w-14 h-14 mx-auto rounded-full bg-success text-white flex items-center justify-center shadow-md mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+
+          <p class="text-sm font-extrabold tracking-wider uppercase text-success">
+            REGISTRATION SUCCESSFUL!
+          </p>
+          <h3 id="confirmEventTitle" class="text-lg sm:text-xl font-extrabold text-navy mt-2">
+            Design Thinking Workshop 2026
+          </h3>
+          <p id="confirmEmailLine" class="text-xs sm:text-sm text-muted mt-1.5">
+            A confirmation email has been sent to astabhya@univ.edu
+          </p>
+          <p id="confirmEventMeta" class="text-xs font-semibold text-navy/80 mt-2 bg-white border border-subtle rounded-lg px-3 py-1.5 inline-block">
+            August 23, 2026 • 10:00 - 17:00 Hours • Seminar Hall 1, Main Block
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="mt-6 pt-5 border-t border-subtle space-y-2.5">
+            <button
+              id="btnDownloadIcs"
+              type="button"
+              class="w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-navy text-navy text-sm font-bold flex items-center justify-center gap-2 transition"
+            >
+              <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"></path>
+              </svg>
+              <span>Add to Google Calendar</span>
+            </button>
+
+            <button
+              id="btnSmsReminder"
+              type="button"
+              class="w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-amberhub text-navy text-sm font-bold flex items-center justify-center gap-2 transition"
+            >
+              <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <span id="smsReminderLabel">Set Event Reminder (SMS)</span>
+            </button>
+
+            <a
+              href="#home"
+              class="w-full mt-2 py-2.5 px-4 rounded-xl bg-navy hover:bg-navy-dark text-white text-sm font-bold inline-flex items-center justify-center transition"
+            >
+              Go Back to Events
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: My Registered Events & Saved Reminders (Persisted in localStorage) -->
+        <div class="lg:col-span-7 bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-7 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-subtle">
+            <div>
+              <h3 class="text-lg font-extrabold text-navy">
+                My Registered Events &amp; Saved Reminders
+              </h3>
+              <p class="text-xs text-muted">Automatically saved in your browser (localStorage)</p>
+            </div>
+            <span id="scheduleCountPill" class="px-3 py-1 rounded-full bg-navy text-white text-xs font-bold">
+              0 Active
+            </span>
+          </div>
+
+          <!-- Local Time-Clash Warning Box -->
+          <div id="scheduleClashBox" class="hidden p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 space-y-1">
+            <div class="flex items-center gap-2 font-extrabold text-sm text-red-700">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+              </svg>
+              <span>Schedule Time-Clash Alert</span>
+            </div>
+            <ul id="scheduleClashList" class="text-xs sm:text-sm list-disc pl-5 space-y-1"></ul>
+          </div>
+
+          <!-- Registered Events List -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy mb-2.5">
+              Registered Events
+            </h4>
+            <div id="myRegistrationsList" class="space-y-2.5"></div>
+          </div>
+
+          <!-- Saved Reminders List -->
+          <div>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy mb-2.5">
+              Saved Reminders
+            </h4>
+            <div id="myRemindersList" class="space-y-2.5"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-navy text-slate-300 border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+      <p><strong class="text-white">CAMPUS <span class="text-amberhub">HUB</span></strong> • INT 335 Design Thinking Project (Track P17)</p>
+      <p>Team: Astabhya Kumar • Om Chaudary • Ujjwal Mani Tripathi</p>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION HOST (Replaces alert()) -->
+  <div id="toastHost" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
+
+  <!-- =====================================================================
+       APPLICATION LOGIC (DATA, STATE, FILTERING, CLASH DETECTION, ICS EXPORT)
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* -------------------------------------------------------------------
+         1. COMPLETE DATASET OF 18 REALISTIC CAMPUS EVENTS
+            - 8 Engineering events
+            - 3 Arts, 3 Business, 2 Cultural, 2 Sports
+            - Includes intentional overlap: Hack Night & Open Mic Evening (Nov 3)
+              plus Robotics & IoT Lab & Campus Startup Pitch (Aug 27)
+         ------------------------------------------------------------------- */
+      const EVENTS = [
+        // === 8 ENGINEERING EVENTS ===
+        {
+          id: 'design-thinking-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '23',
+          year: '2026',
+          fullDate: 'August 23, 2026',
+          isoDate: '2026-08-23',
+          startMin: 600,  // 10:00
+          endMin: 1020,   // 17:00
+          timeLabel: '10:00 - 17:00 Hours',
+          title: 'Design Thinking Workshop 2026',
+          venue: 'Seminar Hall 1, Main Block',
+          directions: 'Enter Main Academic Block via Gate 2, take the central staircase to the 1st Floor, and turn right past the Dean’s Office (2 min walk from Library).',
+          club: 'Design Thinking Club',
+          fee: 0,
+          seatsTaken: 84,
+          seatsTotal: 120,
+          coordinator: 'Rohan Verma • +91 98765 45210 • dtclub@univ.edu',
+          rules: 'Open to all UG students. Bring a laptop or sketchbook; teams of 3–4 will be formed on-site.',
+          description:
+            'Learn how to observe real campus challenges, synthesize user insights, and build testable low-fidelity prototypes in a guided, hands-on interactive session with faculty and industry mentors.',
+          activities: [
+            'Rapid user-empathy interview warm-up & persona framing',
+            'Divergent brainstorming and paper wireframe sketching',
+            'Live peer usability critique and 2-minute prototype pitches'
+          ]
+        },
+        {
+          id: 'aiml-bootcamp-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '21',
+          year: '2026',
+          fullDate: 'August 21, 2026',
+          isoDate: '2026-08-21',
+          startMin: 840,  // 14:00
+          endMin: 1020,   // 17:00
+          timeLabel: '14:00 - 17:00 Hours',
+          title: 'AI & ML Bootcamp',
+          venue: 'CS Innovation Lab, Tech Block',
+          directions: 'Tech Block Ground Floor, Room G-04 directly opposite the Robotics noticeboard.',
+          club: 'AI & Data Science Society',
+          fee: 0,
+          seatsTaken: 62,
+          seatsTotal: 80,
+          coordinator: 'Ananya Nair • +91 98112 30455 • aimsoc@univ.edu',
+          rules: 'Basic Python familiarity recommended. Lab desktops and Google Colab access provided.',
+          description:
+            'Build, train, and evaluate your first machine learning classification pipeline from scratch. Senior mentors walk through data cleaning, feature scaling, and live leaderboard evaluation.',
+          activities: [
+            'Hands-on Pandas & scikit-learn dataset cleaning lab',
+            'Comparing decision trees, random forests, and neural nets',
+            'Live campus-dataset accuracy mini-challenge'
+          ]
+        },
+        {
+          id: 'cad-challenge-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '16',
+          year: '2026',
+          fullDate: 'August 16, 2026',
+          isoDate: '2026-08-16',
+          startMin: 660,  // 11:00
+          endMin: 840,    // 14:00
+          timeLabel: '11:00 - 14:00 Hours',
+          title: 'CAD Challenge',
+          venue: 'Mechanical Studio B',
+          directions: 'Workshop Complex Wing B, 2nd Floor next to the 3D Printing & Prototyping Bay.',
+          club: 'Mechanical Engineering Guild',
+          fee: 50,
+          seatsTaken: 38,
+          seatsTotal: 60,
+          coordinator: 'Kabir Malhotra • +91 97170 88214 • mechguild@univ.edu',
+          rules: 'Individual or pairs. SolidWorks and Fusion 360 workstations are pre-installed.',
+          description:
+            'Put your 3D modelling speed and precision to the test in a timed mechanical blueprint competition. Winning assemblies will be 3D-printed at the campus maker lab.',
+          activities: [
+            'Engineering blueprint & tolerance briefing',
+            '90-minute timed 3D part & assembly modelling round',
+            'Jury inspection & live 3D printer showcase'
+          ]
+        },
+        {
+          id: 'robotics-iot-lab-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '27',
+          year: '2026',
+          fullDate: 'August 27, 2026',
+          isoDate: '2026-08-27',
+          startMin: 900,  // 15:00
+          endMin: 1080,   // 18:00
+          timeLabel: '15:00 - 18:00 Hours',
+          title: 'Robotics & IoT Lab',
+          venue: 'Robotics Arena, Block C',
+          directions: 'Block C Basement Lab 02; follow the yellow floor markers from the North Entrance.',
+          club: 'Campus Robotics Club',
+          fee: 100,
+          seatsTaken: 45,
+          seatsTotal: 50,
+          coordinator: 'Devansh Joshi • +91 98991 44120 • robotics@univ.edu',
+          rules: 'ESP32 kits, ultrasonic sensors, and breadboards provided in pairs. Bring a USB-C cable.',
+          description:
+            'Wire, flash, and deploy a real smart-campus sensor node using ESP32 microcontrollers and MQTT dashboards. Great for beginners and hardware enthusiasts alike.',
+          activities: [
+            'ESP32 sensor wiring & calibration walkthrough',
+            'Streaming live room-occupancy data to a web dashboard',
+            'Mini autonomous obstacle-avoidance demo'
+          ]
+        },
+        {
+          id: 'hack-night-2026',
+          category: 'Engineering',
+          month: 'Nov',
+          day: '03',
+          year: '2026',
+          fullDate: 'November 3, 2026',
+          isoDate: '2026-11-03',
+          startMin: 1020, // 17:00
+          endMin: 1260,   // 21:00
+          timeLabel: '17:00 - 21:00 Hours',
+          title: 'Hack Night',
+          venue: 'CS Seminar Hall',
+          directions: 'Computer Science Block, 2nd Floor Auditorium Hall directly above the Student Lounge.',
+          club: 'Coding Club',
+          fee: 0,
+          seatsTaken: 67,
+          seatsTotal: 150,
+          coordinator: 'Siddharth Rao • +91 98204 51190 • codingclub@univ.edu',
+          rules: 'Teams of 2–4 students. Bring laptops and chargers; pizza and coffee provided at 19:30.',
+          description:
+            'Four hours, one working prototype. Team up with designers and developers to ship a practical campus web utility or automation tool before the 9:00 PM demo bell.',
+          activities: [
+            'Problem track reveal & 15-minute rapid team formation',
+            '3-hour guided build sprint with alumni mentors',
+            'Live 2-minute product demos & Best Prototype prizes'
+          ]
+        },
+        {
+          id: 'cloud-native-sprint-2026',
+          category: 'Engineering',
+          month: 'Sep',
+          day: '02',
+          year: '2026',
+          fullDate: 'September 2, 2026',
+          isoDate: '2026-09-02',
+          startMin: 840,  // 14:00
+          endMin: 1020,   // 17:00
+          timeLabel: '14:00 - 17:00 Hours',
+          title: 'Cloud Native Sprint',
+          venue: 'Seminar Hall 2, Tech Block',
+          directions: 'Tech Block 1st Floor, East Wing beside the Cloud Computing Research Lab.',
+          club: 'Cloud Computing Club',
+          fee: 0,
+          seatsTaken: 54,
+          seatsTotal: 90,
+          coordinator: 'Meera Krishnan • +91 99103 77812 • cloudclub@univ.edu',
+          rules: 'Free GitHub student account required. Cloud sandbox credits distributed at check-in.',
+          description:
+            'Containerize a full-stack student app with Docker and ship an automated CI/CD pipeline using GitHub Actions. Walk away with a live portfolio deployment.',
+          activities: [
+            'Writing clean Dockerfiles & multi-container compose setups',
+            'Automated testing & zero-downtime cloud deployment',
+            'Cost-control & architecture Q&A with cloud engineers'
+          ]
+        },
+        {
+          id: 'embedded-systems-jam-2026',
+          category: 'Engineering',
+          month: 'Sep',
+          day: '05',
+          year: '2026',
+          fullDate: 'September 5, 2026',
+          isoDate: '2026-09-05',
+          startMin: 600,  // 10:00
+          endMin: 780,    // 13:00
+          timeLabel: '10:00 - 13:00 Hours',
+          title: 'Embedded Systems Jam',
+          venue: 'Electronics Lab 1, Main Block',
+          directions: 'Main Block 2nd Floor, South Corridor Room 214.',
+          club: 'IEEE Student Branch',
+          fee: 75,
+          seatsTaken: 29,
+          seatsTotal: 45,
+          coordinator: 'Pranav Kulkarni • +91 98331 66402 • ieee@univ.edu',
+          rules: 'Open to ECE, EEE, and CSE students. All STM32 boards and oscilloscopes supplied.',
+          description:
+            'Dive into bare-metal firmware programming, PWM motor control, and two-layer PCB layout checks in KiCad with hands-on guidance from IEEE senior fellows.',
+          activities: [
+            'STM32 GPIO & interrupt-driven firmware lab',
+            'Schematic capture & DRC verification in KiCad',
+            'Hardware debugging clinic with logic analyzers'
+          ]
+        },
+        {
+          id: 'competitive-coding-arena-2026',
+          category: 'Engineering',
+          month: 'Sep',
+          day: '08',
+          year: '2026',
+          fullDate: 'September 8, 2026',
+          isoDate: '2026-09-08',
+          startMin: 960,  // 16:00
+          endMin: 1140,   // 19:00
+          timeLabel: '16:00 - 19:00 Hours',
+          title: 'Competitive Coding Arena',
+          venue: 'Computer Lab 4, Tech Block',
+          directions: 'Tech Block 3rd Floor, Labs 304–305 (take Lift B).',
+          club: 'ACM Student Chapter',
+          fee: 0,
+          seatsTaken: 96,
+          seatsTotal: 120,
+          coordinator: 'Aarav Mehta • +91 98450 22918 • acm@univ.edu',
+          rules: 'Individual ICPC-style 2-hour contest (C++, Java, or Python) followed by live editorial.',
+          description:
+            'Sharpen your data structures and algorithmic problem-solving under timed contest pressure. Top 10 finishers receive ACM merit certificates and placement prep vouchers.',
+          activities: [
+            '6-problem algorithmic contest on local judge',
+            'Live scoreboard freeze during final 30 minutes',
+            'Post-contest editorial walkthrough & prize distribution'
+          ]
+        },
+
+        // === ARTS EVENTS (3) ===
+        {
+          id: 'golden-hour-photo-walk-2026',
+          category: 'Arts',
+          month: 'Aug',
+          day: '24',
+          year: '2026',
+          fullDate: 'August 24, 2026',
+          isoDate: '2026-08-24',
+          startMin: 960,  // 16:00
+          endMin: 1080,   // 18:00
+          timeLabel: '16:00 - 18:00 Hours',
+          title: 'Golden Hour Photo Walk',
+          venue: 'Art Gallery Lawn',
+          directions: 'Meet at the white pergola in front of the Central Art Gallery beside the Lotus Pond.',
+          club: 'Lens & Shutter Club',
+          fee: 0,
+          seatsTaken: 41,
+          seatsTotal: 60,
+          coordinator: 'Ishita Sen • +91 98109 34112 • lensclub@univ.edu',
+          rules: 'Any smartphone or DSLR welcome. Best 5 shots featured in the campus magazine.',
+          description:
+            'Capture campus architecture, candid student life, and golden-hour portraits on a guided sunset walk with senior student photographers.',
+          activities: [
+            '15-minute composition & natural lighting tips',
+            '75-minute guided photo trail across 4 campus landmarks',
+            'Group shot review & mobile editing presets'
+          ]
+        },
+        {
+          id: 'poster-zine-studio-2026',
+          category: 'Arts',
+          month: 'Sep',
+          day: '01',
+          year: '2026',
+          fullDate: 'September 1, 2026',
+          isoDate: '2026-09-01',
+          startMin: 660,  // 11:00
+          endMin: 780,    // 13:00
+          timeLabel: '11:00 - 13:00 Hours',
+          title: 'Poster & Zine Design Studio',
+          venue: 'Fine Arts Studio 2',
+          directions: 'Humanities & Arts Block, 1st Floor Room A-108.',
+          club: 'Fine Arts Collective',
+          fee: 50,
+          seatsTaken: 24,
+          seatsTotal: 40,
+          coordinator: 'Tara Deshmukh • +91 98672 19004 • finearts@univ.edu',
+          rules: 'All A3 paper, brush pens, linocut ink, and folding tools are included in the ₹50 kit fee.',
+          description:
+            'Experiment with bold editorial typography, collage layouts, and 8-page pocket zine folding to create tactile visual stories.',
+          activities: [
+            'Grid & colour-contrast poster mini-lecture',
+            'Hands-on 8-page pocket zine folding & illustration',
+            'Community artwork swap & gallery pin-up'
+          ]
+        },
+        {
+          id: 'charcoal-sketch-evening-2026',
+          category: 'Arts',
+          month: 'Sep',
+          day: '10',
+          year: '2026',
+          fullDate: 'September 10, 2026',
+          isoDate: '2026-09-10',
+          startMin: 1020, // 17:00
+          endMin: 1140,   // 19:00
+          timeLabel: '17:00 - 19:00 Hours',
+          title: 'Charcoal & Sketch Evening',
+          venue: 'Design Courtyard',
+          directions: 'Open-air courtyard between the Architecture Wing and the Campus Café.',
+          club: 'Visual Arts Society',
+          fee: 0,
+          seatsTaken: 33,
+          seatsTotal: 50,
+          coordinator: 'Nikhil Varma • +91 98215 73409 • visualarts@univ.edu',
+          rules: 'Open to absolute beginners. Charcoal sticks and newsprint pads provided.',
+          description:
+            'Unwind after lectures with expressive charcoal gesture drawing, live acoustic background music, and friendly critiques.',
+          activities: [
+            'Light, shadow & tonal shading warm-up',
+            'Live still-life and portrait sketching session',
+            'Take-home fixative spray & showcase wall'
+          ]
+        },
+
+        // === BUSINESS EVENTS (3) ===
+        {
+          id: 'campus-startup-pitch-2026',
+          category: 'Business',
+          month: 'Aug',
+          day: '27',
+          year: '2026',
+          fullDate: 'August 27, 2026',
+          isoDate: '2026-08-27',
+          startMin: 900,  // 15:00 (overlaps with Robotics & IoT Lab!)
+          endMin: 1080,   // 18:00
+          timeLabel: '15:00 - 18:00 Hours',
+          title: 'Campus Startup Pitch',
+          venue: 'Main Auditorium, Block A',
+          directions: 'Block A Ground Floor; enter through the Central Foyer opposite the Flagpole.',
+          club: 'Entrepreneurship Cell',
+          fee: 0,
+          seatsTaken: 142,
+          seatsTotal: 200,
+          coordinator: 'Riya Kapoor • +91 98188 50921 • ecell@univ.edu',
+          rules: 'Open to both pitching founders and student spectators. ₹25,000 seed micro-grant pool.',
+          description:
+            'Watch top student ventures pitch live to alumni founders and campus incubation mentors in 5-minute rapid-fire rounds followed by open networking.',
+          activities: [
+            'Alumni founder keynote on zero-to-one validation',
+            'Top 8 student startup pitches & investor Q&A',
+            'Micro-grant announcement & founder mixer'
+          ]
+        },
+        {
+          id: 'product-strategy-case-jam-2026',
+          category: 'Business',
+          month: 'Sep',
+          day: '03',
+          year: '2026',
+          fullDate: 'September 3, 2026',
+          isoDate: '2026-09-03',
+          startMin: 780,  // 13:00
+          endMin: 960,    // 16:00
+          timeLabel: '13:00 - 16:00 Hours',
+          title: 'Product Strategy Case Jam',
+          venue: 'Management Seminar Hall',
+          directions: 'School of Management Building, 2nd Floor Room M-201.',
+          club: 'Consulting & Finance Society',
+          fee: 100,
+          seatsTaken: 48,
+          seatsTotal: 75,
+          coordinator: 'Arjun Sengupta • +91 98301 41287 • cfs@univ.edu',
+          rules: 'Teams of 2–3. ₹100 per team; includes case dossier and refreshments.',
+          description:
+            'Tackle a real Indian consumer-tech retention and pricing case in a 90-minute sprint and present your recommendation deck to visiting product managers.',
+          activities: [
+            'Live case dossier release & root-cause framing',
+            '90-minute 5-slide strategy deck sprint',
+            'Panel judging & consulting interview feedback'
+          ]
+        },
+        {
+          id: 'fintech-markets-workshop-2026',
+          category: 'Business',
+          month: 'Sep',
+          day: '09',
+          year: '2026',
+          fullDate: 'September 9, 2026',
+          isoDate: '2026-09-09',
+          startMin: 840,  // 14:00
+          endMin: 990,    // 16:30
+          timeLabel: '14:00 - 16:30 Hours',
+          title: 'FinTech & Markets Workshop',
+          venue: 'Business Block Room 204',
+          directions: 'School of Management Building, 2nd Floor West Wing.',
+          club: 'Finance & Investment Club',
+          fee: 0,
+          seatsTaken: 59,
+          seatsTotal: 80,
+          coordinator: 'Kunal Bansal • +91 99581 20394 • finclub@univ.edu',
+          rules: 'No prior finance background required. Mock trading simulator link shared at start.',
+          description:
+            'Understand UPI rails, personal portfolio basics, and equity valuation through an interactive campus mock-market simulation.',
+          activities: [
+            'How modern Indian FinTech & UPI infrastructure scales',
+            '60-minute live mock-portfolio trading game',
+            'Q&A on finance internships & analyst prep'
+          ]
+        },
+
+        // === CULTURAL EVENTS (2) ===
+        {
+          id: 'open-mic-evening-2026',
+          category: 'Cultural',
+          month: 'Nov',
+          day: '03',
+          year: '2026',
+          fullDate: 'November 3, 2026',
+          isoDate: '2026-11-03',
+          startMin: 1110, // 18:30 (overlaps with Hack Night 17:00-21:00!)
+          endMin: 1230,   // 20:30
+          timeLabel: '18:30 - 20:30 Hours',
+          title: 'Open Mic Evening',
+          venue: 'Central Amphitheatre',
+          directions: 'Outdoor stepped amphitheatre behind the Student Activity Centre.',
+          club: 'Music & Literature Society',
+          fee: 0,
+          seatsTaken: 112,
+          seatsTotal: 180,
+          coordinator: 'Sanya Gill • +91 98714 90823 • musicsoc@univ.edu',
+          rules: 'Free entry for all students. Performers get a 4-minute stage slot (sign up at venue by 18:15).',
+          description:
+            'Relax under fairy lights with unplugged acoustic guitar sets, original slam poetry, and student stand-up comedy right on the amphitheatre steps.',
+          activities: [
+            'Unplugged indie & acoustic vocal performances',
+            'Original slam poetry & spoken-word storytelling',
+            'Student stand-up comedy & acoustic jam finale'
+          ]
+        },
+        {
+          id: 'street-dance-cypher-2026',
+          category: 'Cultural',
+          month: 'Sep',
+          day: '04',
+          year: '2026',
+          fullDate: 'September 4, 2026',
+          isoDate: '2026-09-04',
+          startMin: 1020, // 17:00
+          endMin: 1170,   // 19:30
+          timeLabel: '17:00 - 19:30 Hours',
+          title: 'Street Dance & Cypher',
+          venue: 'Student Plaza Courtyard',
+          directions: 'Central Plaza right outside the Main Canteen.',
+          club: 'Rhythm Crew Dance Club',
+          fee: 50,
+          seatsTaken: 78,
+          seatsTotal: 120,
+          coordinator: 'Yashwant Rana • +91 98117 65320 • rhythmcrew@univ.edu',
+          rules: 'Spectators free; ₹50 battle pass for 1v1 freestyle cypher competitors.',
+          description:
+            'High-energy hip-hop, popping, and contemporary showcase featuring campus dance crews and open 1v1 freestyle battle brackets.',
+          activities: [
+            'Open choreography warm-up with crew captains',
+            '1v1 & 2v2 freestyle cypher knockouts',
+            'Campus crew showcase & live DJ closing set'
+          ]
+        },
+
+        // === SPORTS EVENTS (2) ===
+        {
+          id: 'basketball-cup-2026',
+          category: 'Sports',
+          month: 'Aug',
+          day: '28',
+          year: '2026',
+          fullDate: 'August 28, 2026',
+          isoDate: '2026-08-28',
+          startMin: 990,  // 16:30
+          endMin: 1170,   // 19:30
+          timeLabel: '16:30 - 19:30 Hours',
+          title: 'Inter-Dept Basketball Cup',
+          venue: 'Outdoor Court 1, Sports Complex',
+          directions: 'Sports Complex Gate 4, floodlit basketball court next to the athletics track.',
+          club: 'University Sports Council',
+          fee: 0,
+          seatsTaken: 130,
+          seatsTotal: 200,
+          coordinator: 'Vikramjit Singh • +91 98760 11245 • sports@univ.edu',
+          rules: 'Free spectator seating. Halftime 3-point shootout open to any registered attendee.',
+          description:
+            'Cheer on department squads under floodlights in the 5v5 knockout semifinals and grand final, featuring a crowd-favourite halftime 3-point contest.',
+          activities: [
+            '5v5 department knockout semifinals & championship final',
+            'Halftime spectator 3-point shootout with merch prizes',
+            'Trophy & tournament MVP presentation'
+          ]
+        },
+        {
+          id: 'badminton-doubles-open-2026',
+          category: 'Sports',
+          month: 'Sep',
+          day: '06',
+          year: '2026',
+          fullDate: 'September 6, 2026',
+          isoDate: '2026-09-06',
+          startMin: 900,  // 15:00
+          endMin: 1110,   // 18:30
+          timeLabel: '15:00 - 18:30 Hours',
+          title: 'Badminton Doubles Open',
+          venue: 'Indoor Stadium, Sports Complex',
+          directions: 'Indoor Sports Arena, Courts 1–4 (non-marking court shoes mandatory).',
+          club: 'Racquet Sports Club',
+          fee: 100,
+          seatsTaken: 44,
+          seatsTotal: 64,
+          coordinator: 'Neha Choudhary • +91 98104 88731 • racquetclub@univ.edu',
+          rules: '₹100 per doubles pair; Yonex feather shuttles supplied. Bring your own racquet.',
+          description:
+            'Fast-paced knockout tournament for men’s, women’s, and mixed doubles teams across four indoor wooden courts with student umpires.',
+          activities: [
+            'Court warm-up & live digital bracket draw',
+            'Best-of-3 knockout doubles matches',
+            'Finals & medal ceremony'
+          ]
+        }
+      ];
+
+      const CATEGORIES = ['All', 'Engineering', 'Arts', 'Business', 'Cultural', 'Sports'];
+      const STORAGE_KEY = 'campus_hub_single_page_v2';
+
+      /* -------------------------------------------------------------------
+         2. APPLICATION STATE & LOCALSTORAGE
+         ------------------------------------------------------------------- */
+      const state = {
+        search: '',
+        homeCategory: 'All',
+        freeOnly: false,
+        feedCategory: 'Engineering', // Defaults to Engineering (8 Found)
+        selectedEventId: 'design-thinking-2026',
+        lastConfirmedEventId: 'design-thinking-2026',
+        lastConfirmedEmail: 'astabhya@univ.edu',
+        directionsOpen: false,
+        registered: {}, // { [eventId]: { name, rollNo, email, dept, sms } }
+        reminders: []   // [eventId, ...]
+      };
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const saved = JSON.parse(raw);
+          if (saved && typeof saved === 'object') {
+            if (saved.registered && typeof saved.registered === 'object') state.registered = saved.registered;
+            if (Array.isArray(saved.reminders)) state.reminders = saved.reminders;
+            if (saved.lastConfirmedEventId) state.lastConfirmedEventId = saved.lastConfirmedEventId;
+            if (saved.lastConfirmedEmail) state.lastConfirmedEmail = saved.lastConfirmedEmail;
+          }
+        } catch (err) {
+          // Gracefully ignore storage errors in restricted iframes
+        }
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({
+              registered: state.registered,
+              reminders: state.reminders,
+              lastConfirmedEventId: state.lastConfirmedEventId,
+              lastConfirmedEmail: state.lastConfirmedEmail
+            })
+          );
+        } catch (err) {
+          // Gracefully ignore storage errors
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         3. UTILITY HELPERS & CLASH DETECTION
+         ------------------------------------------------------------------- */
+      function getEvent(id) {
+        return EVENTS.find((e) => e.id === id) || EVENTS[0];
+      }
+
+      function isRegistered(id) {
+        return Boolean(state.registered[id]);
+      }
+
+      function isReminded(id) {
+        return state.reminders.includes(id);
+      }
+
+      function formatFee(fee) {
+        return fee === 0 ? 'FREE' : `₹${fee} Entry`;
+      }
+
+      function matchesQuery(ev, query) {
+        if (!query) return true;
+        const q = query.trim().toLowerCase();
+        return (
+          ev.title.toLowerCase().includes(q) ||
+          ev.venue.toLowerCase().includes(q) ||
+          ev.club.toLowerCase().includes(q) ||
+          ev.category.toLowerCase().includes(q)
+        );
+      }
+
+      /**
+       * Detect all overlapping pairs among currently registered events.
+       */
+      function findRegisteredClashes() {
+        const regEvents = Object.keys(state.registered).map((id) => getEvent(id));
+        const clashes = [];
+        for (let i = 0; i < regEvents.length; i++) {
+          for (let j = i + 1; j < regEvents.length; j++) {
+            const a = regEvents[i];
+            const b = regEvents[j];
+            if (a.isoDate === b.isoDate && a.startMin < b.endMin && b.startMin < a.endMin) {
+              clashes.push({ a, b });
+            }
+          }
+        }
+        return clashes;
+      }
+
+      /**
+       * Check if a candidate event overlaps with any already-registered event.
+       */
+      function findClashesForEvent(candidateId) {
+        const cand = getEvent(candidateId);
+        return Object.keys(state.registered)
+          .filter((id) => id !== candidateId)
+          .map((id) => getEvent(id))
+          .filter((other) => other.isoDate === cand.isoDate && other.startMin < cand.endMin && cand.startMin < other.endMin);
+      }
+
+      /**
+       * Toast Notification (replaces alert())
+       */
+      function showToast(msg, type = 'navy') {
+        const host = document.getElementById('toastHost');
+        const el = document.createElement('div');
+        const bgClass =
+          type === 'success'
+            ? 'bg-success text-white'
+            : type === 'danger'
+            ? 'bg-red-600 text-white'
+            : 'bg-navy text-white';
+        el.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-lg text-xs sm:text-sm font-semibold max-w-xs transition-opacity duration-300`;
+        el.textContent = msg;
+        host.appendChild(el);
+        setTimeout(() => {
+          el.classList.add('opacity-0');
+          setTimeout(() => el.remove(), 300);
+        }, 2600);
+      }
+
+      /**
+       * Generate & download a real .ics calendar invite file
+       */
+      function downloadIcs(ev) {
+        try {
+          const pad = (n) => String(n).padStart(2, '0');
+          const d = ev.isoDate.split('-');
+          const sH = Math.floor(ev.startMin / 60);
+          const sM = ev.startMin % 60;
+          const eH = Math.floor(ev.endMin / 60);
+          const eM = ev.endMin % 60;
+
+          const dtStart = `${d[0]}${d[1]}${d[2]}T${pad(sH)}${pad(sM)}00`;
+          const dtEnd = `${d[0]}${d[1]}${d[2]}T${pad(eH)}${pad(eM)}00`;
+
+          const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Campus Hub//Student Event Platform//EN',
+            'BEGIN:VEVENT',
+            `UID:${ev.id}@campushub.univ.edu`,
+            `DTSTART:${dtStart}`,
+            `DTEND:${dtEnd}`,
+            `SUMMARY:${ev.title}`,
+            `LOCATION:${ev.venue}`,
+            `DESCRIPTION:${ev.description}`,
+            'END:VEVENT',
+            'END:VCALENDAR'
+          ].join('\r\n');
+
+          const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${ev.id}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast(`Calendar file (${ev.id}.ics) downloaded!`, 'success');
+        } catch (err) {
+          showToast('Calendar invite prepared!', 'success');
+        }
+      }
+
+      function toggleReminder(eventId, fromSms = false) {
+        const idx = state.reminders.indexOf(eventId);
+        if (idx >= 0) {
+          state.reminders.splice(idx, 1);
+          if (state.registered[eventId]) state.registered[eventId].sms = false;
+          showToast('Event reminder removed.');
+        } else {
+          state.reminders.push(eventId);
+          if (state.registered[eventId]) state.registered[eventId].sms = true;
+          showToast(fromSms ? 'SMS Reminder Activated ✓' : 'Event Reminder Saved ✓', 'success');
+        }
+        saveState();
+        renderAll();
+      }
+
+      function selectEvent(eventId, scrollToDetails = true) {
+        state.selectedEventId = eventId;
+        state.directionsOpen = false;
+        renderDetails();
+        renderRegistrationForm();
+        if (scrollToDetails) {
+          document.getElementById('details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         4. CARD COMPONENT BUILDER
+         ------------------------------------------------------------------- */
+      function buildEventCardHTML(ev) {
+        const reg = isRegistered(ev.id);
+        const seatsNow = Math.min(ev.seatsTotal, ev.seatsTaken + (reg ? 1 : 0));
+        const pct = Math.round((seatsNow / ev.seatsTotal) * 100);
+        const feeClass =
+          ev.fee === 0
+            ? 'bg-success/15 text-success'
+            : 'bg-amberhub/15 text-amberhub-hover';
+
+        return `
+          <article class="bg-cardbg border border-subtle hover:border-amberhub rounded-[12px] p-4 shadow-sm hover:shadow-md transition flex items-start gap-3.5">
+            <!-- Left Navy Date Badge -->
+            <div class="w-14 shrink-0 rounded-[10px] bg-navy text-white text-center py-2 px-1 leading-tight">
+              <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-200">${ev.month}</div>
+              <div class="text-xl font-extrabold my-0.5">${ev.day}</div>
+              <div class="text-[10px] text-slate-300">${ev.year}</div>
+            </div>
+
+            <!-- Card Main Content -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-start justify-between gap-2">
+                <h3 class="text-sm sm:text-base font-extrabold text-navy leading-snug">
+                  ${ev.title}
+                </h3>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${feeClass}">
+                    ${formatFee(ev.fee)}
+                  </span>
+                  ${reg ? '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success text-white">Registered ✓</span>' : ''}
+                </div>
+              </div>
+
+              <div class="mt-1.5 space-y-1 text-xs text-muted">
+                <p class="flex items-center gap-1.5 truncate">
+                  <svg class="w-3.5 h-3.5 text-navy shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path>
+                    <circle cx="12" cy="11" r="2"></circle>
+                  </svg>
+                  <span class="truncate">${ev.venue} • ${ev.timeLabel}</span>
+                </p>
+                <p class="flex items-center gap-1.5 truncate">
+                  <svg class="w-3.5 h-3.5 text-amberhub shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0zm6 2a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span class="truncate font-medium text-charcoal/80">${ev.club}</span>
+                </p>
+              </div>
+
+              <!-- Live Seat Progress Bar + View Details Button -->
+              <div class="mt-3 pt-2.5 border-t border-subtle/80 flex items-center justify-between gap-3">
+                <div class="flex-1 max-w-[165px]">
+                  <div class="flex items-center justify-between text-[11px] text-muted mb-1">
+                    <span>${seatsNow}/${ev.seatsTotal} going</span>
+                    <span class="font-semibold text-navy">${pct}%</span>
+                  </div>
+                  <div class="w-full h-1.5 rounded-full bg-subtle overflow-hidden">
+                    <div class="h-full rounded-full bg-amberhub" style="width:${pct}%"></div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  data-view-event="${ev.id}"
+                  class="px-3.5 py-1.5 rounded-lg bg-amberhub hover:bg-amberhub-hover text-white text-xs font-bold shadow-sm transition shrink-0"
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          </article>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+         5. RENDER SECTION 1 (HOME & FEATURED CARD)
+         ------------------------------------------------------------------- */
+      function renderHome() {
+        // Category pills
+        const homePillsEl = document.getElementById('homePills');
+        homePillsEl.innerHTML = CATEGORIES.map((cat) => {
+          const active = cat === state.homeCategory;
+          return `
+            <button
+              type="button"
+              data-home-cat="${cat}"
+              class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap border transition ${
+                active
+                  ? 'bg-amberhub text-white border-amberhub shadow-sm font-bold'
+                  : 'bg-cardbg text-navy border-subtle hover:border-amberhub'
+              }"
+            >
+              ${cat}
+            </button>
+          `;
+        }).join('');
+
+        // Free toggle styling
+        const freeBtn = document.getElementById('freeOnlyToggle');
+        const freeDot = document.getElementById('freeToggleDot');
+        if (state.freeOnly) {
+          freeBtn.className =
+            'inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold border border-success bg-success text-white shadow-sm transition shrink-0';
+          freeDot.className = 'w-2.5 h-2.5 rounded-full bg-white';
+        } else {
+          freeBtn.className =
+            'inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0';
+          freeDot.className = 'w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40';
+        }
+
+        // Featured Card (Deep Navy #1B2A4A with Warm Amber Date Badge)
+        const featured = getEvent('design-thinking-2026');
+        const fReg = isRegistered(featured.id);
+        const fSeats = Math.min(featured.seatsTotal, featured.seatsTaken + (fReg ? 1 : 0));
+        const fPct = Math.round((fSeats / featured.seatsTotal) * 100);
+
+        document.getElementById('featuredCardMount').innerHTML = `
+          <div class="bg-navy text-white rounded-[14px] p-5 sm:p-6 shadow-lg border border-white/10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            <!-- Warm Amber Date Badge -->
+            <div class="w-16 sm:w-20 shrink-0 rounded-[12px] bg-amberhub text-white text-center py-3 px-2 leading-tight shadow-md">
+              <div class="text-xs font-bold uppercase tracking-wider">${featured.month}</div>
+              <div class="text-2xl sm:text-3xl font-extrabold my-0.5">${featured.day}</div>
+              <div class="text-xs font-medium opacity-90">${featured.year}</div>
+            </div>
+
+            <!-- Featured Event Info -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-amberhub text-[11px] font-extrabold uppercase tracking-wider">
+                  Featured Campus Event
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-success text-white text-[11px] font-bold">
+                  FREE
+                </span>
+                ${fReg ? '<span class="px-2.5 py-0.5 rounded-full bg-white text-success text-[11px] font-extrabold">Registered ✓</span>' : ''}
+              </div>
+
+              <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                ${featured.title}
+              </h2>
+
+              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-slate-200">
+                <span class="inline-flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path>
+                    <circle cx="12" cy="11" r="2"></circle>
+                  </svg>
+                  ${featured.venue}
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                  </svg>
+                  ${featured.club}
+                </span>
+              </div>
+
+              <!-- Seat Count Bar -->
+              <div class="mt-3.5 max-w-sm">
+                <div class="flex items-center justify-between text-xs text-slate-300 mb-1">
+                  <span>${fSeats} / ${featured.seatsTotal} seats filled</span>
+                  <span class="font-bold text-amberhub">${fPct}%</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-white/15 overflow-hidden">
+                  <div class="h-full rounded-full bg-amberhub" style="width:${fPct}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Amber CTA -->
+            <div class="w-full sm:w-auto shrink-0">
+              <button
+                type="button"
+                data-view-event="${featured.id}"
+                class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amberhub hover:bg-amberhub-hover text-white text-sm font-extrabold shadow-md transition"
+              >
+                View Details
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Highlighted Upcoming Events Grid (up to 6 cards matching home filters)
+        const filteredHome = EVENTS.filter((ev) => {
+          if (ev.id === featured.id && state.homeCategory === 'All' && !state.search.trim()) return false;
+          if (state.homeCategory !== 'All' && ev.category !== state.homeCategory) return false;
+          if (state.freeOnly && ev.fee > 0) return false;
+          return matchesQuery(ev, state.search);
+        }).slice(0, 6);
+
+        document.getElementById('homeGridHeading').textContent =
+          state.homeCategory === 'All'
+            ? `Highlighted Upcoming Events (${filteredHome.length})`
+            : `${state.homeCategory} Highlights (${filteredHome.length})`;
+
+        const gridEl = document.getElementById('homeEventsGrid');
+        if (filteredHome.length === 0) {
+          gridEl.innerHTML = `
+            <div class="col-span-full bg-cardbg border border-dashed border-subtle rounded-xl p-8 text-center text-sm text-muted">
+              No events match your current filter or search query. Try clearing the search bar or toggling off "Free Events Only".
+            </div>
+          `;
+        } else {
+          gridEl.innerHTML = filteredHome.map((ev) => buildEventCardHTML(ev)).join('');
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         6. RENDER SECTION 2 (FILTERED FEED — 18 EVENTS, DEFAULT ENGINEERING)
+         ------------------------------------------------------------------- */
+      function renderFeed() {
+        const feedPillsEl = document.getElementById('feedPills');
+        feedPillsEl.innerHTML = CATEGORIES.map((cat) => {
+          const active = cat === state.feedCategory;
+          return `
+            <button
+              type="button"
+              data-feed-cat="${cat}"
+              class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap border transition ${
+                active
+                  ? 'bg-amberhub text-white border-amberhub shadow-sm font-bold'
+                  : 'bg-cardbg text-navy border-subtle hover:border-amberhub'
+              }"
+            >
+              ${cat}
+            </button>
+          `;
+        }).join('');
+
+        const list = EVENTS.filter((ev) => {
+          if (state.feedCategory !== 'All' && ev.category !== state.feedCategory) return false;
+          if (state.freeOnly && ev.fee > 0) return false;
+          return matchesQuery(ev, state.search);
+        });
+
+        const headingPrefix = state.feedCategory === 'All' ? 'All Campus Events' : `${state.feedCategory} Events`;
+        document.getElementById('feedHeading').textContent = `${headingPrefix} (${list.length} Found)`;
+
+        const notes = [];
+        if (state.freeOnly) notes.push('Free Events Only');
+        if (state.search.trim()) notes.push(`Search: "${state.search.trim()}"`);
+        document.getElementById('feedActiveFiltersNote').textContent = notes.length ? notes.join(' • ') : 'Showing all 18 campus events across 5 departments';
+
+        const gridEl = document.getElementById('feedEventsGrid');
+        if (list.length === 0) {
+          gridEl.innerHTML = `
+            <div class="col-span-full bg-cardbg border border-dashed border-subtle rounded-xl p-8 text-center text-sm text-muted">
+              No matching events found in ${state.feedCategory}. Try switching categories or clearing your search.
+            </div>
+          `;
+        } else {
+          gridEl.innerHTML = list.map((ev) => buildEventCardHTML(ev)).join('');
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         7. RENDER SECTION 3 (EVENT DETAIL PAGE)
+         ------------------------------------------------------------------- */
+      function renderDetails() {
+        const ev = getEvent(state.selectedEventId);
+        const reg = isRegistered(ev.id);
+        const rem = isReminded(ev.id);
+        const seatsNow = Math.min(ev.seatsTotal, ev.seatsTaken + (reg ? 1 : 0));
+
+        document.getElementById('detailCardMount').innerHTML = `
+          <!-- Deep Navy Header Block (#1B2A4A) -->
+          <div class="bg-navy text-white px-6 sm:px-8 py-6">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <p class="text-xs sm:text-sm font-medium text-slate-200">${ev.fullDate}</p>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/15 text-amberhub">
+                  ${ev.category}
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${ev.fee === 0 ? 'bg-success text-white' : 'bg-amberhub text-white'}">
+                  ${formatFee(ev.fee)}
+                </span>
+              </div>
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-white mt-2 leading-tight">
+              ${ev.title}
+            </h3>
+
+            <div class="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-200">
+              <span class="inline-flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-amberhub/25 border border-amberhub text-amberhub inline-flex items-center justify-center font-bold text-xs">
+                  ${ev.club.charAt(0)}
+                </span>
+                <span class="font-semibold">${ev.club}</span>
+              </span>
+              <span class="text-slate-400">•</span>
+              <span>${seatsNow} of ${ev.seatsTotal} seats registered</span>
+            </div>
+          </div>
+
+          <!-- Cream/White Detail Body -->
+          <div class="p-6 sm:p-8 space-y-6 bg-cardbg">
+            <!-- Crisp 2x2 Bordered Logistics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 border border-subtle rounded-[12px] overflow-hidden bg-white">
+              <div class="p-4 border-b border-subtle sm:border-r">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Date</div>
+                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.fullDate}</div>
+              </div>
+
+              <div class="p-4 border-b border-subtle">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Time</div>
+                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.timeLabel}</div>
+              </div>
+
+              <div class="p-4 border-b sm:border-b-0 sm:border-r border-subtle">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Venue</div>
+                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.venue}</div>
+                <button
+                  id="btnToggleDirections"
+                  type="button"
+                  class="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-amberhub hover:text-amberhub-hover underline"
+                >
+                  ${state.directionsOpen ? 'Hide Campus Directions ▲' : 'View Campus Directions ▼'}
+                </button>
+                <div id="campusDirectionsBox" class="${state.directionsOpen ? '' : 'hidden'} mt-2 p-2.5 rounded-lg bg-cream border border-subtle text-xs text-charcoal leading-relaxed">
+                  <strong>Walking Directions:</strong> ${ev.directions}
+                </div>
+              </div>
+
+              <div class="p-4">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Organizers</div>
+                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.club}</div>
+                <div class="text-xs text-muted mt-1">Verified Campus Announcement</div>
+              </div>
+            </div>
+
+            <!-- Description & Included Activities -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div class="lg:col-span-7 space-y-4">
+                <div>
+                  <h4 class="text-sm font-extrabold text-navy uppercase tracking-wide mb-1.5">Event Description</h4>
+                  <p class="text-sm text-charcoal/90 leading-relaxed">${ev.description}</p>
+                </div>
+
+                <div>
+                  <h4 class="text-sm font-extrabold text-navy uppercase tracking-wide mb-1.5">Included Activities</h4>
+                  <ul class="list-disc pl-5 space-y-1.5 text-sm text-charcoal/90 marker:text-amberhub">
+                    ${ev.activities.map((item) => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 space-y-3 bg-white border border-subtle rounded-[12px] p-4">
+                <div>
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Entry Fee &amp; Eligibility</div>
+                  <p class="text-xs sm:text-sm text-charcoal mt-1 leading-relaxed">
+                    <span class="inline-block px-2 py-0.5 rounded-md font-bold text-xs mr-1.5 ${ev.fee === 0 ? 'bg-success/15 text-success' : 'bg-amberhub/15 text-amberhub-hover'}">
+                      ${formatFee(ev.fee)}
+                    </span>
+                    ${ev.rules}
+                  </p>
+                </div>
+                <div class="pt-3 border-t border-subtle">
+                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Coordinator Contact</div>
+                  <p class="text-xs sm:text-sm font-semibold text-navy mt-1">${ev.coordinator}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+              <button
+                id="btnDetailRegisterNow"
+                type="button"
+                class="flex-1 py-3 px-6 rounded-xl ${reg ? 'bg-success hover:bg-success-dark' : 'bg-amberhub hover:bg-amberhub-hover'} text-white text-sm font-extrabold uppercase tracking-wider shadow-sm transition"
+              >
+                ${reg ? 'REGISTERED ✓ (UPDATE DETAILS)' : 'REGISTER NOW'}
+              </button>
+              <button
+                id="btnDetailReminder"
+                type="button"
+                class="sm:w-56 py-3 px-5 rounded-xl border-2 text-sm font-bold transition ${
+                  rem
+                    ? 'bg-navy border-navy text-amberhub'
+                    : 'bg-white border-amberhub text-amberhub hover:bg-amberhub/10'
+                }"
+              >
+                ${rem ? 'Reminder Active ✓' : 'Set Reminder'}
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      /* -------------------------------------------------------------------
+         8. RENDER SECTION 4 (REGISTRATION FORM SYNC)
+         ------------------------------------------------------------------- */
+      function renderRegistrationForm() {
+        const ev = getEvent(state.selectedEventId);
+        document.getElementById('regFormTitle').textContent = `Register: ${ev.title}`;
+        document.getElementById('regFormMeta').textContent = `${ev.fullDate} • ${ev.timeLabel} • ${ev.venue}`;
+
+        const feeBadge = document.getElementById('regFormFeeBadge');
+        feeBadge.textContent = formatFee(ev.fee);
+        feeBadge.className =
+          ev.fee === 0
+            ? 'px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success'
+            : 'px-3 py-1 rounded-full text-xs font-bold bg-amberhub/15 text-amberhub-hover';
+
+        // Show live pre-registration clash warning if selected event overlaps an existing registration
+        const clashBox = document.getElementById('regClashPreview');
+        const potentialClashes = findClashesForEvent(ev.id);
+        if (potentialClashes.length > 0) {
+          const names = potentialClashes.map((c) => `${c.title} (${c.timeLabel})`).join(', ');
+          clashBox.textContent = `Heads up: ${ev.title} overlaps with your registered event — ${names} on ${ev.fullDate}.`;
+          clashBox.classList.remove('hidden');
+        } else {
+          clashBox.classList.add('hidden');
+        }
+      }
+
+      /* -------------------------------------------------------------------
+         9. RENDER SECTION 5 (SUCCESS STATE + MY SCHEDULE + CLASH ALERTS)
+         ------------------------------------------------------------------- */
+      function renderConfirmationAndSchedule() {
+        const regIds = Object.keys(state.registered);
+        const remIds = state.reminders;
+
+        // Update Top Nav Registered Counter Badge
+        document.getElementById('navRegBadge').textContent = regIds.length;
+
+        // Left Card: Success State
+        const confirmedEv = getEvent(state.lastConfirmedEventId);
+        const confirmedRec = state.registered[confirmedEv.id];
+        const displayEmail = (confirmedRec && confirmedRec.email) || state.lastConfirmedEmail || 'astabhya@univ.edu';
+
+        document.getElementById('confirmEventTitle').textContent = confirmedEv.title;
+        document.getElementById('confirmEmailLine').textContent = `A confirmation email has been sent to ${displayEmail}`;
+        document.getElementById('confirmEventMeta').textContent = `${confirmedEv.fullDate} • ${confirmedEv.timeLabel} • ${confirmedEv.venue}`;
+
+        const smsActive = isReminded(confirmedEv.id) || Boolean(confirmedRec && confirmedRec.sms);
+        const smsBtn = document.getElementById('btnSmsReminder');
+        const smsLabel = document.getElementById('smsReminderLabel');
+        if (smsActive) {
+          smsBtn.className =
+            'w-full py-2.5 px-4 rounded-xl bg-success/10 border border-success text-success text-sm font-extrabold flex items-center justify-center gap-2 transition';
+          smsLabel.textContent = 'SMS Reminder Active ✓';
+        } else {
+          smsBtn.className =
+            'w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-amberhub text-navy text-sm font-bold flex items-center justify-center gap-2 transition';
+          smsLabel.textContent = 'Set Event Reminder (SMS)';
+        }
+
+        // Clash Detection Banners (Global + Section 5)
+        const clashes = findRegisteredClashes();
+        const globalBanner = document.getElementById('globalClashBanner');
+        const scheduleClashBox = document.getElementById('scheduleClashBox');
+        const scheduleClashList = document.getElementById('scheduleClashList');
+
+        if (clashes.length > 0) {
+          const first = clashes[0];
+          document.getElementById('globalClashText').textContent =
+            `Time-Clash Warning: ${first.a.title} and ${first.b.title} overlap on ${first.a.fullDate}!`;
+          globalBanner.classList.remove('hidden');
+
+          scheduleClashList.innerHTML = clashes
+            .map(
+              ({ a, b }) =>
+                `<li><strong>${a.title}</strong> (${a.timeLabel}) overlaps with <strong>${b.title}</strong> (${b.timeLabel}) on <strong>${a.fullDate}</strong>.</li>`
+            )
+            .join('');
+          scheduleClashBox.classList.remove('hidden');
+        } else {
+          globalBanner.classList.add('hidden');
+          scheduleClashBox.classList.add('hidden');
+        }
+
+        // Right Card Count Pill
+        document.getElementById('scheduleCountPill').textContent = `${regIds.length} Registered • ${remIds.length} Reminders`;
+
+        // My Registered Events List
+        const regListEl = document.getElementById('myRegistrationsList');
+        if (regIds.length === 0) {
+          regListEl.innerHTML = `
+            <div class="p-4 rounded-xl bg-white border border-dashed border-subtle text-xs sm:text-sm text-muted text-center">
+              No events registered yet. Submit Section 4 above to reserve your first event!
+            </div>
+          `;
+        } else {
+          regListEl.innerHTML = regIds
+            .map((id) => {
+              const ev = getEvent(id);
+              const rec = state.registered[id];
+              return `
+                <div class="p-3.5 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-bold text-navy">${ev.title}</span>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/15 text-success">Confirmed</span>
+                    </div>
+                    <p class="text-xs text-muted mt-0.5">${ev.fullDate} • ${ev.timeLabel} • ${ev.venue}</p>
+                    <p class="text-[11px] text-charcoal/75 mt-0.5">${rec.name} (${rec.rollNo}) • ${rec.dept}</p>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
+                      View
+                    </button>
+                    <button type="button" data-cancel-reg="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              `;
+            })
+            .join('');
+        }
+
+        // Saved Reminders List
+        const remListEl = document.getElementById('myRemindersList');
+        if (remIds.length === 0) {
+          remListEl.innerHTML = `
+            <div class="p-4 rounded-xl bg-white border border-dashed border-subtle text-xs sm:text-sm text-muted text-center">
+              No active reminders yet. Click "Set Reminder" on any event detail page.
+            </div>
+          `;
+        } else {
+          remListEl.innerHTML = remIds
+            .map((id) => {
+              const ev = getEvent(id);
+              return `
+                <div class="p-3 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <p class="text-sm font-bold text-navy">${ev.title}</p>
+                    <p class="text-xs text-muted">${ev.fullDate} • ${ev.timeLabel}</p>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
+                      Open
+                    </button>
+                    <button type="button" data-remove-rem="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              `;
+            })
+            .join('');
+        }
+      }
+
+      function renderAll() {
+        renderHome();
+        renderFeed();
+        renderDetails();
+        renderRegistrationForm();
+        renderConfirmationAndSchedule();
+      }
+
+      /* -------------------------------------------------------------------
+         10. ACTIVE NAV LINK HIGHLIGHTING ON SCROLL
+         ------------------------------------------------------------------- */
+      function initScrollSpy() {
+        const sections = ['home', 'feed', 'details', 'register', 'confirmation']
+          .map((id) => document.getElementById(id))
+          .filter(Boolean);
+        const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+
+        function setActive(id) {
+          navLinks.forEach((link) => {
+            const isMatch = link.dataset.nav === id;
+            link.className = isMatch
+              ? 'nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap bg-amberhub text-white transition'
+              : 'nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition';
+          });
+        }
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  setActive(entry.target.id);
+                }
+              });
+            },
+            { rootMargin: '-25% 0px -55% 0px', threshold: 0.05 }
+          );
+          sections.forEach((sec) => observer.observe(sec));
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener('click', () => setActive(link.dataset.nav));
+        });
+      }
+
+      /* -------------------------------------------------------------------
+         11. EVENT LISTENERS
+         ------------------------------------------------------------------- */
+      function bindEvents() {
+        // Live Global Search
+        document.getElementById('globalSearch').addEventListener('input', (e) => {
+          state.search = e.target.value;
+          renderHome();
+          renderFeed();
+        });
+
+        // Free Events Only Toggle
+        document.getElementById('freeOnlyToggle').addEventListener('click', () => {
+          state.freeOnly = !state.freeOnly;
+          renderHome();
+          renderFeed();
+        });
+
+        // Delegated Click Handlers across the page
+        document.addEventListener('click', (e) => {
+          // Home Category Pill
+          const homeCatBtn = e.target.closest('[data-home-cat]');
+          if (homeCatBtn) {
+            state.homeCategory = homeCatBtn.dataset.homeCat;
+            renderHome();
+            return;
+          }
+
+          // Feed Department Pill
+          const feedCatBtn = e.target.closest('[data-feed-cat]');
+          if (feedCatBtn) {
+            state.feedCategory = feedCatBtn.dataset.feedCat;
+            renderFeed();
+            return;
+          }
+
+          // View Details on ANY card
+          const viewBtn = e.target.closest('[data-view-event]');
+          if (viewBtn) {
+            selectEvent(viewBtn.dataset.viewEvent, true);
+            return;
+          }
+
+          // Toggle Inline Campus Directions in Section 3
+          if (e.target.closest('#btnToggleDirections')) {
+            state.directionsOpen = !state.directionsOpen;
+            renderDetails();
+            return;
+          }
+
+          // Detail "REGISTER NOW" button -> smooth-scroll to Section 4 & focus Roll No
+          if (e.target.closest('#btnDetailRegisterNow')) {
+            document.getElementById('register').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+              const rollInput = document.getElementById('inputRollNo');
+              if (rollInput) rollInput.focus({ preventScroll: true });
+            }, 450);
+            return;
+          }
+
+          // Detail "Set Reminder" button
+          if (e.target.closest('#btnDetailReminder')) {
+            toggleReminder(state.selectedEventId, false);
+            return;
+          }
+
+          // Section 5: Download .ics Calendar Invite
+          if (e.target.closest('#btnDownloadIcs')) {
+            downloadIcs(getEvent(state.lastConfirmedEventId));
+            return;
+          }
+
+          // Section 5: SMS Reminder Toggle
+          if (e.target.closest('#btnSmsReminder')) {
+            toggleReminder(state.lastConfirmedEventId, true);
+            return;
+          }
+
+          // Cancel Registration from My Schedule
+          const cancelBtn = e.target.closest('[data-cancel-reg]');
+          if (cancelBtn) {
+            const id = cancelBtn.dataset.cancelReg;
+            const ev = getEvent(id);
+            delete state.registered[id];
+            saveState();
+            renderAll();
+            showToast(`Cancelled registration for ${ev.title}.`);
+            return;
+          }
+
+          // Remove Reminder from My Schedule
+          const remRemoveBtn = e.target.closest('[data-remove-rem]');
+          if (remRemoveBtn) {
+            toggleReminder(remRemoveBtn.dataset.removeRem, false);
+          }
+        });
+
+        // Section 4: Reset Form Button
+        document.getElementById('btnResetForm').addEventListener('click', () => {
+          document.getElementById('inputFullName').value = 'Astabhya Kumar';
+          document.getElementById('inputRollNo').value = '';
+          document.getElementById('inputEmail').value = 'astabhya@univ.edu';
+          document.getElementById('inputDept').selectedIndex = 0;
+          document.getElementById('regErrorBox').classList.add('hidden');
+          showToast('Form fields reset.');
+        });
+
+        // Section 4: Submit Registration Form
+        document.getElementById('registrationForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('inputFullName').value.trim();
+          const rollNo = document.getElementById('inputRollNo').value.trim();
+          const email = document.getElementById('inputEmail').value.trim();
+          const dept = document.getElementById('inputDept').value;
+          const errorBox = document.getElementById('regErrorBox');
+
+          if (!name || !rollNo || !email || !email.includes('@')) {
+            errorBox.textContent = 'Please enter your Full Name, Roll Number / Reg No, and a valid University Email.';
+            errorBox.classList.remove('hidden');
+            return;
+          }
+
+          errorBox.classList.add('hidden');
+          const ev = getEvent(state.selectedEventId);
+          const clashesBefore = findClashesForEvent(ev.id);
+
+          state.registered[ev.id] = {
+            name,
+            rollNo,
+            email,
+            dept,
+            sms: isReminded(ev.id)
+          };
+          state.lastConfirmedEventId = ev.id;
+          state.lastConfirmedEmail = email;
+          saveState();
+          renderAll();
+
+          if (clashesBefore.length > 0) {
+            showToast(`Registered — Time-Clash detected with ${clashesBefore[0].title}!`, 'danger');
+          } else {
+            showToast(`Registered for ${ev.title}!`, 'success');
+          }
+
+          document.getElementById('confirmation').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      /* -------------------------------------------------------------------
+         12. INITIALIZE APP
+         ------------------------------------------------------------------- */
+      loadState();
+      bindEvents();
+      renderAll();
+      initScrollSpy();
+    })();
+  </script>
+</body>
+</html>
