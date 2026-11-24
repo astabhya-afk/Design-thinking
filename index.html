@@ -1,512 +1,1676 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CAMPUS HUB — Interactive Single-Page Prototype</title>
-
-  <!-- Inter Font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind CSS CDN with Campus Hub Design System Tokens -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-          },
-          colors: {
-            navy: {
-              DEFAULT: '#1B2A4A',
-              dark: '#131E36',
-            },
-            amberhub: {
-              DEFAULT: '#D4882A',
-              hover: '#B8721E',
-            },
-            cream: '#F7F3EB',
-            cardbg: '#FAF7F0',
-            subtle: '#E2D9C8',
-            charcoal: '#1E2430',
-            muted: '#5A6475',
-            success: {
-              DEFAULT: '#388E3C',
-              dark: '#2B722F',
-            },
-          },
-        },
-      },
-    };
-  </script>
   <style>
-    /* Hide horizontal scrollbar on pill strips while preserving touch scrolling */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    /* =====================================================================
+       CAMPUS HUB DESIGN SYSTEM (100% ZERO-DEPENDENCY PURE CSS)
+       ===================================================================== */
+    :root {
+      --navy: #1B2A4A;
+      --navy-dark: #131E36;
+      --amber: #D4882A;
+      --amber-hover: #B8721E;
+      --amber-soft: rgba(212, 136, 42, 0.14);
+      --cream: #F7F3EB;
+      --card: #FAF7F0;
+      --white: #FFFFFF;
+      --border: #E2D9C8;
+      --charcoal: #1E2430;
+      --muted: #5A6475;
+      --success: #388E3C;
+      --success-dark: #2B722F;
+      --success-soft: rgba(56, 142, 60, 0.14);
+      --danger: #C62828;
+      --danger-soft: #FDECEA;
+      --danger-border: rgba(198, 40, 40, 0.35);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 6px rgba(27, 42, 74, 0.06);
+      --shadow-md: 0 8px 24px rgba(27, 42, 74, 0.10);
+      --shadow-lg: 0 12px 32px rgba(27, 42, 74, 0.16);
     }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    /* Offset anchor scroll so sticky navbar never overlaps section headers */
+
+    html {
+      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--charcoal);
+      background-color: var(--cream);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--charcoal);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
     section[id] {
       scroll-margin-top: 84px;
     }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px;
+    }
+
+    /* =====================================================================
+       STICKY TOP NAVBAR (#1B2A4A)
+       ===================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--navy);
+      color: var(--white);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 14px rgba(19, 30, 54, 0.22);
+    }
+
+    .navbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .brand-hub {
+      color: var(--amber);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-link {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #DCE3F0;
+      white-space: nowrap;
+      transition: background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+      color: var(--white);
+    }
+
+    .nav-link.active {
+      background-color: var(--amber);
+      color: var(--white);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: 210px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid transparent;
+      background-color: var(--white);
+      color: var(--charcoal);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(212, 136, 42, 0.25);
+    }
+
+    .reg-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background-color: rgba(255, 255, 255, 0.12);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background-color 0.18s ease;
+    }
+
+    .reg-pill-btn:hover {
+      background-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .reg-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background-color: var(--amber);
+      color: var(--white);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    /* Global Clash Banner */
+    .global-clash-banner {
+      background-color: var(--danger-soft);
+      border-bottom: 1.5px solid var(--danger-border);
+      color: var(--danger);
+    }
+
+    .global-clash-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .clash-msg-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clash-link {
+      font-weight: 800;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+
+    /* =====================================================================
+       MAIN LAYOUT & SECTION HEADERS
+       ===================================================================== */
+    main {
+      padding: 32px 0 60px;
+    }
+
+    .section-block {
+      padding: 8px 0;
+    }
+
+    .section-divider {
+      border: 0;
+      border-top: 1.5px solid var(--border);
+      margin: 42px 0;
+    }
+
+    .section-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .badge-navy {
+      background-color: rgba(27, 42, 74, 0.10);
+      color: var(--navy);
+    }
+
+    .badge-amber {
+      background-color: var(--amber-soft);
+      color: var(--amber-hover);
+    }
+
+    .badge-green {
+      background-color: var(--success-soft);
+      color: var(--success);
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .tip-pill {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.45;
+    }
+
+    .tip-pill strong {
+      color: var(--navy);
+    }
+
+    /* =====================================================================
+       SECTION 01 — STATS & FEATURED CARD
+       ===================================================================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .stat-card.has-clash {
+      background-color: var(--danger-soft);
+      border-color: var(--danger-border);
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-top: 4px;
+      line-height: 1.1;
+    }
+
+    .stat-value.amber { color: var(--amber); }
+    .stat-value.green { color: var(--success); }
+    .stat-value.danger { color: var(--danger); }
+
+    /* Featured Hero Card */
+    .featured-card {
+      background: linear-gradient(135deg, var(--navy) 0%, #243760 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .date-badge-amber {
+      width: 78px;
+      flex-shrink: 0;
+      background-color: var(--amber);
+      color: var(--white);
+      border-radius: var(--radius-md);
+      text-align: center;
+      padding: 12px 8px;
+      line-height: 1.15;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+    }
+
+    .date-badge-amber .m { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .date-badge-amber .d { font-size: 1.75rem; font-weight: 800; margin: 2px 0; }
+    .date-badge-amber .y { font-size: 0.72rem; opacity: 0.92; }
+
+    .featured-info {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .pill-featured { background-color: rgba(255, 255, 255, 0.16); color: #F5C37A; text-transform: uppercase; letter-spacing: 0.05em; }
+    .pill-free { background-color: var(--success-soft); color: var(--success); }
+    .pill-free-solid { background-color: var(--success); color: var(--white); }
+    .pill-paid { background-color: var(--amber-soft); color: var(--amber-hover); }
+    .pill-paid-solid { background-color: var(--amber); color: var(--white); }
+    .pill-reg { background-color: var(--success); color: var(--white); }
+    .pill-reg-light { background-color: var(--white); color: var(--success); }
+    .pill-clash { background-color: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger-border); }
+
+    .featured-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.25;
+    }
+
+    .featured-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: #DCE3F0;
+    }
+
+    .meta-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-inline svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .progress-wrap {
+      margin-top: 14px;
+      max-width: 320px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background-color: var(--border);
+      overflow: hidden;
+    }
+
+    .featured-card .progress-track {
+      background-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background-color: var(--amber);
+      transition: width 0.25s ease;
+    }
+
+    /* =====================================================================
+       BUTTONS
+       ===================================================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      font-weight: 700;
+      border: 1.5px solid transparent;
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-amber {
+      background-color: var(--amber);
+      color: var(--white);
+    }
+
+    .btn-amber:hover {
+      background-color: var(--amber-hover);
+    }
+
+    .btn-navy {
+      background-color: var(--navy);
+      color: var(--white);
+    }
+
+    .btn-navy:hover {
+      background-color: var(--navy-dark);
+    }
+
+    .btn-success {
+      background-color: var(--success);
+      color: var(--white);
+    }
+
+    .btn-success:hover {
+      background-color: var(--success-dark);
+    }
+
+    .btn-outline-amber {
+      background-color: var(--white);
+      border-color: var(--amber);
+      color: var(--amber-hover);
+    }
+
+    .btn-outline-amber:hover {
+      background-color: var(--amber-soft);
+    }
+
+    .btn-outline-subtle {
+      background-color: var(--white);
+      border-color: var(--border);
+      color: var(--navy);
+    }
+
+    .btn-outline-subtle:hover {
+      border-color: var(--navy);
+    }
+
+    .btn-danger-soft {
+      background-color: var(--danger-soft);
+      border-color: var(--danger-border);
+      color: var(--danger);
+      padding: 6px 11px;
+      font-size: 0.78rem;
+    }
+
+    .btn-danger-soft:hover {
+      background-color: #FADBD8;
+    }
+
+    .btn-sm {
+      padding: 7px 13px;
+      font-size: 0.8rem;
+    }
+
+    /* =====================================================================
+       SECTION 02 — FILTER BAR & EVENTS GRID
+       ===================================================================== */
+    .filter-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cat-pill {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background-color: var(--card);
+      color: var(--navy);
+      font-size: 0.84rem;
+      font-weight: 600;
+      transition: all 0.18s ease;
+    }
+
+    .cat-pill:hover {
+      border-color: var(--amber);
+    }
+
+    .cat-pill.active {
+      background-color: var(--amber);
+      border-color: var(--amber);
+      color: var(--white);
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(212, 136, 42, 0.28);
+    }
+
+    .free-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background-color: var(--card);
+      color: var(--navy);
+      font-size: 0.84rem;
+      font-weight: 600;
+      transition: all 0.18s ease;
+    }
+
+    .free-toggle:hover {
+      border-color: var(--amber);
+    }
+
+    .free-toggle.active {
+      background-color: var(--success);
+      border-color: var(--success);
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .toggle-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--border);
+      border: 1px solid rgba(90, 100, 117, 0.4);
+    }
+
+    .free-toggle.active .toggle-dot {
+      background-color: var(--white);
+      border-color: var(--white);
+    }
+
+    .feed-clash-banner {
+      background-color: var(--danger-soft);
+      border: 1.5px solid var(--danger-border);
+      color: var(--danger);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .event-card {
+      background-color: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease;
+    }
+
+    .event-card:hover {
+      border-color: var(--amber);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .date-badge-navy {
+      width: 60px;
+      flex-shrink: 0;
+      background-color: var(--navy);
+      color: var(--white);
+      border-radius: 10px;
+      text-align: center;
+      padding: 9px 4px;
+      line-height: 1.15;
+    }
+
+    .date-badge-navy .m { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #C9D4E8; }
+    .date-badge-navy .d { font-size: 1.35rem; font-weight: 800; margin: 2px 0; }
+    .date-badge-navy .y { font-size: 0.68rem; color: #B4C2DA; }
+
+    .event-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .event-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .event-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.3;
+    }
+
+    .event-meta-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .event-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-progress {
+      flex: 1;
+      max-width: 170px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      background-color: var(--card);
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* =====================================================================
+       SECTION 03 — EVENT DETAIL CARD
+       ===================================================================== */
+    .detail-card {
+      background-color: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    .detail-hero {
+      background-color: var(--navy);
+      color: var(--white);
+      padding: 24px 28px;
+    }
+
+    .detail-hero-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: #DCE3F0;
+    }
+
+    .detail-hero-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-top: 8px;
+      line-height: 1.22;
+    }
+
+    .detail-club-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: #DCE3F0;
+    }
+
+    .club-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background-color: rgba(212, 136, 42, 0.25);
+      border: 1.5px solid var(--amber);
+      color: #F5C37A;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+    }
+
+    .detail-content {
+      padding: 24px 28px;
+    }
+
+    .logistics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      background-color: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+
+    .logistics-cell {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+    }
+
+    .logistics-cell:nth-child(2n) {
+      border-right: none;
+    }
+
+    .logistics-cell:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .cell-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .cell-value {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+
+    .directions-btn {
+      margin-top: 6px;
+      background: none;
+      border: none;
+      color: var(--amber-hover);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: underline;
+      padding: 0;
+    }
+
+    .directions-box {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background-color: var(--cream);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--charcoal);
+      line-height: 1.48;
+    }
+
+    .detail-columns {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .detail-heading {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .detail-text {
+      font-size: 0.92rem;
+      color: #333B4B;
+      line-height: 1.6;
+    }
+
+    .activity-list {
+      padding-left: 20px;
+      font-size: 0.9rem;
+      color: #333B4B;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .activity-list li::marker {
+      color: var(--amber);
+    }
+
+    .detail-side-box {
+      background-color: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .side-divider {
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .detail-actions .btn-primary-wide {
+      flex: 1;
+      min-width: 220px;
+      padding: 13px 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* =====================================================================
+       SECTION 04 — REGISTRATION FORM
+       ===================================================================== */
+    .form-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background-color: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 26px 28px;
+    }
+
+    .form-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 18px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .form-event-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-top: 4px;
+    }
+
+    .form-event-meta {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 5px 11px;
+      border-radius: var(--radius-sm);
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .alert-box {
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      background-color: var(--danger-soft);
+      border: 1.5px solid var(--danger-border);
+      color: var(--danger);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .field-input, .field-select {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background-color: var(--white);
+      color: var(--charcoal);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .field-input:focus, .field-select:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(212, 136, 42, 0.2);
+    }
+
+    .checkbox-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background-color: var(--white);
+      border: 1.5px solid var(--border);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-card input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--amber);
+      cursor: pointer;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* =====================================================================
+       SECTION 05 — CONFIRMATION & MY PASSES
+       ===================================================================== */
+    .confirm-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .confirm-card, .schedule-card {
+      background-color: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+
+    .confirm-card {
+      text-align: center;
+    }
+
+    .check-circle {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background-color: var(--success);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(56, 142, 60, 0.28);
+    }
+
+    .confirm-kicker {
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--success);
+    }
+
+    .confirm-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-top: 8px;
+    }
+
+    .confirm-email {
+      font-size: 0.86rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .confirm-meta {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      background-color: var(--white);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .confirm-btn-stack {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .confirm-btn-stack .btn {
+      width: 100%;
+    }
+
+    .schedule-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1.5px solid var(--border);
+    }
+
+    .schedule-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .schedule-count-pill {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background-color: var(--navy);
+      color: var(--white);
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    .schedule-clash-box {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background-color: var(--danger-soft);
+      border: 1.5px solid var(--danger-border);
+      color: var(--danger);
+      margin-bottom: 18px;
+    }
+
+    .schedule-clash-box ul {
+      margin-top: 6px;
+      padding-left: 18px;
+      font-size: 0.83rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .list-group-heading {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+
+    .saved-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .saved-list:last-child {
+      margin-bottom: 0;
+    }
+
+    .saved-item {
+      background-color: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .saved-item.clash-item {
+      border-color: var(--danger-border);
+    }
+
+    .saved-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .saved-empty {
+      background-color: var(--white);
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    /* =====================================================================
+       FOOTER & TOAST NOTIFICATIONS
+       ===================================================================== */
+    footer {
+      background-color: var(--navy);
+      color: #C9D4E8;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px 0;
+      font-size: 0.82rem;
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .toast-host {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      color: var(--white);
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      max-width: 320px;
+      opacity: 1;
+      transition: opacity 0.25s ease;
+    }
+
+    .toast.navy { background-color: var(--navy); }
+    .toast.success { background-color: var(--success); }
+    .toast.danger { background-color: var(--danger); }
+    .toast.fade-out { opacity: 0; }
+
+    /* =====================================================================
+       RESPONSIVE BREAKPOINTS
+       ===================================================================== */
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .events-grid { grid-template-columns: 1fr; }
+      .detail-columns { grid-template-columns: 1fr; }
+      .confirm-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .navbar-inner { gap: 10px; }
+      .nav-links { order: 3; width: 100%; padding-top: 4px; }
+      .search-wrap { width: 150px; }
+      .section-title { font-size: 1.45rem; }
+      .logistics-grid { grid-template-columns: 1fr; }
+      .logistics-cell { border-right: none !important; border-bottom: 1px solid var(--border) !important; }
+      .logistics-cell:last-child { border-bottom: none !important; }
+      .form-grid { grid-template-columns: 1fr; }
+      .detail-hero, .detail-content, .form-card, .confirm-card, .schedule-card { padding: 18px; }
+    }
   </style>
 </head>
-<body class="bg-cream text-charcoal font-sans antialiased overflow-x-hidden">
+<body>
 
   <!-- =====================================================================
-       STICKY TOP NAVIGATION BAR (#1B2A4A)
+       STICKY TOP NAVIGATION BAR
        ===================================================================== -->
-  <header class="sticky top-0 z-50 bg-navy text-white shadow-md border-b border-white/10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <!-- Brand Logo -->
-      <a href="#home" class="flex items-center gap-1.5 text-lg sm:text-xl font-extrabold tracking-wide shrink-0">
-        <span class="text-white">CAMPUS</span>
-        <span class="text-amberhub">HUB</span>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="#home" class="brand">
+        <span>CAMPUS</span><span class="brand-hub">HUB</span>
       </a>
 
-      <!-- Center Quick-Jump Section Links -->
-      <nav aria-label="Prototype Sections" class="order-3 lg:order-2 w-full lg:w-auto flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 lg:pt-0">
-        <a href="#home" data-nav="home" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap bg-amberhub text-white transition">
-          Home
-        </a>
-        <a href="#feed" data-nav="feed" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
-          Filtered Feed
-        </a>
-        <a href="#details" data-nav="details" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
-          Event Details
-        </a>
-        <a href="#register" data-nav="register" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
-          Register
-        </a>
-        <a href="#confirmation" data-nav="confirmation" class="nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition">
-          Confirmation
-        </a>
+      <nav class="nav-links" aria-label="Prototype Sections">
+        <a href="#home" data-nav="home" class="nav-link active">Home</a>
+        <a href="#feed" data-nav="feed" class="nav-link">Filtered Feed</a>
+        <a href="#details" data-nav="details" class="nav-link">Event Details</a>
+        <a href="#register" data-nav="register" class="nav-link">Register</a>
+        <a href="#confirmation" data-nav="confirmation" class="nav-link">Confirmation</a>
       </nav>
 
-      <!-- Right: Live Search Input + Registered Counter Badge -->
-      <div class="order-2 lg:order-3 flex items-center gap-2.5 flex-1 sm:flex-initial justify-end max-w-xs sm:max-w-none">
-        <div class="relative w-full sm:w-52">
-          <svg class="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+      <div class="nav-actions">
+        <div class="search-wrap">
+          <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="11" cy="11" r="7"></circle>
             <path stroke-linecap="round" d="M20 20l-3.5-3.5"></path>
           </svg>
           <input
             id="globalSearch"
             type="search"
-            placeholder="Search Events..."
-            aria-label="Search Events"
-            class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white text-charcoal text-xs sm:text-sm placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-amberhub"
+            class="search-input"
+            placeholder="Search events, blocks..."
+            aria-label="Search events by title, club, venue, or category"
           />
         </div>
 
-        <a
-          href="#confirmation"
-          title="View My Registered Events"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs sm:text-sm font-semibold text-white shrink-0 transition"
-        >
-          <span class="hidden sm:inline">Registered</span>
-          <span id="navRegBadge" class="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full bg-amberhub text-white text-xs font-extrabold">
-            0
-          </span>
+        <a href="#confirmation" class="reg-pill-btn" title="View My Registered Events">
+          <span>Registered:</span>
+          <span id="navRegBadge" class="reg-badge">0</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- GLOBAL TIME-CLASH BANNER (Appears automatically if any 2 registered events overlap) -->
-  <div id="globalClashBanner" class="hidden bg-red-50 border-b border-red-200">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-red-800">
-      <div class="flex items-center gap-2 font-semibold">
-        <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+  <!-- GLOBAL TIME-CLASH BANNER -->
+  <div id="globalClashBanner" class="global-clash-banner hidden" role="alert">
+    <div class="global-clash-inner">
+      <div class="clash-msg-wrap">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
         </svg>
         <span id="globalClashText">Time-Clash Detected!</span>
       </div>
-      <a href="#confirmation" class="text-xs font-bold underline hover:text-red-950">Review My Schedule →</a>
+      <a href="#confirmation" class="clash-link">Review My Schedule →</a>
     </div>
   </div>
 
-  <!-- MAIN VERTICAL FLOW CONTAINER (ALL 5 SECTIONS VISIBLE ON ONE PAGE) -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-14 sm:space-y-16">
+  <!-- =====================================================================
+       MAIN SINGLE-PAGE CONTAINER (ALL 5 SECTIONS)
+       ===================================================================== -->
+  <main>
+    <div class="container">
 
-    <!-- ===================================================================
-         SECTION 1 — LANDING PAGE (HOME & FEATURED EVENTS)
-         =================================================================== -->
-    <section id="home" class="space-y-6">
-      <div class="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
-            01 • LANDING PAGE (HOME)
-          </span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-            Discover Upcoming Campus Events
-          </h1>
-          <p class="text-sm text-muted mt-1">
-            All university workshops, hackathons, cultural nights, and sports tournaments in one clear feed.
-          </p>
-        </div>
-        <div class="text-xs font-semibold text-muted bg-cardbg border border-subtle px-3 py-1.5 rounded-lg">
-          Tip: Register for <strong class="text-navy">Hack Night</strong> &amp; <strong class="text-navy">Open Mic Evening</strong> to test live clash detection
-        </div>
-      </div>
-
-      <!-- Horizontal Category Pills + Free Events Only Toggle -->
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div id="homePills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Home Category Filter">
-          <!-- Injected by JS -->
-        </div>
-        <button
-          id="freeOnlyToggle"
-          type="button"
-          class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0"
-        >
-          <span id="freeToggleDot" class="w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40"></span>
-          <span>Free Events Only</span>
-        </button>
-      </div>
-
-      <!-- Featured Event Card (Deep Navy #1B2A4A) -->
-      <div id="featuredCardMount"></div>
-
-      <!-- Highlighted Upcoming Events Grid -->
-      <div>
-        <div class="flex items-center justify-between mb-3">
-          <h2 id="homeGridHeading" class="text-base sm:text-lg font-bold text-navy">
-            Highlighted Upcoming Events
-          </h2>
-          <a href="#feed" class="text-xs sm:text-sm font-bold text-amberhub hover:text-amberhub-hover">
-            Browse Full Department Feed ↓
-          </a>
-        </div>
-        <div id="homeEventsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Injected by JS -->
-        </div>
-      </div>
-    </section>
-
-    <hr class="border-subtle" />
-
-    <!-- ===================================================================
-         SECTION 2 — FILTERED FEED (18 REALISTIC CAMPUS EVENTS)
-         =================================================================== -->
-    <section id="feed" class="space-y-6">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-amberhub/15 text-amberhub-hover text-xs font-bold tracking-wider uppercase mb-2">
-          02 • FILTERED FEED
-        </span>
-        <div class="flex flex-wrap items-center justify-between gap-3">
-          <h2 id="feedHeading" class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-            Engineering Events (8 Found)
-          </h2>
-          <span id="feedActiveFiltersNote" class="text-xs font-medium text-muted"></span>
-        </div>
-      </div>
-
-      <!-- Department Filter Pills (Default: Engineering) -->
-      <div id="feedPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" role="tablist" aria-label="Department Filter">
-        <!-- Injected by JS -->
-      </div>
-
-      <!-- Filtered Events Grid -->
-      <div id="feedEventsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Injected by JS -->
-      </div>
-    </section>
-
-    <hr class="border-subtle" />
-
-    <!-- ===================================================================
-         SECTION 3 — EVENT DETAIL PAGE
-         =================================================================== -->
-    <section id="details" class="space-y-5">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-navy/10 text-navy text-xs font-bold tracking-wider uppercase mb-2">
-          03 • EVENT DETAIL PAGE
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-          Standardised Event Details
-        </h2>
-        <p class="text-sm text-muted mt-1">
-          Click <strong>View Details</strong> on any event above to inspect its full schedule, venue directions, and included activities here.
-        </p>
-      </div>
-
-      <!-- Event Detail Card (Matches Screen 3 of Mockup) -->
-      <div id="detailCardMount" class="bg-cardbg border border-subtle rounded-[14px] shadow-md overflow-hidden">
-        <!-- Injected by JS -->
-      </div>
-    </section>
-
-    <hr class="border-subtle" />
-
-    <!-- ===================================================================
-         SECTION 4 — REGISTRATION FORM SECTION
-         =================================================================== -->
-    <section id="register" class="space-y-5">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-amberhub/15 text-amberhub-hover text-xs font-bold tracking-wider uppercase mb-2">
-          04 • REGISTRATION FORM
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-          One-Step Student Registration
-        </h2>
-        <p class="text-sm text-muted mt-1">
-          Complete your details below to reserve your seat and automatically check for schedule overlaps.
-        </p>
-      </div>
-
-      <!-- Registration Elevated Card (Matches Screen 4 of Mockup) -->
-      <div class="max-w-2xl mx-auto bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-8">
-        <div class="flex flex-wrap items-start justify-between gap-3 pb-4 mb-5 border-b border-subtle">
+      <!-- =================================================================
+           SECTION 01 — LANDING PAGE (HOME)
+           ================================================================= -->
+      <section id="home" class="section-block">
+        <div class="section-header-row">
           <div>
-            <p class="text-xs font-bold uppercase tracking-wider text-amberhub">Selected Event</p>
-            <h3 id="regFormTitle" class="text-xl sm:text-2xl font-extrabold text-navy mt-0.5">
-              Register: Design Thinking Workshop 2026
-            </h3>
-            <p id="regFormMeta" class="text-xs sm:text-sm text-muted mt-1">
-              August 23, 2026 • 10:00 - 17:00 Hours • Shanti Devi Mittal Auditorium
+            <span class="section-badge badge-navy">01 • LANDING PAGE (HOME)</span>
+            <h1 class="section-title">Discover Upcoming Campus Events</h1>
+            <p class="section-subtitle">
+              All upcoming campus events in one place — zero WhatsApp clutter, automatic time-clash warnings.
             </p>
           </div>
-          <span id="regFormFeeBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success">
-            FREE
-          </span>
+          <div class="tip-pill">
+            Tip: Register for <strong>Hack Night (Block 34, Room 810)</strong> &amp; <strong>Open Mic Evening (Shanti Devi Mittal Auditorium)</strong> on Nov 3 to test clash detection.
+          </div>
         </div>
 
-        <!-- Inline Form Validation Error Box (No alert()) -->
-        <div id="regErrorBox" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm font-medium"></div>
-
-        <!-- Inline Pre-Submission Clash Preview if selected event overlaps an existing registration -->
-        <div id="regClashPreview" class="hidden mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm font-semibold"></div>
-
-        <form id="registrationForm" class="space-y-4" novalidate>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="inputFullName" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
-                Full Name
-              </label>
-              <input
-                id="inputFullName"
-                type="text"
-                value="Astabhya Kumar"
-                required
-                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
-              />
-            </div>
-
-            <div>
-              <label for="inputRollNo" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
-                Roll Number / Reg No
-              </label>
-              <input
-                id="inputRollNo"
-                type="text"
-                placeholder="e.g., 12304567"
-                required
-                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
-              />
-            </div>
+        <!-- 4 Live Summary Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Events This Week</div>
+            <div id="statTotalEvents" class="stat-value">18</div>
           </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="inputEmail" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
-                University Email
-              </label>
-              <input
-                id="inputEmail"
-                type="email"
-                value="astabhya@univ.edu"
-                required
-                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
-              />
-            </div>
-
-            <div>
-              <label for="inputDept" class="block text-xs font-bold text-navy uppercase tracking-wide mb-1.5">
-                Department
-              </label>
-              <select
-                id="inputDept"
-                class="w-full px-3.5 py-2.5 rounded-xl border border-subtle bg-white text-charcoal text-sm focus:outline-none focus:ring-2 focus:ring-amberhub focus:border-amberhub"
-              >
-                <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
-                <option value="Mechanical Engineering">Mechanical Engineering</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Business">Business</option>
-                <option value="Arts">Arts</option>
-                <option value="Design">Design</option>
-              </select>
-            </div>
+          <div class="stat-card">
+            <div class="stat-label">Matching Filter</div>
+            <div id="statMatchingEvents" class="stat-value amber">8</div>
           </div>
-
-          <div class="pt-3 flex flex-col sm:flex-row items-center justify-end gap-3">
-            <button
-              id="btnResetForm"
-              type="button"
-              class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-subtle bg-white text-muted hover:text-navy hover:border-navy text-sm font-semibold transition"
-            >
-              Reset
-            </button>
-            <button
-              type="submit"
-              class="w-full sm:w-auto px-7 py-2.5 rounded-xl bg-amberhub hover:bg-amberhub-hover text-white text-sm font-extrabold tracking-wide uppercase shadow-sm transition"
-            >
-              CONFIRM REGISTRATION
-            </button>
+          <div class="stat-card">
+            <div class="stat-label">Registered</div>
+            <div id="statRegisteredEvents" class="stat-value green">0</div>
           </div>
-        </form>
-      </div>
-    </section>
+          <div id="statClashCard" class="stat-card">
+            <div class="stat-label">Active Clashes</div>
+            <div id="statActiveClashes" class="stat-value">0</div>
+          </div>
+        </div>
 
-    <hr class="border-subtle" />
+        <!-- Featured Event Card -->
+        <div id="featuredCardMount"></div>
+      </section>
 
-    <!-- ===================================================================
-         SECTION 5 — SUCCESS STATE, CALENDAR ACTIONS & MY REGISTRATIONS
-         =================================================================== -->
-    <section id="confirmation" class="space-y-5 pb-10">
-      <div>
-        <span class="inline-block px-3 py-1 rounded-full bg-success/15 text-success text-xs font-bold tracking-wider uppercase mb-2">
-          05 • SUCCESS STATE &amp; ACTIONS
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-navy tracking-tight">
-          Registration Confirmation &amp; My Schedule
-        </h2>
-        <p class="text-sm text-muted mt-1">
-          Export your confirmed event to Google Calendar (.ics), toggle SMS reminders, and manage saved registrations.
-        </p>
-      </div>
+      <hr class="section-divider" />
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <!-- Left: Screen 5 Success State Card -->
-        <div class="lg:col-span-5 bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-7 text-center">
-          <div class="w-14 h-14 mx-auto rounded-full bg-success text-white flex items-center justify-center shadow-md mb-4">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+      <!-- =================================================================
+           SECTION 02 — FILTERED FEED
+           ================================================================= -->
+      <section id="feed" class="section-block">
+        <div class="section-header-row">
+          <div>
+            <span class="section-badge badge-amber">02 • FILTERED FEED</span>
+            <h2 id="feedHeading" class="section-title">Engineering Events (8 Found)</h2>
+            <p id="feedActiveFiltersNote" class="section-subtitle">Showing 18 verified campus events across 5 departments</p>
+          </div>
+        </div>
+
+        <!-- Category Pills + Free Events Only Toggle -->
+        <div class="filter-toolbar">
+          <div id="feedPills" class="pill-group" role="tablist" aria-label="Department Filter"></div>
+          <button id="freeOnlyToggle" type="button" class="free-toggle">
+            <span class="toggle-dot"></span>
+            <span>Free Events Only</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Time-Clash Warning Banner -->
+        <div id="feedClashBanner" class="feed-clash-banner hidden" role="alert">
+          <div class="clash-msg-wrap">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
             </svg>
+            <span id="feedClashText">Schedule overlap detected!</span>
           </div>
+          <a href="#confirmation" class="clash-link">View Clashes ↓</a>
+        </div>
 
-          <p class="text-sm font-extrabold tracking-wider uppercase text-success">
-            REGISTRATION SUCCESSFUL!
-          </p>
-          <h3 id="confirmEventTitle" class="text-lg sm:text-xl font-extrabold text-navy mt-2">
-            Design Thinking Workshop 2026
-          </h3>
-          <p id="confirmEmailLine" class="text-xs sm:text-sm text-muted mt-1.5">
-            A confirmation email has been sent to astabhya@univ.edu
-          </p>
-          <p id="confirmEventMeta" class="text-xs font-semibold text-navy/80 mt-2 bg-white border border-subtle rounded-lg px-3 py-1.5 inline-block">
-            August 23, 2026 • 10:00 - 17:00 Hours • Shanti Devi Mittal Auditorium
-          </p>
+        <!-- Events Grid -->
+        <div id="feedEventsGrid" class="events-grid"></div>
+      </section>
 
-          <!-- Action Buttons -->
-          <div class="mt-6 pt-5 border-t border-subtle space-y-2.5">
-            <button
-              id="btnDownloadIcs"
-              type="button"
-              class="w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-navy text-navy text-sm font-bold flex items-center justify-center gap-2 transition"
-            >
-              <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <rect x="3" y="4" width="18" height="18" rx="2"></rect>
-                <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"></path>
-              </svg>
-              <span>Add to Google Calendar</span>
-            </button>
+      <hr class="section-divider" />
 
-            <button
-              id="btnSmsReminder"
-              type="button"
-              class="w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-amberhub text-navy text-sm font-bold flex items-center justify-center gap-2 transition"
-            >
-              <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-              </svg>
-              <span id="smsReminderLabel">Set Event Reminder (SMS)</span>
-            </button>
+      <!-- =================================================================
+           SECTION 03 — EVENT DETAIL PAGE
+           ================================================================= -->
+      <section id="details" class="section-block">
+        <div class="section-header-row">
+          <div>
+            <span class="section-badge badge-navy">03 • EVENT DETAIL PAGE</span>
+            <h2 class="section-title">Standardised Event Details</h2>
+            <p class="section-subtitle">
+              Click <strong>View Details</strong> on any event above to inspect its logistics, campus directions, and activities.
+            </p>
+          </div>
+          <a href="#feed" class="btn btn-outline-subtle btn-sm">← Back to Filtered Feed</a>
+        </div>
 
-            <a
-              href="#home"
-              class="w-full mt-2 py-2.5 px-4 rounded-xl bg-navy hover:bg-navy-dark text-white text-sm font-bold inline-flex items-center justify-center transition"
-            >
-              Go Back to Events
-            </a>
+        <div id="detailCardMount" class="detail-card"></div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- =================================================================
+           SECTION 04 — REGISTRATION FORM
+           ================================================================= -->
+      <section id="register" class="section-block">
+        <div class="section-header-row">
+          <div>
+            <span class="section-badge badge-amber">04 • REGISTRATION</span>
+            <h2 class="section-title">One-Step Student Registration</h2>
+            <p class="section-subtitle">
+              Confirm your details below to reserve your seat and automatically check for overlapping events.
+            </p>
           </div>
         </div>
 
-        <!-- Right: My Registered Events & Saved Reminders (Persisted in localStorage) -->
-        <div class="lg:col-span-7 bg-cardbg border border-subtle rounded-[14px] shadow-md p-6 sm:p-7 space-y-5">
-          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-subtle">
+        <div class="form-card">
+          <div class="form-card-header">
             <div>
-              <h3 class="text-lg font-extrabold text-navy">
-                My Registered Events &amp; Saved Reminders
-              </h3>
-              <p class="text-xs text-muted">Automatically saved in your browser (localStorage)</p>
+              <div class="cell-label" style="color: var(--amber-hover);">Selected Event</div>
+              <h3 id="regFormTitle" class="form-event-title">Register: Design Thinking Workshop 2026</h3>
+              <div id="regFormMeta" class="form-event-meta">August 23, 2026 • 10:00 AM – 1:00 PM • Shanti Devi Mittal Auditorium</div>
             </div>
-            <span id="scheduleCountPill" class="px-3 py-1 rounded-full bg-navy text-white text-xs font-bold">
-              0 Active
-            </span>
+            <span id="regFormFeeBadge" class="pill pill-free">FREE</span>
           </div>
 
-          <!-- Local Time-Clash Warning Box -->
-          <div id="scheduleClashBox" class="hidden p-4 rounded-xl bg-red-50 border border-red-200 text-red-800 space-y-1">
-            <div class="flex items-center gap-2 font-extrabold text-sm text-red-700">
-              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
-              </svg>
-              <span>Schedule Time-Clash Alert</span>
+          <!-- Inline Validation Error Box -->
+          <div id="regErrorBox" class="alert-box hidden" role="alert"></div>
+
+          <!-- Live Pre-Registration Clash Preview -->
+          <div id="regClashPreview" class="alert-box hidden" role="alert"></div>
+
+          <form id="registrationForm" novalidate>
+            <div class="form-grid">
+              <div>
+                <label for="inputFullName" class="field-label">Full Name</label>
+                <input id="inputFullName" type="text" class="field-input" value="Astabhya Kumar" required />
+              </div>
+              <div>
+                <label for="inputRollNo" class="field-label">Registration / Roll Number</label>
+                <input id="inputRollNo" type="text" class="field-input" placeholder="12405678" required />
+              </div>
             </div>
-            <ul id="scheduleClashList" class="text-xs sm:text-sm list-disc pl-5 space-y-1"></ul>
-          </div>
 
-          <!-- Registered Events List -->
-          <div>
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy mb-2.5">
-              Registered Events
-            </h4>
-            <div id="myRegistrationsList" class="space-y-2.5"></div>
-          </div>
+            <div class="form-grid">
+              <div>
+                <label for="inputEmail" class="field-label">University Email</label>
+                <input id="inputEmail" type="email" class="field-input" value="astabhya@lpu.in" placeholder="astabhya@lpu.in" required />
+              </div>
+              <div>
+                <label for="inputDept" class="field-label">Department</label>
+                <select id="inputDept" class="field-select">
+                  <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
+                  <option value="Electronics & Communication">Electronics &amp; Communication</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Business & Management">Business &amp; Management</option>
+                  <option value="Design & Arts">Design &amp; Arts</option>
+                </select>
+              </div>
+            </div>
 
-          <!-- Saved Reminders List -->
+            <label class="checkbox-card">
+              <input id="inputSmsOptIn" type="checkbox" checked />
+              <span>Send me an SMS reminder 1 hour before this event starts</span>
+            </label>
+
+            <div class="form-actions">
+              <button id="btnResetForm" type="button" class="btn btn-outline-subtle">Cancel</button>
+              <button type="submit" class="btn btn-amber">CONFIRM REGISTRATION</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- =================================================================
+           SECTION 05 — CONFIRMATION & MY PASSES
+           ================================================================= -->
+      <section id="confirmation" class="section-block">
+        <div class="section-header-row">
           <div>
-            <h4 class="text-xs font-extrabold uppercase tracking-wider text-navy mb-2.5">
-              Saved Reminders
-            </h4>
-            <div id="myRemindersList" class="space-y-2.5"></div>
+            <span class="section-badge badge-green">05 • SUCCESS STATE &amp; ACTIONS</span>
+            <h2 class="section-title">Registration Confirmation &amp; My Passes</h2>
+            <p class="section-subtitle">
+              Download your Google Calendar invite (.ics), manage SMS reminders, and track your active registrations.
+            </p>
           </div>
         </div>
-      </div>
-    </section>
+
+        <div class="confirm-grid">
+          <!-- Left: Success State Card -->
+          <div class="confirm-card">
+            <div class="check-circle" aria-hidden="true">
+              <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="3.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+
+            <div class="confirm-kicker">REGISTRATION SUCCESSFUL!</div>
+            <h3 id="confirmEventTitle" class="confirm-title">Design Thinking Workshop 2026</h3>
+            <p id="confirmEmailLine" class="confirm-email">A confirmation email has been sent to astabhya@lpu.in</p>
+            <div id="confirmEventMeta" class="confirm-meta">August 23, 2026 • 10:00 AM – 1:00 PM • Shanti Devi Mittal Auditorium</div>
+
+            <div class="confirm-btn-stack">
+              <button id="btnDownloadIcs" type="button" class="btn btn-outline-subtle">
+                <svg width="16" height="16" fill="none" stroke="var(--amber)" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                  <path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"></path>
+                </svg>
+                <span>Add to Google Calendar (.ics)</span>
+              </button>
+
+              <button id="btnSmsReminder" type="button" class="btn btn-outline-subtle">
+                <svg width="16" height="16" fill="none" stroke="var(--amber)" stroke-width="2.2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span id="smsReminderLabel">Set Event Reminder (SMS)</span>
+              </button>
+
+              <a href="#home" class="btn btn-navy">Go Back to Events</a>
+            </div>
+          </div>
+
+          <!-- Right: My Registered Events & Saved Reminders -->
+          <div class="schedule-card">
+            <div class="schedule-header">
+              <div>
+                <h3 class="schedule-title">My Registered Events &amp; Saved Reminders</h3>
+                <p style="font-size: 0.78rem; color: var(--muted);">Automatically saved in your browser (localStorage)</p>
+              </div>
+              <span id="scheduleCountPill" class="schedule-count-pill">0 Registered • 0 Reminders</span>
+            </div>
+
+            <div id="scheduleClashBox" class="schedule-clash-box hidden" role="alert">
+              <div class="clash-msg-wrap" style="font-weight: 800; font-size: 0.88rem;">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                </svg>
+                <span>Schedule Time-Clash Alert</span>
+              </div>
+              <ul id="scheduleClashList"></ul>
+            </div>
+
+            <div class="list-group-heading">Registered Events</div>
+            <div id="myRegistrationsList" class="saved-list"></div>
+
+            <div class="list-group-heading">Saved Reminders</div>
+            <div id="myRemindersList" class="saved-list"></div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-navy text-slate-300 border-t border-white/10">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-      <p><strong class="text-white">CAMPUS <span class="text-amberhub">HUB</span></strong> • INT 335 Design Thinking Project (Track P17)</p>
-      <p>Team: Astabhya Kumar • Om Chaudary • Ujjwal Mani Tripathi</p>
+  <footer>
+    <div class="footer-inner">
+      <div><strong style="color: #FFFFFF;">CAMPUS <span style="color: var(--amber);">HUB</span></strong> • INT 335 Design Thinking Project (Track P17)</div>
+      <div>Team: Astabhya Kumar • Om Chaudary • Ujjwal Mani Tripathi</div>
     </div>
   </footer>
 
-  <!-- TOAST NOTIFICATION HOST (Replaces alert()) -->
-  <div id="toastHost" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
+  <!-- TOAST NOTIFICATION HOST -->
+  <div id="toastHost" class="toast-host" aria-live="polite"></div>
 
   <!-- =====================================================================
-       APPLICATION LOGIC (DATA, STATE, FILTERING, CLASH DETECTION, ICS EXPORT)
+       APPLICATION LOGIC (ZERO-DEPENDENCY VANILLA JS)
        ===================================================================== -->
   <script>
     (function () {
       'use strict';
 
       /* -------------------------------------------------------------------
-         1. COMPLETE DATASET OF 18 REALISTIC CAMPUS EVENTS
-            - 8 Engineering events
-            - 3 Arts, 3 Business, 2 Cultural, 2 Sports
-            - Includes intentional overlap: Hack Night & Open Mic Evening (Nov 3)
-              plus Robotics & IoT Lab & Campus Startup Pitch (Aug 27)
+         1. DATASET: 18 REALISTIC CAMPUS EVENTS
+            - 8 Engineering, 3 Arts, 3 Business, 2 Cultural, 2 Sports
+            - Exact Campus Venues: Shanti Devi Mittal Auditorium, Blocks 34,
+              32, 33, 36, 38, 14 (Rooms 404, 703, 810, 602, 506, 108, 204),
+              and Indoor Sports Complex, Near Block 34.
+            - Intentional Time Clash: Hack Night (Nov 3, 5:00 PM - 9:00 PM)
+              & Open Mic Evening (Nov 3, 6:30 PM - 8:30 PM).
          ------------------------------------------------------------------- */
       const EVENTS = [
         // === 8 ENGINEERING EVENTS ===
@@ -518,24 +1682,50 @@
           year: '2026',
           fullDate: 'August 23, 2026',
           isoDate: '2026-08-23',
-          startMin: 600,  // 10:00
-          endMin: 1020,   // 17:00
-          timeLabel: '10:00 - 17:00 Hours',
+          startMin: 600,
+          endMin: 780,
+          timeLabel: '10:00 AM – 1:00 PM',
           title: 'Design Thinking Workshop 2026',
           venue: 'Shanti Devi Mittal Auditorium',
-          directions: 'Enter Main Academic Block via Gate 2, take the central staircase to the 1st Floor, and turn right past the Dean’s Office (2 min walk from Library).',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter via the Main Auditorium Plaza gates; registration desks are in the ground-floor lobby (3 min walk from Block 34).',
           club: 'Design Thinking Club',
           fee: 0,
           seatsTaken: 84,
           seatsTotal: 120,
-          coordinator: 'Rohan Verma • +91 98765 45210 • dtclub@univ.edu',
-          rules: 'Open to all UG students. Bring a laptop or sketchbook; teams of 3–4 will be formed on-site.',
-          description:
-            'Learn how to observe real campus challenges, synthesize user insights, and build testable low-fidelity prototypes in a guided, hands-on interactive session with faculty and industry mentors.',
+          coordinator: 'Rohan Verma • +91 98765 45210 • dtclub@lpu.in',
+          rules: 'Open to all UG students. Bring a laptop or sketchbook; teams of 3–4 formed on-site. Certificates for all participants.',
+          description: 'Learn how to observe real campus challenges, synthesize user insights, and build testable low-fidelity prototypes in a guided, hands-on interactive session with faculty mentors.',
           activities: [
             'Rapid user-empathy interview warm-up & persona framing',
             'Divergent brainstorming and paper wireframe sketching',
             'Live peer usability critique and 2-minute prototype pitches'
+          ]
+        },
+        {
+          id: 'hack-night-2026',
+          category: 'Engineering',
+          month: 'Nov',
+          day: '03',
+          year: '2026',
+          fullDate: 'November 3, 2026',
+          isoDate: '2026-11-03',
+          startMin: 1020, // 5:00 PM
+          endMin: 1260,   // 9:00 PM
+          timeLabel: '5:00 PM – 9:00 PM',
+          title: 'Hack Night',
+          venue: 'Block 34, Room 810',
+          directions: 'Enter Block 34 via the East Entrance, take Lift B to the 8th Floor Innovation Wing; Room 810 is the corner glass-walled lab overlooking the campus walkway.',
+          club: 'Coding Club',
+          fee: 0,
+          seatsTaken: 67,
+          seatsTotal: 150,
+          coordinator: 'Siddharth Rao • +91 98204 51190 • codingclub@lpu.in',
+          rules: 'Teams of 2–4 students. Bring laptops and chargers; ₹15,000 prize pool & refreshments served at 7:30 PM.',
+          description: 'Four hours, one working prototype. Team up with designers and developers to ship a practical campus web utility or automation tool before the 9:00 PM demo bell.',
+          activities: [
+            'Problem track reveal & 15-minute rapid team formation',
+            '3-hour guided build sprint with alumni mentors',
+            'Live 2-minute product demos & Best Prototype awards'
           ]
         },
         {
@@ -546,20 +1736,19 @@
           year: '2026',
           fullDate: 'August 21, 2026',
           isoDate: '2026-08-21',
-          startMin: 840,  // 14:00
-          endMin: 1020,   // 17:00
-          timeLabel: '14:00 - 17:00 Hours',
+          startMin: 840,
+          endMin: 1020,
+          timeLabel: '2:00 PM – 5:00 PM',
           title: 'AI & ML Bootcamp',
-          venue: 'CS Innovation Lab, Tech Block',
-          directions: 'Tech Block Ground Floor, Room G-04 directly opposite the Robotics noticeboard.',
+          venue: 'Block 34, Room 404',
+          directions: 'Enter Block 34 near the central lawn, take Lift A or the main staircase to the 4th Floor, and walk straight to Computer Lab Room 404.',
           club: 'AI & Data Science Society',
           fee: 0,
           seatsTaken: 62,
           seatsTotal: 80,
-          coordinator: 'Ananya Nair • +91 98112 30455 • aimsoc@univ.edu',
-          rules: 'Basic Python familiarity recommended. Lab desktops and Google Colab access provided.',
-          description:
-            'Build, train, and evaluate your first machine learning classification pipeline from scratch. Senior mentors walk through data cleaning, feature scaling, and live leaderboard evaluation.',
+          coordinator: 'Ananya Nair • +91 98112 30455 • aimsoc@lpu.in',
+          rules: 'Basic Python familiarity recommended. Lab desktops and Google Colab notebooks provided; top 3 win Kaggle swag.',
+          description: 'Build, train, and evaluate your first machine learning classification pipeline from scratch. Senior mentors walk through data cleaning, feature scaling, and live leaderboard evaluation.',
           activities: [
             'Hands-on Pandas & scikit-learn dataset cleaning lab',
             'Comparing decision trees, random forests, and neural nets',
@@ -574,20 +1763,19 @@
           year: '2026',
           fullDate: 'August 16, 2026',
           isoDate: '2026-08-16',
-          startMin: 660,  // 11:00
-          endMin: 840,    // 14:00
-          timeLabel: '11:00 - 14:00 Hours',
-          title: 'CAD Challenge',
-          venue: 'Mechanical Studio B',
-          directions: 'Workshop Complex Wing B, 2nd Floor next to the 3D Printing & Prototyping Bay.',
+          startMin: 660,
+          endMin: 840,
+          timeLabel: '11:00 AM – 2:00 PM',
+          title: 'CAD & 3D Modeling Challenge',
+          venue: 'Block 34, Room 703',
+          directions: 'Take the central elevators in Block 34 up to the 7th Floor, turn left past the Faculty Cabins, and enter CAD Studio Room 703.',
           club: 'Mechanical Engineering Guild',
           fee: 50,
           seatsTaken: 38,
           seatsTotal: 60,
-          coordinator: 'Kabir Malhotra • +91 97170 88214 • mechguild@univ.edu',
-          rules: 'Individual or pairs. SolidWorks and Fusion 360 workstations are pre-installed.',
-          description:
-            'Put your 3D modelling speed and precision to the test in a timed mechanical blueprint competition. Winning assemblies will be 3D-printed at the campus maker lab.',
+          coordinator: 'Kabir Malhotra • +91 97170 88214 • mechguild@lpu.in',
+          rules: 'Individual or pairs. ₹50 entry; SolidWorks & Fusion 360 workstations pre-installed. Winning designs get 3D-printed.',
+          description: 'Put your 3D modelling speed and precision to the test in a timed mechanical blueprint competition judged on tolerances, assembly constraints, and manufacturability.',
           activities: [
             'Engineering blueprint & tolerance briefing',
             '90-minute timed 3D part & assembly modelling round',
@@ -595,83 +1783,26 @@
           ]
         },
         {
-          id: 'robotics-iot-lab-2026',
+          id: 'cloud-devops-sprint-2026',
           category: 'Engineering',
           month: 'Aug',
-          day: '27',
+          day: '25',
           year: '2026',
-          fullDate: 'August 27, 2026',
-          isoDate: '2026-08-27',
-          startMin: 900,  // 15:00
-          endMin: 1080,   // 18:00
-          timeLabel: '15:00 - 18:00 Hours',
-          title: 'Robotics & IoT Lab',
-          venue: 'Robotics Arena, Block C',
-          directions: 'Block C Basement Lab 02; follow the yellow floor markers from the North Entrance.',
-          club: 'Campus Robotics Club',
-          fee: 100,
-          seatsTaken: 45,
-          seatsTotal: 50,
-          coordinator: 'Devansh Joshi • +91 98991 44120 • robotics@univ.edu',
-          rules: 'ESP32 kits, ultrasonic sensors, and breadboards provided in pairs. Bring a USB-C cable.',
-          description:
-            'Wire, flash, and deploy a real smart-campus sensor node using ESP32 microcontrollers and MQTT dashboards. Great for beginners and hardware enthusiasts alike.',
-          activities: [
-            'ESP32 sensor wiring & calibration walkthrough',
-            'Streaming live room-occupancy data to a web dashboard',
-            'Mini autonomous obstacle-avoidance demo'
-          ]
-        },
-        {
-          id: 'hack-night-2026',
-          category: 'Engineering',
-          month: 'Nov',
-          day: '03',
-          year: '2026',
-          fullDate: 'November 3, 2026',
-          isoDate: '2026-11-03',
-          startMin: 1020, // 17:00
-          endMin: 1260,   // 21:00
-          timeLabel: '17:00 - 21:00 Hours',
-          title: 'Hack Night',
-          venue: 'Shanti Devi Mittal Auditorium',
-          directions: 'Computer Science Block, 2nd Floor Auditorium Hall directly above the Student Lounge.',
-          club: 'Coding Club',
-          fee: 0,
-          seatsTaken: 67,
-          seatsTotal: 150,
-          coordinator: 'Siddharth Rao • +91 98204 51190 • codingclub@univ.edu',
-          rules: 'Teams of 2–4 students. Bring laptops and chargers; pizza and coffee provided at 19:30.',
-          description:
-            'Four hours, one working prototype. Team up with designers and developers to ship a practical campus web utility or automation tool before the 9:00 PM demo bell.',
-          activities: [
-            'Problem track reveal & 15-minute rapid team formation',
-            '3-hour guided build sprint with alumni mentors',
-            'Live 2-minute product demos & Best Prototype prizes'
-          ]
-        },
-        {
-          id: 'cloud-native-sprint-2026',
-          category: 'Engineering',
-          month: 'Sep',
-          day: '02',
-          year: '2026',
-          fullDate: 'September 2, 2026',
-          isoDate: '2026-09-02',
-          startMin: 840,  // 14:00
-          endMin: 1020,   // 17:00
-          timeLabel: '14:00 - 17:00 Hours',
-          title: 'Cloud Native Sprint',
-          venue: 'Shanti Devi Mittal Auditorium',
-          directions: 'Computer Science Block, 1st Floor.',
+          fullDate: 'August 25, 2026',
+          isoDate: '2026-08-25',
+          startMin: 900,
+          endMin: 1050,
+          timeLabel: '3:00 PM – 5:30 PM',
+          title: 'Cloud & DevOps Sprint',
+          venue: 'Block 34, Room 602',
+          directions: 'Enter Block 34 and take Lift A to the 6th Floor; Room 602 is directly across from the Cloud Computing Lab.',
           club: 'Cloud Computing Club',
           fee: 0,
           seatsTaken: 54,
           seatsTotal: 90,
-          coordinator: 'Meera Krishnan • +91 99103 77812 • cloudclub@univ.edu',
+          coordinator: 'Meera Krishnan • +91 99103 77812 • cloudclub@lpu.in',
           rules: 'Free GitHub student account required. Cloud sandbox credits distributed at check-in.',
-          description:
-            'Containerize a full-stack student app with Docker and ship an automated CI/CD pipeline using GitHub Actions. Walk away with a live portfolio deployment.',
+          description: 'Containerize a full-stack student web app with Docker and ship an automated CI/CD pipeline using GitHub Actions. Walk away with a live portfolio deployment.',
           activities: [
             'Writing clean Dockerfiles & multi-container compose setups',
             'Automated testing & zero-downtime cloud deployment',
@@ -679,171 +1810,192 @@
           ]
         },
         {
-          id: 'embedded-systems-jam-2026',
+          id: 'embedded-systems-lab-2026',
           category: 'Engineering',
-          month: 'Sep',
-          day: '05',
+          month: 'Aug',
+          day: '27',
           year: '2026',
-          fullDate: 'September 5, 2026',
-          isoDate: '2026-09-05',
-          startMin: 600,  // 10:00
-          endMin: 780,    // 13:00
-          timeLabel: '10:00 - 13:00 Hours',
-          title: 'Embedded Systems Jam',
-          venue: 'Electronics Block Block -36 Room 214',
-          directions: 'Main Block 2nd Floor, South Corridor Room 214.',
+          fullDate: 'August 27, 2026',
+          isoDate: '2026-08-27',
+          startMin: 630,
+          endMin: 810,
+          timeLabel: '10:30 AM – 1:30 PM',
+          title: 'Embedded Systems Lab',
+          venue: 'Block 34, Room 703',
+          directions: 'Take the central elevators in Block 34 to the 7th Floor, turn left past the Faculty Cabins, and enter Lab Room 703.',
           club: 'IEEE Student Branch',
-          fee: 75,
-          seatsTaken: 29,
-          seatsTotal: 45,
-          coordinator: 'Pranav Kulkarni • +91 98331 66402 • ieee@univ.edu',
-          rules: 'Open to ECE, EEE, and CSE students. All STM32 boards and oscilloscopes supplied.',
-          description:
-            'Dive into bare-metal firmware programming, PWM motor control, and two-layer PCB layout checks in KiCad with hands-on guidance from IEEE senior fellows.',
+          fee: 100,
+          seatsTaken: 34,
+          seatsTotal: 50,
+          coordinator: 'Pranav Kulkarni • +91 98331 66402 • ieee@lpu.in',
+          rules: 'Open to ECE, EEE, and CSE students. ₹100 covers ESP32 kits, sensors, and lab consumables; prizes for fastest telemetry setup.',
+          description: 'Wire, flash, and deploy a real smart-campus sensor node using ESP32 microcontrollers and MQTT dashboards with hands-on guidance from IEEE senior fellows.',
           activities: [
-            'STM32 GPIO & interrupt-driven firmware lab',
-            'Schematic capture & DRC verification in KiCad',
+            'ESP32 sensor wiring & calibration walkthrough',
+            'Streaming live room-occupancy data to a web dashboard',
             'Hardware debugging clinic with logic analyzers'
           ]
         },
         {
-          id: 'competitive-coding-arena-2026',
+          id: 'cybersecurity-ctf-2026',
+          category: 'Engineering',
+          month: 'Aug',
+          day: '29',
+          year: '2026',
+          fullDate: 'August 29, 2026',
+          isoDate: '2026-08-29',
+          startMin: 960,
+          endMin: 1140,
+          timeLabel: '4:00 PM – 7:00 PM',
+          title: 'Cybersecurity CTF',
+          venue: 'Block 34, Room 404',
+          directions: 'Enter Block 34 via the East Entrance, take Lift A to the 4th Floor, and walk straight to Computer Lab Room 404.',
+          club: 'InfoSec & Cyber Club',
+          fee: 0,
+          seatsTaken: 74,
+          seatsTotal: 100,
+          coordinator: 'Aarav Mehta • +91 98450 22918 • infosec@lpu.in',
+          rules: 'Individual or pairs. Bring a laptop with Kali Linux or a modern browser; top 3 teams qualify for Inter-University Finals.',
+          description: 'Test your web exploitation, cryptography, reverse engineering, and digital forensics skills in a timed Jeopardy-style Capture The Flag qualifier.',
+          activities: [
+            'Live 12-challenge CTF board across web, crypto & forensics',
+            'Real-time scoreboard with first-blood bonus points',
+            'Post-event write-up walkthrough & finals qualification'
+          ]
+        },
+        {
+          id: 'robotics-line-follower-2026',
           category: 'Engineering',
           month: 'Sep',
-          day: '08',
+          day: '02',
           year: '2026',
-          fullDate: 'September 8, 2026',
-          isoDate: '2026-09-08',
-          startMin: 960,  // 16:00
-          endMin: 1140,   // 19:00
-          timeLabel: '16:00 - 19:00 Hours',
-          title: 'Competitive Coding Arena',
-          venue: 'Mittal School of Bussiness LEcture Hall 3',
-          directions: 'Tech Block 3rd Floor, Labs 304–305 (take Lift B).',
-          club: 'ACM Student Chapter',
-          fee: 0,
-          seatsTaken: 96,
-          seatsTotal: 120,
-          coordinator: 'Aarav Mehta • +91 98450 22918 • acm@univ.edu',
-          rules: 'Individual ICPC-style 2-hour contest (C++, Java, or Python) followed by live editorial.',
-          description:
-            'Sharpen your data structures and algorithmic problem-solving under timed contest pressure. Top 10 finishers receive ACM merit certificates and placement prep vouchers.',
+          fullDate: 'September 2, 2026',
+          isoDate: '2026-09-02',
+          startMin: 840,
+          endMin: 1020,
+          timeLabel: '2:00 PM – 5:00 PM',
+          title: 'Robotics Line-Follower Qualifier',
+          venue: 'Block 33, Room 703',
+          directions: 'Block 33 is directly adjacent to Block 34 on the Engineering Spine. Take the main lift to the 7th Floor; Room 703 is the third lab on the right.',
+          club: 'Campus Robotics Club',
+          fee: 150,
+          seatsTaken: 42,
+          seatsTotal: 60,
+          coordinator: 'Devansh Joshi • +91 98991 44120 • robotics@lpu.in',
+          rules: 'Teams of up to 4 members. ₹150 per bot entry; ₹10,000 cash prize for fastest autonomous lap.',
+          description: 'Tune your PID controllers and IR sensor arrays to race autonomous line-following bots through sharp hairpins, loops, and speed checkpoints.',
           activities: [
-            '6-problem algorithmic contest on local judge',
-            'Live scoreboard freeze during final 30 minutes',
-            'Post-contest editorial walkthrough & prize distribution'
+            'Bot dimension & sensor compliance check',
+            'Two timed qualifying runs on the official arena track',
+            'Top 8 knockout finals & fastest-lap awards'
           ]
         },
 
-        // === ARTS EVENTS (3) ===
+        // === 3 ARTS EVENTS ===
         {
-          id: 'golden-hour-photo-walk-2026',
+          id: 'digital-illustration-2026',
           category: 'Arts',
           month: 'Aug',
           day: '24',
           year: '2026',
           fullDate: 'August 24, 2026',
           isoDate: '2026-08-24',
-          startMin: 960,  // 16:00
-          endMin: 1080,   // 18:00
-          timeLabel: '16:00 - 18:00 Hours',
-          title: 'Golden Hour Photo Walk',
-          venue: 'Art Gallery Lawn',
-          directions: 'Meet at the white pergola in front of the Central Art Gallery beside the Lotus Pond.',
+          startMin: 900,
+          endMin: 1020,
+          timeLabel: '3:00 PM – 5:00 PM',
+          title: 'Digital Illustration & Poster Jam',
+          venue: 'Block 36, Room 108',
+          directions: 'Walk south from Block 34 toward the Design Wing to Block 36. Room 108 is the sunlit Studio Hall on the 1st Floor.',
+          club: 'Fine Arts & Design Collective',
+          fee: 0,
+          seatsTaken: 36,
+          seatsTotal: 50,
+          coordinator: 'Tara Deshmukh • +91 98672 19004 • finearts@lpu.in',
+          rules: 'Free entry. Bring a tablet, laptop with Figma/Illustrator, or sketchbook. Winning posters featured on campus.',
+          description: 'Master rapid poster composition, vector iconography, and expressive digital sketching in a friendly cross-disciplinary studio jam.',
+          activities: [
+            '15-minute composition, grid & visual hierarchy warm-up',
+            'Hands-on Figma & vector poster sprint',
+            'Gallery pin-up & constructive peer feedback'
+          ]
+        },
+        {
+          id: 'photography-walk-2026',
+          category: 'Arts',
+          month: 'Aug',
+          day: '28',
+          year: '2026',
+          fullDate: 'August 28, 2026',
+          isoDate: '2026-08-28',
+          startMin: 990,
+          endMin: 1110,
+          timeLabel: '4:30 PM – 6:30 PM',
+          title: 'Photography Walk Briefing',
+          venue: 'Block 38, Room 404',
+          directions: 'Walk past the Central Library toward the CSE Cluster to reach Block 38. Take the main stairs or elevator to the 4th Floor, Room 404.',
           club: 'Lens & Shutter Club',
           fee: 0,
           seatsTaken: 41,
           seatsTotal: 60,
-          coordinator: 'Ishita Sen • +91 98109 34112 • lensclub@univ.edu',
-          rules: 'Any smartphone or DSLR welcome. Best 5 shots featured in the campus magazine.',
-          description:
-            'Capture campus architecture, candid student life, and golden-hour portraits on a guided sunset walk with senior student photographers.',
+          coordinator: 'Ishita Sen • +91 98109 34112 • lensclub@lpu.in',
+          rules: 'Any smartphone or DSLR welcome. Best 5 shots published in the semester campus magazine.',
+          description: 'Capture campus architecture, candid student life, and golden-hour portraits on a guided sunset trail starting with a framing workshop in Room 404.',
           activities: [
-            '15-minute composition & natural lighting tips',
-            '75-minute guided photo trail across 4 campus landmarks',
-            'Group shot review & mobile editing presets'
+            '15-minute composition & natural lighting briefing in Room 404',
+            '75-minute guided photo trail across campus landmarks',
+            'Group shot review & mobile colour-grading presets'
           ]
         },
         {
-          id: 'poster-zine-studio-2026',
+          id: 'uiux-critique-circle-2026',
           category: 'Arts',
-          month: 'Sep',
-          day: '01',
+          month: 'Aug',
+          day: '30',
           year: '2026',
-          fullDate: 'September 1, 2026',
-          isoDate: '2026-09-01',
-          startMin: 660,  // 11:00
-          endMin: 780,    // 13:00
-          timeLabel: '11:00 - 13:00 Hours',
-          title: 'Poster & Zine Design Studio',
-          venue: 'Fine Arts Studio 2',
-          directions: 'Humanities & Arts Block, 1st Floor Room A-108.',
-          club: 'Fine Arts Collective',
-          fee: 50,
-          seatsTaken: 24,
-          seatsTotal: 40,
-          coordinator: 'Tara Deshmukh • +91 98672 19004 • finearts@univ.edu',
-          rules: 'All A3 paper, brush pens, linocut ink, and folding tools are included in the ₹50 kit fee.',
-          description:
-            'Experiment with bold editorial typography, collage layouts, and 8-page pocket zine folding to create tactile visual stories.',
-          activities: [
-            'Grid & colour-contrast poster mini-lecture',
-            'Hands-on 8-page pocket zine folding & illustration',
-            'Community artwork swap & gallery pin-up'
-          ]
-        },
-        {
-          id: 'charcoal-sketch-evening-2026',
-          category: 'Arts',
-          month: 'Sep',
-          day: '10',
-          year: '2026',
-          fullDate: 'September 10, 2026',
-          isoDate: '2026-09-10',
-          startMin: 1020, // 17:00
-          endMin: 1140,   // 19:00
-          timeLabel: '17:00 - 19:00 Hours',
-          title: 'Charcoal & Sketch Evening',
-          venue: 'Design Courtyard',
-          directions: 'Open-air courtyard between the Architecture Wing and the Campus Café.',
-          club: 'Visual Arts Society',
+          fullDate: 'August 30, 2026',
+          isoDate: '2026-08-30',
+          startMin: 660,
+          endMin: 780,
+          timeLabel: '11:00 AM – 1:00 PM',
+          title: 'UI/UX Critique Circle',
+          venue: 'Block 32, Room 506',
+          directions: 'Enter Block 32 via the South Entrance, take Lift B to the 5th Floor, and turn right to Seminar Room 506.',
+          club: 'Interaction Design Society',
           fee: 0,
-          seatsTaken: 33,
-          seatsTotal: 50,
-          coordinator: 'Nikhil Varma • +91 98215 73409 • visualarts@univ.edu',
-          rules: 'Open to absolute beginners. Charcoal sticks and newsprint pads provided.',
-          description:
-            'Unwind after lectures with expressive charcoal gesture drawing, live acoustic background music, and friendly critiques.',
+          seatsTaken: 29,
+          seatsTotal: 45,
+          coordinator: 'Nandini Rao • +91 98119 42087 • ixdsoc@lpu.in',
+          rules: 'Bring any Figma prototype or portfolio case study for live 5-minute peer & alumni critique.',
+          description: 'Get actionable usability feedback on your student app prototypes, typography hierarchy, and mobile layouts from senior product designers.',
           activities: [
-            'Light, shadow & tonal shading warm-up',
-            'Live still-life and portrait sketching session',
-            'Take-home fixative spray & showcase wall'
+            'Live heuristic teardown of 3 student web apps',
+            'Small-group portfolio & wireframe critique tables',
+            'Accessibility & colour-contrast checklist workshop'
           ]
         },
 
-        // === BUSINESS EVENTS (3) ===
+        // === 3 BUSINESS EVENTS ===
         {
-          id: 'campus-startup-pitch-2026',
+          id: 'startup-pitch-finale-2026',
           category: 'Business',
           month: 'Aug',
-          day: '27',
+          day: '26',
           year: '2026',
-          fullDate: 'August 27, 2026',
-          isoDate: '2026-08-27',
-          startMin: 900,  // 15:00 (overlaps with Robotics & IoT Lab!)
-          endMin: 1080,   // 18:00
-          timeLabel: '15:00 - 18:00 Hours',
-          title: 'Campus Startup Pitch',
-          venue: 'Main Auditorium, Block A',
-          directions: 'Block A Ground Floor; enter through the Central Foyer opposite the Flagpole.',
+          fullDate: 'August 26, 2026',
+          isoDate: '2026-08-26',
+          startMin: 1020,
+          endMin: 1170,
+          timeLabel: '5:00 PM – 7:30 PM',
+          title: 'Startup Pitch Finale',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter through the Main Auditorium Plaza gates; doors open at 4:40 PM.',
           club: 'Entrepreneurship Cell',
           fee: 0,
-          seatsTaken: 142,
-          seatsTotal: 200,
-          coordinator: 'Riya Kapoor • +91 98188 50921 • ecell@univ.edu',
-          rules: 'Open to both pitching founders and student spectators. ₹25,000 seed micro-grant pool.',
-          description:
-            'Watch top student ventures pitch live to alumni founders and campus incubation mentors in 5-minute rapid-fire rounds followed by open networking.',
+          seatsTaken: 118,
+          seatsTotal: 160,
+          coordinator: 'Riya Kapoor • +91 98188 50921 • ecell@lpu.in',
+          rules: 'Open to both pitching founders and student spectators. ₹50,000 seed micro-grant pool for top 3 ventures.',
+          description: 'Watch top student ventures pitch live to alumni founders and campus incubation mentors in 5-minute rapid-fire rounds followed by open networking.',
           activities: [
             'Alumni founder keynote on zero-to-one validation',
             'Top 8 student startup pitches & investor Q&A',
@@ -851,63 +2003,61 @@
           ]
         },
         {
-          id: 'product-strategy-case-jam-2026',
+          id: 'fintech-case-study-2026',
           category: 'Business',
-          month: 'Sep',
-          day: '03',
+          month: 'Aug',
+          day: '31',
           year: '2026',
-          fullDate: 'September 3, 2026',
-          isoDate: '2026-09-03',
-          startMin: 780,  // 13:00
-          endMin: 960,    // 16:00
-          timeLabel: '13:00 - 16:00 Hours',
-          title: 'Product Strategy Case Jam',
-          venue: 'Management Seminar Hall',
-          directions: 'School of Management Building, 2nd Floor Room M-201.',
-          club: 'Consulting & Finance Society',
-          fee: 100,
+          fullDate: 'August 31, 2026',
+          isoDate: '2026-08-31',
+          startMin: 660,
+          endMin: 810,
+          timeLabel: '11:00 AM – 1:30 PM',
+          title: 'FinTech Case Study',
+          venue: 'Block 32, Room 810',
+          directions: 'Block 32 sits right next to Block 33 along the main academic walkway. Take Lift A to the 8th Floor; Case Room 810 is at the end of the corridor.',
+          club: 'Finance & Investment Club',
+          fee: 50,
           seatsTaken: 48,
           seatsTotal: 75,
-          coordinator: 'Arjun Sengupta • +91 98301 41287 • cfs@univ.edu',
-          rules: 'Teams of 2–3. ₹100 per team; includes case dossier and refreshments.',
-          description:
-            'Tackle a real Indian consumer-tech retention and pricing case in a 90-minute sprint and present your recommendation deck to visiting product managers.',
+          coordinator: 'Kunal Bansal • +91 99581 20394 • finclub@lpu.in',
+          rules: 'Teams of 2–3. ₹50 per participant covers printed case dossier & refreshments; ₹8,000 winner trophy.',
+          description: 'Analyse UPI payment economics, neobanking unit metrics, and equity valuation through a fast-paced Indian FinTech case competition.',
           activities: [
-            'Live case dossier release & root-cause framing',
-            '90-minute 5-slide strategy deck sprint',
-            'Panel judging & consulting interview feedback'
+            'Live FinTech case dossier release & root-cause framing',
+            '75-minute 5-slide strategy deck sprint',
+            'Panel judging & finance internship Q&A'
           ]
         },
         {
-          id: 'fintech-markets-workshop-2026',
+          id: 'inter-dept-debate-2026',
           category: 'Business',
           month: 'Sep',
-          day: '09',
+          day: '01',
           year: '2026',
-          fullDate: 'September 9, 2026',
-          isoDate: '2026-09-09',
-          startMin: 840,  // 14:00
-          endMin: 990,    // 16:30
-          timeLabel: '14:00 - 16:30 Hours',
-          title: 'FinTech & Markets Workshop',
-          venue: 'Business Block Room 204',
-          directions: 'School of Management Building, 2nd Floor West Wing.',
-          club: 'Finance & Investment Club',
+          fullDate: 'September 1, 2026',
+          isoDate: '2026-09-01',
+          startMin: 930,
+          endMin: 1050,
+          timeLabel: '3:30 PM – 5:30 PM',
+          title: 'Inter-Department Debate',
+          venue: 'Block 14, Room 404',
+          directions: 'Enter Block 14 (Business & Humanities Wing), take the central lift to the 4th Floor, and proceed directly to Seminar Room 404.',
+          club: 'Oratory & Policy Society',
           fee: 0,
-          seatsTaken: 59,
+          seatsTaken: 52,
           seatsTotal: 80,
-          coordinator: 'Kunal Bansal • +91 99581 20394 • finclub@univ.edu',
-          rules: 'No prior finance background required. Mock trading simulator link shared at start.',
-          description:
-            'Understand UPI rails, personal portfolio basics, and equity valuation through an interactive campus mock-market simulation.',
+          coordinator: 'Arjun Sengupta • +91 98301 41287 • oratory@lpu.in',
+          rules: 'Open to all branches. Asian Parliamentary format; Best Speaker and Best Rebuttal trophies awarded.',
+          description: 'Sharp policy and tech-ethics debates pitting engineering, management, and law students head-to-head on AI regulation and startup economics.',
           activities: [
-            'How modern Indian FinTech & UPI infrastructure scales',
-            '60-minute live mock-portfolio trading game',
-            'Q&A on finance internships & analyst prep'
+            'Motion release & 20-minute team preparation window',
+            'Live parliamentary debate rounds & floor rebuttals',
+            'Adjudicator feedback & Best Speaker awards'
           ]
         },
 
-        // === CULTURAL EVENTS (2) ===
+        // === 2 CULTURAL EVENTS ===
         {
           id: 'open-mic-evening-2026',
           category: 'Cultural',
@@ -916,20 +2066,19 @@
           year: '2026',
           fullDate: 'November 3, 2026',
           isoDate: '2026-11-03',
-          startMin: 1110, // 18:30 (overlaps with Hack Night 17:00-21:00!)
-          endMin: 1230,   // 20:30
-          timeLabel: '18:30 - 20:30 Hours',
+          startMin: 1110, // 6:30 PM (OVERLAPS WITH HACK NIGHT 5:00 PM - 9:00 PM!)
+          endMin: 1230,   // 8:30 PM
+          timeLabel: '6:30 PM – 8:30 PM',
           title: 'Open Mic Evening',
-          venue: 'unipolis',
-          directions: 'Outdoor stepped amphitheatre behind the Student Activity Centre.',
+          venue: 'Shanti Devi Mittal Auditorium',
+          directions: 'Located opposite Uni-Mall along the Central Campus Avenue. Enter through the Main Auditorium Plaza gates; doors open at 6:00 PM.',
           club: 'Music & Literature Society',
           fee: 0,
           seatsTaken: 112,
           seatsTotal: 180,
-          coordinator: 'Sanya Gill • +91 98714 90823 • musicsoc@univ.edu',
-          rules: 'Free entry for all students. Performers get a 4-minute stage slot (sign up at venue by 18:15).',
-          description:
-            'Relax under fairy lights with unplugged acoustic guitar sets, original slam poetry, and student stand-up comedy right on the amphitheatre steps.',
+          coordinator: 'Sanya Gill • +91 98714 90823 • musicsoc@lpu.in',
+          rules: 'Free entry for all students. Performers get a 4-minute stage slot (sign up at lobby desk by 6:15 PM).',
+          description: 'Unwind after evening classes with unplugged acoustic sets, original slam poetry, and student stand-up comedy on the main auditorium stage.',
           activities: [
             'Unplugged indie & acoustic vocal performances',
             'Original slam poetry & spoken-word storytelling',
@@ -937,107 +2086,103 @@
           ]
         },
         {
-          id: 'street-dance-cypher-2026',
+          id: 'classical-indie-acoustics-2026',
           category: 'Cultural',
           month: 'Sep',
           day: '04',
           year: '2026',
           fullDate: 'September 4, 2026',
           isoDate: '2026-09-04',
-          startMin: 1020, // 17:00
-          endMin: 1170,   // 19:30
-          timeLabel: '17:00 - 19:30 Hours',
-          title: 'Street Dance & Cypher',
-          venue: 'Unipolis',
-          directions: 'Central Plaza right outside the Main Canteen.',
-          club: 'Rhythm Crew Dance Club',
-          fee: 50,
-          seatsTaken: 78,
-          seatsTotal: 120,
-          coordinator: 'Yashwant Rana • +91 98117 65320 • rhythmcrew@univ.edu',
-          rules: 'Spectators free; ₹50 battle pass for 1v1 freestyle cypher competitors.',
-          description:
-            'High-energy hip-hop, popping, and contemporary showcase featuring campus dance crews and open 1v1 freestyle battle brackets.',
+          startMin: 1050,
+          endMin: 1170,
+          timeLabel: '5:30 PM – 7:30 PM',
+          title: 'Classical & Indie Acoustics',
+          venue: 'Block 14, Room 204',
+          directions: 'Head to Block 14 near the North Academic Gate; take the main stairs to the 2nd Floor, Acoustic Recital Room 204.',
+          club: 'Campus Strings & Music Guild',
+          fee: 100,
+          seatsTaken: 64,
+          seatsTotal: 100,
+          coordinator: 'Kabir Arora • +91 98114 55209 • strings@lpu.in',
+          rules: '₹100 entry includes refreshments and songbook. Bring your own acoustic guitar or tabla if jamming.',
+          description: 'An intimate evening blending classical sitar & vocal ragas with indie fingerstyle guitar arrangements and an open campus sing-along.',
           activities: [
-            'Open choreography warm-up with crew captains',
-            '1v1 & 2v2 freestyle cypher knockouts',
-            'Campus crew showcase & live DJ closing set'
+            'Classical vocal & instrumental opening recital',
+            'Indie acoustic ensemble showcase',
+            'Open group acoustic jam finale'
           ]
         },
 
-        // === SPORTS EVENTS (2) ===
+        // === 2 SPORTS EVENTS ===
         {
-          id: 'basketball-cup-2026',
+          id: 'badminton-open-2026',
           category: 'Sports',
           month: 'Aug',
-          day: '28',
+          day: '31',
           year: '2026',
-          fullDate: 'August 28, 2026',
-          isoDate: '2026-08-28',
-          startMin: 990,  // 16:30
-          endMin: 1170,   // 19:30
-          timeLabel: '16:30 - 19:30 Hours',
-          title: 'Inter-Dept Basketball Cup',
-          venue: 'Outdoor Court 1, Sports Complex',
-          directions: 'Sports Complex Gate 4, floodlit basketball court next to the athletics track.',
-          club: 'University Sports Council',
-          fee: 0,
-          seatsTaken: 130,
-          seatsTotal: 200,
-          coordinator: 'Vikramjit Singh • +91 98760 11245 • sports@univ.edu',
-          rules: 'Free spectator seating. Halftime 3-point shootout open to any registered attendee.',
-          description:
-            'Cheer on department squads under floodlights in the 5v5 knockout semifinals and grand final, featuring a crowd-favourite halftime 3-point contest.',
+          fullDate: 'August 31, 2026',
+          isoDate: '2026-08-31',
+          startMin: 960,
+          endMin: 1140,
+          timeLabel: '4:00 PM – 7:00 PM',
+          title: 'Inter-Block Badminton Open',
+          venue: 'Indoor Sports Complex, Near Block 34',
+          directions: 'Walk 200m east past Block 34 toward the Sports Arena Gate; Courts 1–4 are inside the main indoor hall (non-marking shoes mandatory).',
+          club: 'Racquet Sports Club',
+          fee: 50,
+          seatsTaken: 44,
+          seatsTotal: 64,
+          coordinator: 'Neha Choudhary • +91 98104 88731 • racquetclub@lpu.in',
+          rules: '₹50 entry per player; Yonex feather shuttles supplied. Bring your own racquet & non-marking shoes. Medals for top 3.',
+          description: 'Fast-paced inter-block knockout badminton tournament across four indoor wooden courts with live digital brackets and student umpires.',
           activities: [
-            '5v5 department knockout semifinals & championship final',
-            'Halftime spectator 3-point shootout with merch prizes',
-            'Trophy & tournament MVP presentation'
+            'Court warm-up & live digital bracket draw',
+            'Best-of-3 knockout singles & doubles rounds',
+            'Championship finals & medal presentation'
           ]
         },
         {
-          id: 'badminton-doubles-open-2026',
+          id: 'basketball-3v3-2026',
           category: 'Sports',
           month: 'Sep',
-          day: '06',
+          day: '03',
           year: '2026',
-          fullDate: 'September 6, 2026',
-          isoDate: '2026-09-06',
-          startMin: 900,  // 15:00
-          endMin: 1110,   // 18:30
-          timeLabel: '15:00 - 18:30 Hours',
-          title: 'Badminton Doubles Open',
-          venue: ' Sports Complex',
-          directions: 'Indoor Sports Arena, Courts 1–4 (non-marking court shoes mandatory).',
-          club: 'Racquet Sports Club',
+          fullDate: 'September 3, 2026',
+          isoDate: '2026-09-03',
+          startMin: 990,
+          endMin: 1170,
+          timeLabel: '4:30 PM – 7:30 PM',
+          title: '3v3 Basketball Knockouts',
+          venue: 'Indoor Sports Complex, Near Block 34',
+          directions: 'Walk 200m east past Block 34 toward the Sports Arena Gate; enter the Main Hardwood Court via Entrance B.',
+          club: 'University Basketball Association',
           fee: 100,
-          seatsTaken: 44,
+          seatsTaken: 48,
           seatsTotal: 64,
-          coordinator: 'Neha Choudhary • +91 98104 88731 • racquetclub@univ.edu',
-          rules: '₹100 per doubles pair; Yonex feather shuttles supplied. Bring your own racquet.',
-          description:
-            'Fast-paced knockout tournament for men’s, women’s, and mixed doubles teams across four indoor wooden courts with student umpires.',
+          coordinator: 'Vikramjit Singh • +91 98760 11245 • hoops@lpu.in',
+          rules: 'Teams of 3 + 1 substitute. ₹100 per team; FIBA 3x3 half-court rules (10-minute games or first to 21).',
+          description: 'High-energy half-court 3v3 knockout basketball tournament under floodlights with shot clocks, live commentary, and MVP awards.',
           activities: [
-            'Court warm-up & live digital bracket draw',
-            'Best-of-3 knockout doubles matches',
-            'Finals & medal ceremony'
+            'Team check-in & shootaround warm-up',
+            'Pool stage & knockout half-court 3v3 fixtures',
+            'Championship final, 3-point shootout & MVP trophy'
           ]
         }
       ];
 
       const CATEGORIES = ['All', 'Engineering', 'Arts', 'Business', 'Cultural', 'Sports'];
-      const STORAGE_KEY = 'campus_hub_single_page_v2';
+      const STORAGE_KEY = 'campus_hub_zero_dep_v1';
 
       /* -------------------------------------------------------------------
-         2. APPLICATION STATE & LOCALSTORAGE
+         2. STATE & SAFE LOCALSTORAGE HELPERS
          ------------------------------------------------------------------- */
       const state = {
         search: '',
-        homeCategory: 'All',
-        freeOnly: false,
         feedCategory: 'Engineering', // Defaults to Engineering (8 Found)
+        freeOnly: false,
         selectedEventId: 'design-thinking-2026',
         lastConfirmedEventId: 'design-thinking-2026',
-        lastConfirmedEmail: 'astabhya@univ.edu',
+        lastConfirmedEmail: 'astabhya@lpu.in',
         directionsOpen: false,
         registered: {}, // { [eventId]: { name, rollNo, email, dept, sms } }
         reminders: []   // [eventId, ...]
@@ -1045,23 +2190,23 @@
 
       function loadState() {
         try {
-          const raw = localStorage.getItem(STORAGE_KEY);
+          const raw = window.localStorage.getItem(STORAGE_KEY);
           if (!raw) return;
-          const saved = JSON.parse(raw);
-          if (saved && typeof saved === 'object') {
-            if (saved.registered && typeof saved.registered === 'object') state.registered = saved.registered;
-            if (Array.isArray(saved.reminders)) state.reminders = saved.reminders;
-            if (saved.lastConfirmedEventId) state.lastConfirmedEventId = saved.lastConfirmedEventId;
-            if (saved.lastConfirmedEmail) state.lastConfirmedEmail = saved.lastConfirmedEmail;
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            if (parsed.registered && typeof parsed.registered === 'object') state.registered = parsed.registered;
+            if (Array.isArray(parsed.reminders)) state.reminders = parsed.reminders;
+            if (typeof parsed.lastConfirmedEventId === 'string') state.lastConfirmedEventId = parsed.lastConfirmedEventId;
+            if (typeof parsed.lastConfirmedEmail === 'string') state.lastConfirmedEmail = parsed.lastConfirmedEmail;
           }
         } catch (err) {
-          // Gracefully ignore storage errors in restricted iframes
+          // Ignore storage restrictions safely
         }
       }
 
       function saveState() {
         try {
-          localStorage.setItem(
+          window.localStorage.setItem(
             STORAGE_KEY,
             JSON.stringify({
               registered: state.registered,
@@ -1071,15 +2216,22 @@
             })
           );
         } catch (err) {
-          // Gracefully ignore storage errors
+          // Ignore storage restrictions safely
         }
       }
 
       /* -------------------------------------------------------------------
-         3. UTILITY HELPERS & CLASH DETECTION
+         3. UTILITY & CLASH DETECTION FUNCTIONS
          ------------------------------------------------------------------- */
+      function byId(id) {
+        return document.getElementById(id);
+      }
+
       function getEvent(id) {
-        return EVENTS.find((e) => e.id === id) || EVENTS[0];
+        for (let i = 0; i < EVENTS.length; i++) {
+          if (EVENTS[i].id === id) return EVENTS[i];
+        }
+        return EVENTS[0];
       }
 
       function isRegistered(id) {
@@ -1087,688 +2239,504 @@
       }
 
       function isReminded(id) {
-        return state.reminders.includes(id);
+        return state.reminders.indexOf(id) !== -1;
       }
 
       function formatFee(fee) {
-        return fee === 0 ? 'FREE' : `₹${fee} Entry`;
+        return fee === 0 ? 'FREE' : '₹' + fee + ' Entry';
       }
 
-      function matchesQuery(ev, query) {
-        if (!query) return true;
+      function matchesSearch(ev, query) {
+        if (!query || !query.trim()) return true;
         const q = query.trim().toLowerCase();
         return (
-          ev.title.toLowerCase().includes(q) ||
-          ev.venue.toLowerCase().includes(q) ||
-          ev.club.toLowerCase().includes(q) ||
-          ev.category.toLowerCase().includes(q)
+          ev.title.toLowerCase().indexOf(q) !== -1 ||
+          ev.venue.toLowerCase().indexOf(q) !== -1 ||
+          ev.club.toLowerCase().indexOf(q) !== -1 ||
+          ev.category.toLowerCase().indexOf(q) !== -1
         );
       }
 
-      /**
-       * Detect all overlapping pairs among currently registered events.
-       */
+      function getFilteredFeedEvents() {
+        return EVENTS.filter(function (ev) {
+          if (state.feedCategory !== 'All' && ev.category !== state.feedCategory) return false;
+          if (state.freeOnly && ev.fee > 0) return false;
+          return matchesSearch(ev, state.search);
+        });
+      }
+
       function findRegisteredClashes() {
-        const regEvents = Object.keys(state.registered).map((id) => getEvent(id));
+        const ids = Object.keys(state.registered);
+        const regEvents = ids.map(getEvent);
         const clashes = [];
         for (let i = 0; i < regEvents.length; i++) {
           for (let j = i + 1; j < regEvents.length; j++) {
             const a = regEvents[i];
             const b = regEvents[j];
             if (a.isoDate === b.isoDate && a.startMin < b.endMin && b.startMin < a.endMin) {
-              clashes.push({ a, b });
+              clashes.push({ a: a, b: b });
             }
           }
         }
         return clashes;
       }
 
-      /**
-       * Check if a candidate event overlaps with any already-registered event.
-       */
       function findClashesForEvent(candidateId) {
         const cand = getEvent(candidateId);
         return Object.keys(state.registered)
-          .filter((id) => id !== candidateId)
-          .map((id) => getEvent(id))
-          .filter((other) => other.isoDate === cand.isoDate && other.startMin < cand.endMin && cand.startMin < other.endMin);
+          .filter(function (id) { return id !== candidateId; })
+          .map(getEvent)
+          .filter(function (other) {
+            return other.isoDate === cand.isoDate && other.startMin < cand.endMin && cand.startMin < other.endMin;
+          });
       }
 
-      /**
-       * Toast Notification (replaces alert())
-       */
-      function showToast(msg, type = 'navy') {
-        const host = document.getElementById('toastHost');
+      function showToast(msg, variant) {
+        const host = byId('toastHost');
+        if (!host) return;
         const el = document.createElement('div');
-        const bgClass =
-          type === 'success'
-            ? 'bg-success text-white'
-            : type === 'danger'
-            ? 'bg-red-600 text-white'
-            : 'bg-navy text-white';
-        el.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-lg text-xs sm:text-sm font-semibold max-w-xs transition-opacity duration-300`;
+        el.className = 'toast ' + (variant || 'navy');
         el.textContent = msg;
         host.appendChild(el);
-        setTimeout(() => {
-          el.classList.add('opacity-0');
-          setTimeout(() => el.remove(), 300);
+        window.setTimeout(function () {
+          el.classList.add('fade-out');
+          window.setTimeout(function () {
+            if (el.parentNode) el.parentNode.removeChild(el);
+          }, 260);
         }, 2600);
       }
 
-      /**
-       * Generate & download a real .ics calendar invite file
-       */
       function downloadIcs(ev) {
         try {
-          const pad = (n) => String(n).padStart(2, '0');
+          const pad = function (n) { return String(n).padStart(2, '0'); };
           const d = ev.isoDate.split('-');
-          const sH = Math.floor(ev.startMin / 60);
-          const sM = ev.startMin % 60;
-          const eH = Math.floor(ev.endMin / 60);
-          const eM = ev.endMin % 60;
-
-          const dtStart = `${d[0]}${d[1]}${d[2]}T${pad(sH)}${pad(sM)}00`;
-          const dtEnd = `${d[0]}${d[1]}${d[2]}T${pad(eH)}${pad(eM)}00`;
+          const dtStart = d[0] + d[1] + d[2] + 'T' + pad(Math.floor(ev.startMin / 60)) + pad(ev.startMin % 60) + '00';
+          const dtEnd = d[0] + d[1] + d[2] + 'T' + pad(Math.floor(ev.endMin / 60)) + pad(ev.endMin % 60) + '00';
 
           const ics = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
             'PRODID:-//Campus Hub//Student Event Platform//EN',
             'BEGIN:VEVENT',
-            `UID:${ev.id}@campushub.univ.edu`,
-            `DTSTART:${dtStart}`,
-            `DTEND:${dtEnd}`,
-            `SUMMARY:${ev.title}`,
-            `LOCATION:${ev.venue}`,
-            `DESCRIPTION:${ev.description}`,
+            'UID:' + ev.id + '@campushub.lpu.in',
+            'DTSTART:' + dtStart,
+            'DTEND:' + dtEnd,
+            'SUMMARY:' + ev.title,
+            'LOCATION:' + ev.venue,
+            'DESCRIPTION:' + ev.description,
             'END:VEVENT',
             'END:VCALENDAR'
           ].join('\r\n');
 
           const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `${ev.id}.ics`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = ev.id + '.ics';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
           URL.revokeObjectURL(url);
-          showToast(`Calendar file (${ev.id}.ics) downloaded!`, 'success');
+          showToast('Calendar file (' + ev.id + '.ics) downloaded!', 'success');
         } catch (err) {
-          showToast('Calendar invite prepared!', 'success');
+          showToast('Calendar invite ready for ' + ev.title + '.', 'success');
         }
       }
 
-      function toggleReminder(eventId, fromSms = false) {
+      function toggleReminder(eventId, isSms) {
         const idx = state.reminders.indexOf(eventId);
-        if (idx >= 0) {
+        if (idx !== -1) {
           state.reminders.splice(idx, 1);
           if (state.registered[eventId]) state.registered[eventId].sms = false;
-          showToast('Event reminder removed.');
+          showToast('Event reminder removed.', 'navy');
         } else {
           state.reminders.push(eventId);
           if (state.registered[eventId]) state.registered[eventId].sms = true;
-          showToast(fromSms ? 'SMS Reminder Activated ✓' : 'Event Reminder Saved ✓', 'success');
+          showToast(isSms ? 'SMS Reminder Activated ✓' : 'Event Reminder Saved ✓', 'success');
         }
         saveState();
         renderAll();
       }
 
-      function selectEvent(eventId, scrollToDetails = true) {
+      function selectEvent(eventId, shouldScroll) {
         state.selectedEventId = eventId;
         state.directionsOpen = false;
         renderDetails();
         renderRegistrationForm();
-        if (scrollToDetails) {
-          document.getElementById('details').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (shouldScroll) {
+          const target = byId('details');
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
 
       /* -------------------------------------------------------------------
-         4. CARD COMPONENT BUILDER
-         ------------------------------------------------------------------- */
-      function buildEventCardHTML(ev) {
-        const reg = isRegistered(ev.id);
-        const seatsNow = Math.min(ev.seatsTotal, ev.seatsTaken + (reg ? 1 : 0));
-        const pct = Math.round((seatsNow / ev.seatsTotal) * 100);
-        const feeClass =
-          ev.fee === 0
-            ? 'bg-success/15 text-success'
-            : 'bg-amberhub/15 text-amberhub-hover';
-
-        return `
-          <article class="bg-cardbg border border-subtle hover:border-amberhub rounded-[12px] p-4 shadow-sm hover:shadow-md transition flex items-start gap-3.5">
-            <!-- Left Navy Date Badge -->
-            <div class="w-14 shrink-0 rounded-[10px] bg-navy text-white text-center py-2 px-1 leading-tight">
-              <div class="text-[11px] font-semibold uppercase tracking-wide text-slate-200">${ev.month}</div>
-              <div class="text-xl font-extrabold my-0.5">${ev.day}</div>
-              <div class="text-[10px] text-slate-300">${ev.year}</div>
-            </div>
-
-            <!-- Card Main Content -->
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-start justify-between gap-2">
-                <h3 class="text-sm sm:text-base font-extrabold text-navy leading-snug">
-                  ${ev.title}
-                </h3>
-                <div class="flex items-center gap-1.5 shrink-0">
-                  <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${feeClass}">
-                    ${formatFee(ev.fee)}
-                  </span>
-                  ${reg ? '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success text-white">Registered ✓</span>' : ''}
-                </div>
-              </div>
-
-              <div class="mt-1.5 space-y-1 text-xs text-muted">
-                <p class="flex items-center gap-1.5 truncate">
-                  <svg class="w-3.5 h-3.5 text-navy shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path>
-                    <circle cx="12" cy="11" r="2"></circle>
-                  </svg>
-                  <span class="truncate">${ev.venue} • ${ev.timeLabel}</span>
-                </p>
-                <p class="flex items-center gap-1.5 truncate">
-                  <svg class="w-3.5 h-3.5 text-amberhub shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0zm6 2a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                  <span class="truncate font-medium text-charcoal/80">${ev.club}</span>
-                </p>
-              </div>
-
-              <!-- Live Seat Progress Bar + View Details Button -->
-              <div class="mt-3 pt-2.5 border-t border-subtle/80 flex items-center justify-between gap-3">
-                <div class="flex-1 max-w-[165px]">
-                  <div class="flex items-center justify-between text-[11px] text-muted mb-1">
-                    <span>${seatsNow}/${ev.seatsTotal} going</span>
-                    <span class="font-semibold text-navy">${pct}%</span>
-                  </div>
-                  <div class="w-full h-1.5 rounded-full bg-subtle overflow-hidden">
-                    <div class="h-full rounded-full bg-amberhub" style="width:${pct}%"></div>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  data-view-event="${ev.id}"
-                  class="px-3.5 py-1.5 rounded-lg bg-amberhub hover:bg-amberhub-hover text-white text-xs font-bold shadow-sm transition shrink-0"
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
-          </article>
-        `;
-      }
-
-      /* -------------------------------------------------------------------
-         5. RENDER SECTION 1 (HOME & FEATURED CARD)
+         4. RENDER SECTION 01 (HOME STATS + FEATURED EVENT CARD)
          ------------------------------------------------------------------- */
       function renderHome() {
-        // Category pills
-        const homePillsEl = document.getElementById('homePills');
-        homePillsEl.innerHTML = CATEGORIES.map((cat) => {
-          const active = cat === state.homeCategory;
-          return `
-            <button
-              type="button"
-              data-home-cat="${cat}"
-              class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap border transition ${
-                active
-                  ? 'bg-amberhub text-white border-amberhub shadow-sm font-bold'
-                  : 'bg-cardbg text-navy border-subtle hover:border-amberhub'
-              }"
-            >
-              ${cat}
-            </button>
-          `;
-        }).join('');
+        const matches = getFilteredFeedEvents();
+        const regCount = Object.keys(state.registered).length;
+        const clashCount = findRegisteredClashes().length;
 
-        // Free toggle styling
-        const freeBtn = document.getElementById('freeOnlyToggle');
-        const freeDot = document.getElementById('freeToggleDot');
-        if (state.freeOnly) {
-          freeBtn.className =
-            'inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-bold border border-success bg-success text-white shadow-sm transition shrink-0';
-          freeDot.className = 'w-2.5 h-2.5 rounded-full bg-white';
+        byId('statTotalEvents').textContent = String(EVENTS.length);
+        byId('statMatchingEvents').textContent = String(matches.length);
+        byId('statRegisteredEvents').textContent = String(regCount);
+
+        const clashVal = byId('statActiveClashes');
+        const clashCard = byId('statClashCard');
+        clashVal.textContent = String(clashCount);
+        if (clashCount > 0) {
+          clashVal.className = 'stat-value danger';
+          clashCard.className = 'stat-card has-clash';
         } else {
-          freeBtn.className =
-            'inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-subtle bg-cardbg text-navy hover:border-amberhub transition shrink-0';
-          freeDot.className = 'w-2.5 h-2.5 rounded-full bg-subtle border border-muted/40';
+          clashVal.className = 'stat-value';
+          clashCard.className = 'stat-card';
         }
 
-        // Featured Card (Deep Navy #1B2A4A with Warm Amber Date Badge)
         const featured = getEvent('design-thinking-2026');
         const fReg = isRegistered(featured.id);
         const fSeats = Math.min(featured.seatsTotal, featured.seatsTaken + (fReg ? 1 : 0));
         const fPct = Math.round((fSeats / featured.seatsTotal) * 100);
 
-        document.getElementById('featuredCardMount').innerHTML = `
-          <div class="bg-navy text-white rounded-[14px] p-5 sm:p-6 shadow-lg border border-white/10 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <!-- Warm Amber Date Badge -->
-            <div class="w-16 sm:w-20 shrink-0 rounded-[12px] bg-amberhub text-white text-center py-3 px-2 leading-tight shadow-md">
-              <div class="text-xs font-bold uppercase tracking-wider">${featured.month}</div>
-              <div class="text-2xl sm:text-3xl font-extrabold my-0.5">${featured.day}</div>
-              <div class="text-xs font-medium opacity-90">${featured.year}</div>
-            </div>
-
-            <!-- Featured Event Info -->
-            <div class="flex-1 min-w-0">
-              <div class="flex flex-wrap items-center gap-2 mb-1.5">
-                <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-amberhub text-[11px] font-extrabold uppercase tracking-wider">
-                  Featured Campus Event
-                </span>
-                <span class="px-2.5 py-0.5 rounded-full bg-success text-white text-[11px] font-bold">
-                  FREE
-                </span>
-                ${fReg ? '<span class="px-2.5 py-0.5 rounded-full bg-white text-success text-[11px] font-extrabold">Registered ✓</span>' : ''}
-              </div>
-
-              <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
-                ${featured.title}
-              </h2>
-
-              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-slate-200">
-                <span class="inline-flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path>
-                    <circle cx="12" cy="11" r="2"></circle>
-                  </svg>
-                  ${featured.venue}
-                </span>
-                <span class="inline-flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-amberhub" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                  </svg>
-                  ${featured.club}
-                </span>
-              </div>
-
-              <!-- Seat Count Bar -->
-              <div class="mt-3.5 max-w-sm">
-                <div class="flex items-center justify-between text-xs text-slate-300 mb-1">
-                  <span>${fSeats} / ${featured.seatsTotal} seats filled</span>
-                  <span class="font-bold text-amberhub">${fPct}%</span>
-                </div>
-                <div class="w-full h-2 rounded-full bg-white/15 overflow-hidden">
-                  <div class="h-full rounded-full bg-amberhub" style="width:${fPct}%"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Amber CTA -->
-            <div class="w-full sm:w-auto shrink-0">
-              <button
-                type="button"
-                data-view-event="${featured.id}"
-                class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amberhub hover:bg-amberhub-hover text-white text-sm font-extrabold shadow-md transition"
-              >
-                View Details
-              </button>
-            </div>
-          </div>
-        `;
-
-        // Highlighted Upcoming Events Grid (up to 6 cards matching home filters)
-        const filteredHome = EVENTS.filter((ev) => {
-          if (ev.id === featured.id && state.homeCategory === 'All' && !state.search.trim()) return false;
-          if (state.homeCategory !== 'All' && ev.category !== state.homeCategory) return false;
-          if (state.freeOnly && ev.fee > 0) return false;
-          return matchesQuery(ev, state.search);
-        }).slice(0, 6);
-
-        document.getElementById('homeGridHeading').textContent =
-          state.homeCategory === 'All'
-            ? `Highlighted Upcoming Events (${filteredHome.length})`
-            : `${state.homeCategory} Highlights (${filteredHome.length})`;
-
-        const gridEl = document.getElementById('homeEventsGrid');
-        if (filteredHome.length === 0) {
-          gridEl.innerHTML = `
-            <div class="col-span-full bg-cardbg border border-dashed border-subtle rounded-xl p-8 text-center text-sm text-muted">
-              No events match your current filter or search query. Try clearing the search bar or toggling off "Free Events Only".
-            </div>
-          `;
-        } else {
-          gridEl.innerHTML = filteredHome.map((ev) => buildEventCardHTML(ev)).join('');
-        }
+        byId('featuredCardMount').innerHTML =
+          '<div class="featured-card">' +
+            '<div class="date-badge-amber">' +
+              '<div class="m">' + featured.month + '</div>' +
+              '<div class="d">' + featured.day + '</div>' +
+              '<div class="y">' + featured.year + '</div>' +
+            '</div>' +
+            '<div class="featured-info">' +
+              '<div class="badge-row">' +
+                '<span class="pill pill-featured">Featured Campus Event</span>' +
+                '<span class="pill pill-free-solid">FREE</span>' +
+                (fReg ? '<span class="pill pill-reg-light">Registered ✓</span>' : '') +
+              '</div>' +
+              '<h2 class="featured-title">' + featured.title + '</h2>' +
+              '<div class="featured-meta">' +
+                '<span class="meta-inline">' +
+                  '<svg fill="none" stroke="var(--amber)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path><circle cx="12" cy="11" r="2"></circle></svg>' +
+                  '<span>' + featured.venue + '</span>' +
+                '</span>' +
+                '<span class="meta-inline">' +
+                  '<svg fill="none" stroke="var(--amber)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>' +
+                  '<span>' + featured.club + '</span>' +
+                '</span>' +
+              '</div>' +
+              '<div class="progress-wrap">' +
+                '<div class="progress-labels">' +
+                  '<span style="color:#DCE3F0;">' + fSeats + ' / ' + featured.seatsTotal + ' seats filled</span>' +
+                  '<span style="color:#F5C37A;font-weight:700;">' + fPct + '%</span>' +
+                '</div>' +
+                '<div class="progress-track"><div class="progress-fill" style="width:' + fPct + '%;"></div></div>' +
+              '</div>' +
+            '</div>' +
+            '<div>' +
+              '<button type="button" class="btn btn-amber" data-view-event="' + featured.id + '">View Details</button>' +
+            '</div>' +
+          '</div>';
       }
 
       /* -------------------------------------------------------------------
-         6. RENDER SECTION 2 (FILTERED FEED — 18 EVENTS, DEFAULT ENGINEERING)
+         5. RENDER SECTION 02 (FILTERED FEED — 18 EVENTS)
          ------------------------------------------------------------------- */
+      function buildEventCard(ev) {
+        const reg = isRegistered(ev.id);
+        const seatsNow = Math.min(ev.seatsTotal, ev.seatsTaken + (reg ? 1 : 0));
+        const pct = Math.round((seatsNow / ev.seatsTotal) * 100);
+        const feeBadgeClass = ev.fee === 0 ? 'pill pill-free' : 'pill pill-paid';
+
+        return (
+          '<article class="event-card">' +
+            '<div class="date-badge-navy">' +
+              '<div class="m">' + ev.month + '</div>' +
+              '<div class="d">' + ev.day + '</div>' +
+              '<div class="y">' + ev.year + '</div>' +
+            '</div>' +
+            '<div class="event-body">' +
+              '<div class="event-top">' +
+                '<h3 class="event-title">' + ev.title + '</h3>' +
+                '<div class="badge-row" style="margin-bottom:0;">' +
+                  '<span class="' + feeBadgeClass + '">' + formatFee(ev.fee) + '</span>' +
+                  (reg ? '<span class="pill pill-reg">Registered ✓</span>' : '') +
+                '</div>' +
+              '</div>' +
+              '<div class="event-meta-list">' +
+                '<div class="meta-inline">' +
+                  '<svg fill="none" stroke="var(--navy)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s6-5.4 6-10a6 6 0 10-12 0c0 4.6 6 10 6 10z"></path><circle cx="12" cy="11" r="2"></circle></svg>' +
+                  '<span>' + ev.venue + ' • ' + ev.timeLabel + '</span>' +
+                '</div>' +
+                '<div class="meta-inline">' +
+                  '<svg fill="none" stroke="var(--amber)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>' +
+                  '<span style="color:var(--charcoal);font-weight:500;">' + ev.club + '</span>' +
+                '</div>' +
+              '</div>' +
+              '<div class="event-footer">' +
+                '<div class="card-progress">' +
+                  '<div class="progress-labels">' +
+                    '<span style="color:var(--muted);">' + seatsNow + '/' + ev.seatsTotal + ' going</span>' +
+                    '<span style="color:var(--navy);font-weight:700;">' + pct + '%</span>' +
+                  '</div>' +
+                  '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+                '</div>' +
+                '<button type="button" class="btn btn-amber btn-sm" data-view-event="' + ev.id + '">View Details</button>' +
+              '</div>' +
+            '</div>' +
+          '</article>'
+        );
+      }
+
       function renderFeed() {
-        const feedPillsEl = document.getElementById('feedPills');
-        feedPillsEl.innerHTML = CATEGORIES.map((cat) => {
-          const active = cat === state.feedCategory;
-          return `
-            <button
-              type="button"
-              data-feed-cat="${cat}"
-              class="px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap border transition ${
-                active
-                  ? 'bg-amberhub text-white border-amberhub shadow-sm font-bold'
-                  : 'bg-cardbg text-navy border-subtle hover:border-amberhub'
-              }"
-            >
-              ${cat}
-            </button>
-          `;
+        const pillsEl = byId('feedPills');
+        pillsEl.innerHTML = CATEGORIES.map(function (cat) {
+          const activeClass = cat === state.feedCategory ? ' active' : '';
+          return '<button type="button" class="cat-pill' + activeClass + '" data-feed-cat="' + cat + '">' + cat + '</button>';
         }).join('');
 
-        const list = EVENTS.filter((ev) => {
-          if (state.feedCategory !== 'All' && ev.category !== state.feedCategory) return false;
-          if (state.freeOnly && ev.fee > 0) return false;
-          return matchesQuery(ev, state.search);
-        });
+        const freeBtn = byId('freeOnlyToggle');
+        if (state.freeOnly) {
+          freeBtn.classList.add('active');
+        } else {
+          freeBtn.classList.remove('active');
+        }
 
-        const headingPrefix = state.feedCategory === 'All' ? 'All Campus Events' : `${state.feedCategory} Events`;
-        document.getElementById('feedHeading').textContent = `${headingPrefix} (${list.length} Found)`;
+        const list = getFilteredFeedEvents();
+        const headingPrefix = state.feedCategory === 'All' ? 'All Campus Events' : state.feedCategory + ' Events';
+        byId('feedHeading').textContent = headingPrefix + ' (' + list.length + ' Found)';
 
         const notes = [];
         if (state.freeOnly) notes.push('Free Events Only');
-        if (state.search.trim()) notes.push(`Search: "${state.search.trim()}"`);
-        document.getElementById('feedActiveFiltersNote').textContent = notes.length ? notes.join(' • ') : 'Showing all 18 campus events across 5 departments';
+        if (state.search.trim()) notes.push('Search: "' + state.search.trim() + '"');
+        byId('feedActiveFiltersNote').textContent = notes.length
+          ? notes.join(' • ')
+          : 'Showing verified events across 5 campus departments (18 total)';
 
-        const gridEl = document.getElementById('feedEventsGrid');
+        const gridEl = byId('feedEventsGrid');
         if (list.length === 0) {
-          gridEl.innerHTML = `
-            <div class="col-span-full bg-cardbg border border-dashed border-subtle rounded-xl p-8 text-center text-sm text-muted">
-              No matching events found in ${state.feedCategory}. Try switching categories or clearing your search.
-            </div>
-          `;
+          gridEl.innerHTML =
+            '<div class="empty-state">No events match your active filter or search query. Try switching categories or clearing the search box.</div>';
         } else {
-          gridEl.innerHTML = list.map((ev) => buildEventCardHTML(ev)).join('');
+          gridEl.innerHTML = list.map(buildEventCard).join('');
         }
       }
 
       /* -------------------------------------------------------------------
-         7. RENDER SECTION 3 (EVENT DETAIL PAGE)
+         6. RENDER SECTION 03 (EVENT DETAIL PAGE)
          ------------------------------------------------------------------- */
       function renderDetails() {
         const ev = getEvent(state.selectedEventId);
         const reg = isRegistered(ev.id);
         const rem = isReminded(ev.id);
         const seatsNow = Math.min(ev.seatsTotal, ev.seatsTaken + (reg ? 1 : 0));
+        const feePill = ev.fee === 0 ? '<span class="pill pill-free-solid">FREE</span>' : '<span class="pill pill-paid-solid">' + formatFee(ev.fee) + '</span>';
 
-        document.getElementById('detailCardMount').innerHTML = `
-          <!-- Deep Navy Header Block (#1B2A4A) -->
-          <div class="bg-navy text-white px-6 sm:px-8 py-6">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <p class="text-xs sm:text-sm font-medium text-slate-200">${ev.fullDate}</p>
-              <div class="flex items-center gap-2">
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-white/15 text-amberhub">
-                  ${ev.category}
-                </span>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${ev.fee === 0 ? 'bg-success text-white' : 'bg-amberhub text-white'}">
-                  ${formatFee(ev.fee)}
-                </span>
-              </div>
-            </div>
+        const activitiesHtml = ev.activities.map(function (item) {
+          return '<li>' + item + '</li>';
+        }).join('');
 
-            <h3 class="text-2xl sm:text-3xl font-extrabold text-white mt-2 leading-tight">
-              ${ev.title}
-            </h3>
-
-            <div class="mt-3 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-200">
-              <span class="inline-flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-amberhub/25 border border-amberhub text-amberhub inline-flex items-center justify-center font-bold text-xs">
-                  ${ev.club.charAt(0)}
-                </span>
-                <span class="font-semibold">${ev.club}</span>
-              </span>
-              <span class="text-slate-400">•</span>
-              <span>${seatsNow} of ${ev.seatsTotal} seats registered</span>
-            </div>
-          </div>
-
-          <!-- Cream/White Detail Body -->
-          <div class="p-6 sm:p-8 space-y-6 bg-cardbg">
-            <!-- Crisp 2x2 Bordered Logistics Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 border border-subtle rounded-[12px] overflow-hidden bg-white">
-              <div class="p-4 border-b border-subtle sm:border-r">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Date</div>
-                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.fullDate}</div>
-              </div>
-
-              <div class="p-4 border-b border-subtle">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Time</div>
-                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.timeLabel}</div>
-              </div>
-
-              <div class="p-4 border-b sm:border-b-0 sm:border-r border-subtle">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Venue</div>
-                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.venue}</div>
-                <button
-                  id="btnToggleDirections"
-                  type="button"
-                  class="mt-1.5 inline-flex items-center gap-1 text-xs font-bold text-amberhub hover:text-amberhub-hover underline"
-                >
-                  ${state.directionsOpen ? 'Hide Campus Directions ▲' : 'View Campus Directions ▼'}
-                </button>
-                <div id="campusDirectionsBox" class="${state.directionsOpen ? '' : 'hidden'} mt-2 p-2.5 rounded-lg bg-cream border border-subtle text-xs text-charcoal leading-relaxed">
-                  <strong>Walking Directions:</strong> ${ev.directions}
-                </div>
-              </div>
-
-              <div class="p-4">
-                <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Organizers</div>
-                <div class="text-sm sm:text-base font-bold text-navy mt-1">${ev.club}</div>
-                <div class="text-xs text-muted mt-1">Verified Campus Announcement</div>
-              </div>
-            </div>
-
-            <!-- Description & Included Activities -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div class="lg:col-span-7 space-y-4">
-                <div>
-                  <h4 class="text-sm font-extrabold text-navy uppercase tracking-wide mb-1.5">Event Description</h4>
-                  <p class="text-sm text-charcoal/90 leading-relaxed">${ev.description}</p>
-                </div>
-
-                <div>
-                  <h4 class="text-sm font-extrabold text-navy uppercase tracking-wide mb-1.5">Included Activities</h4>
-                  <ul class="list-disc pl-5 space-y-1.5 text-sm text-charcoal/90 marker:text-amberhub">
-                    ${ev.activities.map((item) => `<li>${item}</li>`).join('')}
-                  </ul>
-                </div>
-              </div>
-
-              <div class="lg:col-span-5 space-y-3 bg-white border border-subtle rounded-[12px] p-4">
-                <div>
-                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Entry Fee &amp; Eligibility</div>
-                  <p class="text-xs sm:text-sm text-charcoal mt-1 leading-relaxed">
-                    <span class="inline-block px-2 py-0.5 rounded-md font-bold text-xs mr-1.5 ${ev.fee === 0 ? 'bg-success/15 text-success' : 'bg-amberhub/15 text-amberhub-hover'}">
-                      ${formatFee(ev.fee)}
-                    </span>
-                    ${ev.rules}
-                  </p>
-                </div>
-                <div class="pt-3 border-t border-subtle">
-                  <div class="text-[11px] font-bold uppercase tracking-wider text-muted">Coordinator Contact</div>
-                  <p class="text-xs sm:text-sm font-semibold text-navy mt-1">${ev.coordinator}</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="pt-2 flex flex-col sm:flex-row gap-3">
-              <button
-                id="btnDetailRegisterNow"
-                type="button"
-                class="flex-1 py-3 px-6 rounded-xl ${reg ? 'bg-success hover:bg-success-dark' : 'bg-amberhub hover:bg-amberhub-hover'} text-white text-sm font-extrabold uppercase tracking-wider shadow-sm transition"
-              >
-                ${reg ? 'REGISTERED ✓ (UPDATE DETAILS)' : 'REGISTER NOW'}
-              </button>
-              <button
-                id="btnDetailReminder"
-                type="button"
-                class="sm:w-56 py-3 px-5 rounded-xl border-2 text-sm font-bold transition ${
-                  rem
-                    ? 'bg-navy border-navy text-amberhub'
-                    : 'bg-white border-amberhub text-amberhub hover:bg-amberhub/10'
-                }"
-              >
-                ${rem ? 'Reminder Active ✓' : 'Set Reminder'}
-              </button>
-            </div>
-          </div>
-        `;
+        byId('detailCardMount').innerHTML =
+          '<div class="detail-hero">' +
+            '<div class="detail-hero-top">' +
+              '<span>' + ev.fullDate + '</span>' +
+              '<div class="badge-row" style="margin-bottom:0;">' +
+                '<span class="pill pill-featured">' + ev.category + '</span>' +
+                feePill +
+              '</div>' +
+            '</div>' +
+            '<h3 class="detail-hero-title">' + ev.title + '</h3>' +
+            '<div class="detail-club-row">' +
+              '<span class="club-avatar">' + ev.club.charAt(0) + '</span>' +
+              '<strong style="color:#FFFFFF;">' + ev.club + '</strong>' +
+              '<span>•</span>' +
+              '<span>' + seatsNow + ' of ' + ev.seatsTotal + ' seats registered</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="detail-content">' +
+            '<div class="logistics-grid">' +
+              '<div class="logistics-cell">' +
+                '<div class="cell-label">Date</div>' +
+                '<div class="cell-value">' + ev.fullDate + '</div>' +
+              '</div>' +
+              '<div class="logistics-cell">' +
+                '<div class="cell-label">Time</div>' +
+                '<div class="cell-value">' + ev.timeLabel + '</div>' +
+              '</div>' +
+              '<div class="logistics-cell">' +
+                '<div class="cell-label">Venue</div>' +
+                '<div class="cell-value">' + ev.venue + '</div>' +
+                '<button id="btnToggleDirections" type="button" class="directions-btn">' +
+                  (state.directionsOpen ? 'Hide Campus Directions ▲' : 'View Campus Directions ▼') +
+                '</button>' +
+                '<div class="directions-box' + (state.directionsOpen ? '' : ' hidden') + '">' +
+                  '<strong>Walking Directions:</strong> ' + ev.directions +
+                '</div>' +
+              '</div>' +
+              '<div class="logistics-cell">' +
+                '<div class="cell-label">Organizers</div>' +
+                '<div class="cell-value">' + ev.club + '</div>' +
+                '<div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">' + ev.coordinator + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="detail-columns">' +
+              '<div>' +
+                '<div style="margin-bottom:16px;">' +
+                  '<h4 class="detail-heading">Event Description</h4>' +
+                  '<p class="detail-text">' + ev.description + '</p>' +
+                '</div>' +
+                '<div>' +
+                  '<h4 class="detail-heading">Included Activities</h4>' +
+                  '<ul class="activity-list">' + activitiesHtml + '</ul>' +
+                '</div>' +
+              '</div>' +
+              '<div class="detail-side-box">' +
+                '<div>' +
+                  '<div class="cell-label">Rules &amp; Prizes</div>' +
+                  '<p class="detail-text" style="font-size:0.86rem;margin-top:6px;">' +
+                    '<span class="' + (ev.fee === 0 ? 'pill pill-free' : 'pill pill-paid') + '" style="margin-right:6px;">' + formatFee(ev.fee) + '</span>' +
+                    ev.rules +
+                  '</p>' +
+                '</div>' +
+                '<div class="side-divider">' +
+                  '<div class="cell-label">Coordinator Contact</div>' +
+                  '<p style="font-size:0.88rem;font-weight:700;color:var(--navy);margin-top:4px;">' + ev.coordinator + '</p>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="detail-actions">' +
+              '<button id="btnDetailRegisterNow" type="button" class="btn btn-primary-wide ' + (reg ? 'btn-success' : 'btn-amber') + '">' +
+                (reg ? 'REGISTERED ✓ (UPDATE DETAILS)' : 'REGISTER NOW') +
+              '</button>' +
+              '<button id="btnDetailReminder" type="button" class="btn ' + (rem ? 'btn-navy' : 'btn-outline-amber') + '">' +
+                (rem ? 'Reminder Saved ✓' : 'Set Reminder') +
+              '</button>' +
+            '</div>' +
+          '</div>';
       }
 
       /* -------------------------------------------------------------------
-         8. RENDER SECTION 4 (REGISTRATION FORM SYNC)
+         7. RENDER SECTION 04 (REGISTRATION FORM SYNC)
          ------------------------------------------------------------------- */
       function renderRegistrationForm() {
         const ev = getEvent(state.selectedEventId);
-        document.getElementById('regFormTitle').textContent = `Register: ${ev.title}`;
-        document.getElementById('regFormMeta').textContent = `${ev.fullDate} • ${ev.timeLabel} • ${ev.venue}`;
+        byId('regFormTitle').textContent = 'Register: ' + ev.title;
+        byId('regFormMeta').textContent = ev.fullDate + ' • ' + ev.timeLabel + ' • ' + ev.venue;
 
-        const feeBadge = document.getElementById('regFormFeeBadge');
+        const feeBadge = byId('regFormFeeBadge');
         feeBadge.textContent = formatFee(ev.fee);
-        feeBadge.className =
-          ev.fee === 0
-            ? 'px-3 py-1 rounded-full text-xs font-bold bg-success/15 text-success'
-            : 'px-3 py-1 rounded-full text-xs font-bold bg-amberhub/15 text-amberhub-hover';
+        feeBadge.className = ev.fee === 0 ? 'pill pill-free' : 'pill pill-paid';
 
-        // Show live pre-registration clash warning if selected event overlaps an existing registration
-        const clashBox = document.getElementById('regClashPreview');
-        const potentialClashes = findClashesForEvent(ev.id);
-        if (potentialClashes.length > 0) {
-          const names = potentialClashes.map((c) => `${c.title} (${c.timeLabel})`).join(', ');
-          clashBox.textContent = `Heads up: ${ev.title} overlaps with your registered event — ${names} on ${ev.fullDate}.`;
-          clashBox.classList.remove('hidden');
+        const clashPreview = byId('regClashPreview');
+        const clashes = findClashesForEvent(ev.id);
+        if (clashes.length > 0) {
+          const names = clashes.map(function (c) { return c.title + ' (' + c.timeLabel + ')'; }).join(', ');
+          clashPreview.textContent = 'Schedule Clash Warning: ' + ev.title + ' overlaps with your registered event — ' + names + ' on ' + ev.fullDate + '.';
+          clashPreview.classList.remove('hidden');
         } else {
-          clashBox.classList.add('hidden');
+          clashPreview.classList.add('hidden');
         }
       }
 
       /* -------------------------------------------------------------------
-         9. RENDER SECTION 5 (SUCCESS STATE + MY SCHEDULE + CLASH ALERTS)
+         8. RENDER SECTION 05 (CONFIRMATION, CLASHES & MY PASSES)
          ------------------------------------------------------------------- */
       function renderConfirmationAndSchedule() {
         const regIds = Object.keys(state.registered);
         const remIds = state.reminders;
 
-        // Update Top Nav Registered Counter Badge
-        document.getElementById('navRegBadge').textContent = regIds.length;
+        byId('navRegBadge').textContent = String(regIds.length);
 
-        // Left Card: Success State
         const confirmedEv = getEvent(state.lastConfirmedEventId);
         const confirmedRec = state.registered[confirmedEv.id];
-        const displayEmail = (confirmedRec && confirmedRec.email) || state.lastConfirmedEmail || 'astabhya@univ.edu';
+        const displayEmail = (confirmedRec && confirmedRec.email) || state.lastConfirmedEmail || 'astabhya@lpu.in';
 
-        document.getElementById('confirmEventTitle').textContent = confirmedEv.title;
-        document.getElementById('confirmEmailLine').textContent = `A confirmation email has been sent to ${displayEmail}`;
-        document.getElementById('confirmEventMeta').textContent = `${confirmedEv.fullDate} • ${confirmedEv.timeLabel} • ${confirmedEv.venue}`;
+        byId('confirmEventTitle').textContent = confirmedEv.title;
+        byId('confirmEmailLine').textContent = 'A confirmation email has been sent to ' + displayEmail;
+        byId('confirmEventMeta').textContent = confirmedEv.fullDate + ' • ' + confirmedEv.timeLabel + ' • ' + confirmedEv.venue;
 
-        const smsActive = isReminded(confirmedEv.id) || Boolean(confirmedRec && confirmedRec.sms);
-        const smsBtn = document.getElementById('btnSmsReminder');
-        const smsLabel = document.getElementById('smsReminderLabel');
-        if (smsActive) {
-          smsBtn.className =
-            'w-full py-2.5 px-4 rounded-xl bg-success/10 border border-success text-success text-sm font-extrabold flex items-center justify-center gap-2 transition';
-          smsLabel.textContent = 'SMS Reminder Active ✓';
-        } else {
-          smsBtn.className =
-            'w-full py-2.5 px-4 rounded-xl bg-white border border-subtle hover:border-amberhub text-navy text-sm font-bold flex items-center justify-center gap-2 transition';
-          smsLabel.textContent = 'Set Event Reminder (SMS)';
-        }
+        const smsActive = isReminded(confirmedEv.id);
+        byId('smsReminderLabel').textContent = smsActive ? 'SMS Reminder Active ✓' : 'Set Event Reminder (SMS)';
 
-        // Clash Detection Banners (Global + Section 5)
+        // Clash banners across page
         const clashes = findRegisteredClashes();
-        const globalBanner = document.getElementById('globalClashBanner');
-        const scheduleClashBox = document.getElementById('scheduleClashBox');
-        const scheduleClashList = document.getElementById('scheduleClashList');
+        const globalBanner = byId('globalClashBanner');
+        const feedClashBanner = byId('feedClashBanner');
+        const scheduleClashBox = byId('scheduleClashBox');
+        const scheduleClashList = byId('scheduleClashList');
+
+        const clashingSet = {};
+        clashes.forEach(function (pair) {
+          clashingSet[pair.a.id] = true;
+          clashingSet[pair.b.id] = true;
+        });
 
         if (clashes.length > 0) {
           const first = clashes[0];
-          document.getElementById('globalClashText').textContent =
-            `Time-Clash Warning: ${first.a.title} and ${first.b.title} overlap on ${first.a.fullDate}!`;
+          const msg = 'Time-Clash Warning: ' + first.a.title + ' (' + first.a.venue + ') & ' + first.b.title + ' (' + first.b.venue + ') overlap on ' + first.a.fullDate + '!';
+          byId('globalClashText').textContent = msg;
+          byId('feedClashText').textContent = msg;
           globalBanner.classList.remove('hidden');
+          feedClashBanner.classList.remove('hidden');
 
-          scheduleClashList.innerHTML = clashes
-            .map(
-              ({ a, b }) =>
-                `<li><strong>${a.title}</strong> (${a.timeLabel}) overlaps with <strong>${b.title}</strong> (${b.timeLabel}) on <strong>${a.fullDate}</strong>.</li>`
-            )
-            .join('');
+          scheduleClashList.innerHTML = clashes.map(function (pair) {
+            return '<li><strong>' + pair.a.title + '</strong> (' + pair.a.timeLabel + ' • ' + pair.a.venue + ') overlaps with <strong>' + pair.b.title + '</strong> (' + pair.b.timeLabel + ' • ' + pair.b.venue + ') on <strong>' + pair.a.fullDate + '</strong>.</li>';
+          }).join('');
           scheduleClashBox.classList.remove('hidden');
         } else {
           globalBanner.classList.add('hidden');
+          feedClashBanner.classList.add('hidden');
           scheduleClashBox.classList.add('hidden');
         }
 
-        // Right Card Count Pill
-        document.getElementById('scheduleCountPill').textContent = `${regIds.length} Registered • ${remIds.length} Reminders`;
+        byId('scheduleCountPill').textContent = regIds.length + ' Registered • ' + remIds.length + ' Reminders';
 
-        // My Registered Events List
-        const regListEl = document.getElementById('myRegistrationsList');
+        // Registered Events List
+        const regListEl = byId('myRegistrationsList');
         if (regIds.length === 0) {
-          regListEl.innerHTML = `
-            <div class="p-4 rounded-xl bg-white border border-dashed border-subtle text-xs sm:text-sm text-muted text-center">
-              No events registered yet. Submit Section 4 above to reserve your first event!
-            </div>
-          `;
+          regListEl.innerHTML = '<div class="saved-empty">No events registered yet. Submit Section 04 above to reserve your first seat!</div>';
         } else {
-          regListEl.innerHTML = regIds
-            .map((id) => {
-              const ev = getEvent(id);
-              const rec = state.registered[id];
-              return `
-                <div class="p-3.5 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
-                  <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                      <span class="text-sm font-bold text-navy">${ev.title}</span>
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-success/15 text-success">Confirmed</span>
-                    </div>
-                    <p class="text-xs text-muted mt-0.5">${ev.fullDate} • ${ev.timeLabel} • ${ev.venue}</p>
-                    <p class="text-[11px] text-charcoal/75 mt-0.5">${rec.name} (${rec.rollNo}) • ${rec.dept}</p>
-                  </div>
-                  <div class="flex items-center gap-2 shrink-0">
-                    <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
-                      View
-                    </button>
-                    <button type="button" data-cancel-reg="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              `;
-            })
-            .join('');
+          regListEl.innerHTML = regIds.map(function (id) {
+            const ev = getEvent(id);
+            const rec = state.registered[id];
+            const hasClash = Boolean(clashingSet[id]);
+            return (
+              '<div class="saved-item' + (hasClash ? ' clash-item' : '') + '">' +
+                '<div>' +
+                  '<div class="badge-row" style="margin-bottom:4px;">' +
+                    '<strong style="color:var(--navy);font-size:0.92rem;">' + ev.title + '</strong>' +
+                    '<span class="pill pill-free">Confirmed</span>' +
+                    (hasClash ? '<span class="pill pill-clash">Time Clash</span>' : '') +
+                  '</div>' +
+                  '<div style="font-size:0.8rem;color:var(--muted);">' + ev.fullDate + ' • ' + ev.timeLabel + '</div>' +
+                  '<div style="font-size:0.8rem;font-weight:600;color:var(--navy);margin-top:2px;">' + ev.venue + '</div>' +
+                  '<div style="font-size:0.76rem;color:var(--muted);margin-top:2px;">' + rec.name + ' (' + rec.rollNo + ') • ' + rec.dept + '</div>' +
+                '</div>' +
+                '<div class="saved-item-actions">' +
+                  '<button type="button" class="btn btn-outline-subtle btn-sm" data-view-event="' + ev.id + '">View</button>' +
+                  '<button type="button" class="btn btn-danger-soft" data-cancel-reg="' + ev.id + '">Cancel</button>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join('');
         }
 
         // Saved Reminders List
-        const remListEl = document.getElementById('myRemindersList');
+        const remListEl = byId('myRemindersList');
         if (remIds.length === 0) {
-          remListEl.innerHTML = `
-            <div class="p-4 rounded-xl bg-white border border-dashed border-subtle text-xs sm:text-sm text-muted text-center">
-              No active reminders yet. Click "Set Reminder" on any event detail page.
-            </div>
-          `;
+          remListEl.innerHTML = '<div class="saved-empty">No saved reminders yet. Click "Set Reminder" on any event detail page.</div>';
         } else {
-          remListEl.innerHTML = remIds
-            .map((id) => {
-              const ev = getEvent(id);
-              return `
-                <div class="p-3 rounded-xl bg-white border border-subtle flex flex-wrap items-center justify-between gap-3">
-                  <div class="min-w-0">
-                    <p class="text-sm font-bold text-navy">${ev.title}</p>
-                    <p class="text-xs text-muted">${ev.fullDate} • ${ev.timeLabel}</p>
-                  </div>
-                  <div class="flex items-center gap-2 shrink-0">
-                    <button type="button" data-view-event="${ev.id}" class="px-2.5 py-1 rounded-lg bg-cream border border-subtle hover:border-amberhub text-xs font-bold text-navy">
-                      Open
-                    </button>
-                    <button type="button" data-remove-rem="${ev.id}" class="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-xs font-bold text-red-700">
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              `;
-            })
-            .join('');
+          remListEl.innerHTML = remIds.map(function (id) {
+            const ev = getEvent(id);
+            return (
+              '<div class="saved-item">' +
+                '<div>' +
+                  '<strong style="color:var(--navy);font-size:0.9rem;">' + ev.title + '</strong>' +
+                  '<div style="font-size:0.8rem;color:var(--muted);margin-top:2px;">' + ev.fullDate + ' • ' + ev.timeLabel + ' • <strong style="color:var(--navy);">' + ev.venue + '</strong></div>' +
+                '</div>' +
+                '<div class="saved-item-actions">' +
+                  '<button type="button" class="btn btn-outline-subtle btn-sm" data-view-event="' + ev.id + '">Open</button>' +
+                  '<button type="button" class="btn btn-danger-soft" data-remove-rem="' + ev.id + '">Remove</button>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join('');
         }
       }
 
@@ -1781,197 +2749,213 @@
       }
 
       /* -------------------------------------------------------------------
-         10. ACTIVE NAV LINK HIGHLIGHTING ON SCROLL
+         9. SCROLL-SPY NAVIGATION HIGHLIGHTING
          ------------------------------------------------------------------- */
       function initScrollSpy() {
-        const sections = ['home', 'feed', 'details', 'register', 'confirmation']
-          .map((id) => document.getElementById(id))
-          .filter(Boolean);
-        const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+        const navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-link'));
+        const sectionIds = ['home', 'feed', 'details', 'register', 'confirmation'];
 
-        function setActive(id) {
-          navLinks.forEach((link) => {
-            const isMatch = link.dataset.nav === id;
-            link.className = isMatch
-              ? 'nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap bg-amberhub text-white transition'
-              : 'nav-link px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap text-slate-200 hover:bg-white/10 transition';
+        function setActive(activeId) {
+          navLinks.forEach(function (link) {
+            if (link.getAttribute('data-nav') === activeId) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
           });
         }
 
         if ('IntersectionObserver' in window) {
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  setActive(entry.target.id);
-                }
-              });
-            },
-            { rootMargin: '-25% 0px -55% 0px', threshold: 0.05 }
-          );
-          sections.forEach((sec) => observer.observe(sec));
+          const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                setActive(entry.target.id);
+              }
+            });
+          }, { rootMargin: '-25% 0px -55% 0px', threshold: 0.05 });
+
+          sectionIds.forEach(function (id) {
+            const sec = byId(id);
+            if (sec) observer.observe(sec);
+          });
         }
 
-        navLinks.forEach((link) => {
-          link.addEventListener('click', () => setActive(link.dataset.nav));
+        navLinks.forEach(function (link) {
+          link.addEventListener('click', function () {
+            setActive(link.getAttribute('data-nav'));
+          });
         });
       }
 
       /* -------------------------------------------------------------------
-         11. EVENT LISTENERS
+         10. EVENT LISTENERS (CLEANLY BOUND & ZERO SYNTAX ERRORS)
          ------------------------------------------------------------------- */
       function bindEvents() {
-        // Live Global Search
-        document.getElementById('globalSearch').addEventListener('input', (e) => {
-          state.search = e.target.value;
-          renderHome();
-          renderFeed();
-        });
+        // Live Search Input
+        const searchInput = byId('globalSearch');
+        if (searchInput) {
+          searchInput.addEventListener('input', function (e) {
+            state.search = e.target.value;
+            renderHome();
+            renderFeed();
+          });
+        }
 
         // Free Events Only Toggle
-        document.getElementById('freeOnlyToggle').addEventListener('click', () => {
-          state.freeOnly = !state.freeOnly;
-          renderHome();
-          renderFeed();
-        });
-
-        // Delegated Click Handlers across the page
-        document.addEventListener('click', (e) => {
-          // Home Category Pill
-          const homeCatBtn = e.target.closest('[data-home-cat]');
-          if (homeCatBtn) {
-            state.homeCategory = homeCatBtn.dataset.homeCat;
+        const freeBtn = byId('freeOnlyToggle');
+        if (freeBtn) {
+          freeBtn.addEventListener('click', function () {
+            state.freeOnly = !state.freeOnly;
             renderHome();
-            return;
-          }
+            renderFeed();
+          });
+        }
 
-          // Feed Department Pill
+        // Reset / Cancel Form Button
+        const resetBtn = byId('btnResetForm');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function () {
+            byId('inputFullName').value = 'Astabhya Kumar';
+            byId('inputRollNo').value = '';
+            byId('inputEmail').value = 'astabhya@lpu.in';
+            byId('inputDept').selectedIndex = 0;
+            byId('inputSmsOptIn').checked = true;
+            byId('regErrorBox').classList.add('hidden');
+            showToast('Registration form reset.', 'navy');
+          });
+        }
+
+        // Registration Form Submission
+        const regForm = byId('registrationForm');
+        if (regForm) {
+          regForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = byId('inputFullName').value.trim();
+            const rollNo = byId('inputRollNo').value.trim();
+            const email = byId('inputEmail').value.trim();
+            const dept = byId('inputDept').value;
+            const smsOptIn = byId('inputSmsOptIn').checked;
+            const errorBox = byId('regErrorBox');
+
+            if (!name || !rollNo || !email || email.indexOf('@') === -1) {
+              errorBox.textContent = 'Please enter your Full Name, Registration / Roll Number, and a valid University Email.';
+              errorBox.classList.remove('hidden');
+              return;
+            }
+
+            errorBox.classList.add('hidden');
+            const ev = getEvent(state.selectedEventId);
+            const clashesBefore = findClashesForEvent(ev.id);
+
+            if (smsOptIn && state.reminders.indexOf(ev.id) === -1) {
+              state.reminders.push(ev.id);
+            }
+
+            state.registered[ev.id] = {
+              name: name,
+              rollNo: rollNo,
+              email: email,
+              dept: dept,
+              sms: smsOptIn
+            };
+            state.lastConfirmedEventId = ev.id;
+            state.lastConfirmedEmail = email;
+            saveState();
+            renderAll();
+
+            if (clashesBefore.length > 0) {
+              showToast('Registered — Time-Clash detected with ' + clashesBefore[0].title + '!', 'danger');
+            } else {
+              showToast('Registered for ' + ev.title + '!', 'success');
+            }
+
+            const confirmSec = byId('confirmation');
+            if (confirmSec) confirmSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+
+        // Delegated Click Events for Dynamic Cards & Buttons
+        document.addEventListener('click', function (e) {
           const feedCatBtn = e.target.closest('[data-feed-cat]');
           if (feedCatBtn) {
-            state.feedCategory = feedCatBtn.dataset.feedCat;
+            state.feedCategory = feedCatBtn.getAttribute('data-feed-cat');
+            renderHome();
             renderFeed();
             return;
           }
 
-          // View Details on ANY card
           const viewBtn = e.target.closest('[data-view-event]');
           if (viewBtn) {
-            selectEvent(viewBtn.dataset.viewEvent, true);
+            selectEvent(viewBtn.getAttribute('data-view-event'), true);
             return;
           }
 
-          // Toggle Inline Campus Directions in Section 3
           if (e.target.closest('#btnToggleDirections')) {
             state.directionsOpen = !state.directionsOpen;
             renderDetails();
             return;
           }
 
-          // Detail "REGISTER NOW" button -> smooth-scroll to Section 4 & focus Roll No
           if (e.target.closest('#btnDetailRegisterNow')) {
-            document.getElementById('register').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            setTimeout(() => {
-              const rollInput = document.getElementById('inputRollNo');
+            const regSec = byId('register');
+            if (regSec) regSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.setTimeout(function () {
+              const rollInput = byId('inputRollNo');
               if (rollInput) rollInput.focus({ preventScroll: true });
-            }, 450);
+            }, 420);
             return;
           }
 
-          // Detail "Set Reminder" button
           if (e.target.closest('#btnDetailReminder')) {
             toggleReminder(state.selectedEventId, false);
             return;
           }
 
-          // Section 5: Download .ics Calendar Invite
           if (e.target.closest('#btnDownloadIcs')) {
             downloadIcs(getEvent(state.lastConfirmedEventId));
             return;
           }
 
-          // Section 5: SMS Reminder Toggle
           if (e.target.closest('#btnSmsReminder')) {
             toggleReminder(state.lastConfirmedEventId, true);
             return;
           }
 
-          // Cancel Registration from My Schedule
-          const cancelBtn = e.target.closest('[data-cancel-reg]');
-          if (cancelBtn) {
-            const id = cancelBtn.dataset.cancelReg;
+          const cancelRegBtn = e.target.closest('[data-cancel-reg]');
+          if (cancelRegBtn) {
+            const id = cancelRegBtn.getAttribute('data-cancel-reg');
             const ev = getEvent(id);
             delete state.registered[id];
             saveState();
             renderAll();
-            showToast(`Cancelled registration for ${ev.title}.`);
+            showToast('Cancelled registration for ' + ev.title + '.', 'navy');
             return;
           }
 
-          // Remove Reminder from My Schedule
-          const remRemoveBtn = e.target.closest('[data-remove-rem]');
-          if (remRemoveBtn) {
-            toggleReminder(remRemoveBtn.dataset.removeRem, false);
-          }
-        });
-
-        // Section 4: Reset Form Button
-        document.getElementById('btnResetForm').addEventListener('click', () => {
-          document.getElementById('inputFullName').value = 'Astabhya Kumar';
-          document.getElementById('inputRollNo').value = '';
-          document.getElementById('inputEmail').value = 'astabhya@univ.edu';
-          document.getElementById('inputDept').selectedIndex = 0;
-          document.getElementById('regErrorBox').classList.add('hidden');
-          showToast('Form fields reset.');
-        });
-
-        // Section 4: Submit Registration Form
-        document.getElementById('registrationForm').addEventListener('submit', (e) => {
-          e.preventDefault();
-          const name = document.getElementById('inputFullName').value.trim();
-          const rollNo = document.getElementById('inputRollNo').value.trim();
-          const email = document.getElementById('inputEmail').value.trim();
-          const dept = document.getElementById('inputDept').value;
-          const errorBox = document.getElementById('regErrorBox');
-
-          if (!name || !rollNo || !email || !email.includes('@')) {
-            errorBox.textContent = 'Please enter your Full Name, Roll Number / Reg No, and a valid University Email.';
-            errorBox.classList.remove('hidden');
+          const removeRemBtn = e.target.closest('[data-remove-rem]');
+          if (removeRemBtn) {
+            const id = removeRemBtn.getAttribute('data-remove-rem');
+            toggleReminder(id, false);
             return;
           }
-
-          errorBox.classList.add('hidden');
-          const ev = getEvent(state.selectedEventId);
-          const clashesBefore = findClashesForEvent(ev.id);
-
-          state.registered[ev.id] = {
-            name,
-            rollNo,
-            email,
-            dept,
-            sms: isReminded(ev.id)
-          };
-          state.lastConfirmedEventId = ev.id;
-          state.lastConfirmedEmail = email;
-          saveState();
-          renderAll();
-
-          if (clashesBefore.length > 0) {
-            showToast(`Registered — Time-Clash detected with ${clashesBefore[0].title}!`, 'danger');
-          } else {
-            showToast(`Registered for ${ev.title}!`, 'success');
-          }
-
-          document.getElementById('confirmation').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       }
 
       /* -------------------------------------------------------------------
-         12. INITIALIZE APP
+         11. BOOTSTRAP ON DOM READY
          ------------------------------------------------------------------- */
-      loadState();
-      bindEvents();
-      renderAll();
-      initScrollSpy();
+      function init() {
+        loadState();
+        bindEvents();
+        renderAll();
+        initScrollSpy();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
     })();
   </script>
 </body>
